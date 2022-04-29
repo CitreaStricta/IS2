@@ -92,7 +92,8 @@ def create_app(test_config=None):
     def index():
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute('SELECT * FROM encuestado;')
+        sentenciaSQL = 'SELECT * FROM encuestado;'
+        cur.execute(sentenciaSQL)
         bdEncuestados = cur.fetchall()
         cur.close()
         conn.close()
