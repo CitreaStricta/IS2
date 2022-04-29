@@ -1,8 +1,18 @@
 import os
-
-from flask import Flask, render_template,redirect,url_for,request
+import psycopg2
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
-import jyserver.Flask as jsf
+
+def get_db_connection():
+    DBHOST="ec2-52-5-110-35.compute-1.amazonaws.com"
+    DATABASE="d28t56b7dpk32k"
+    DBUSER="zntctcuflomgsk"
+    DBPASSWORD="43061258b91aaa3cf85b9c222443c57f889531d4478e8e0e69abcd715daf419c"
+    DBPORT= "5432"
+    connstr = "host=%s port=%s user=%s password=%s dbname=%s" % (DBHOST, DBPORT, DBUSER, DBPASSWORD, DATABASE)
+    conn = psycopg2.connect(connstr)
+    return conn
+
 
 def create_app(test_config=None):
     # create and configure the app
@@ -48,7 +58,6 @@ def create_app(test_config=None):
 
     @app.route('/logged')
     def rutaLogged():
-        #COMPROBAR QUE LOS DATOS ESTEN BIEN POR LA BASE DE DATOS
         '''
         import pymysql 
         import sys
@@ -71,76 +80,26 @@ def create_app(test_config=None):
         user_details = {'name': 'John', 'password': 'hola123'}
         return render_template('logged.html', user=user_details)
 
-    @app.route('/encuestas_privadas',methods=["POST","GET"])
+    @app.route('/encuestas_privadas')
     def rutaEncuestas_privadas():
-        #SELECCIONAR LAS ENCUESTAS DEL USUARIO LOGGEADO
-        '''
-        import pymysql 
-        import sys
-        host='localhost'
-        user = 'root'
-        password = ''
-        db = 'skripsi'
-
-        try:
-            con = pymysql.connect(host=host,user=user,password=password,db=db, use_unicode=True, charset='utf8')
-            print('+=========================+')
-            print('|  CONNECTED TO DATABASE  |')
-            print('+=========================+')
-        except Exception as e:
-            sys.exit('error',e)
-        cur = con.cursor()
-        #cur.execute("SELECT * FROM dataset") #QUERY
-        data = cur.fetchall()
-        '''
-        nombre_encuestas = ['Encuesta 1','Encuesta 2']
-        preguntas = []
-        respuestas = []
-        for i in range(len(nombre_encuestas)):
-            numero_de_preguntas = 2
-            preg_por_enc = []
-            resp_por_enc = []
-            for j in range(numero_de_preguntas):
-                resp_por_preg = []
-                preg_por_enc.append('Hola/encuesta '+str(i))
-                numero_de_respuestas = 2
-                for k in range(numero_de_respuestas):
-                    resp_por_preg.append('Adios/encuesta '+str(i))
-                resp_por_enc.append(resp_por_preg)
-            preguntas.append(preg_por_enc)
-            respuestas.append(resp_por_enc)
-        encuesta_activa = -1
-        data = {'nombre_encuestas':nombre_encuestas,'preguntas':preguntas,'respuestas':respuestas,'encuesta_activa':encuesta_activa}
-        if request.method == "POST":
-            encuesta_seleccionada = list(request.form.keys())[0]
-            print(encuesta_seleccionada)
-            data['encuesta_activa'] = int(encuesta_seleccionada)
-            return render_template('encuestas_privadas.html',data = data)
-        else:
-            return render_template('encuestas_privadas.html',data = data)
-        return render_template('encuestas_privadas.html',data = data)
-
-    @app.route('/preguntas_privadas')    
-    def rutaPreguntas_privadas():
-        name = "hola"
-        if request.method == 'POST':
-            return render_template('home.html',name)
-        else:
-            return render_template('home.html',name)
-        name = "hola"
-        return render_template('home.html',name)
-
-
+        return render_template('encuestas_privadas.html')
 
     @app.route('/linkEncuesta/parametros de info para reconocer en BD o algo similar')
     def encuesta():
         return render_template('lugarDondeSeAlmacenaLaEncuesta.html')
 
+    @app.route('/bd')
+    def index():
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute('SELECT * FROM encuestado;')
+        bdEncuestados = cur.fetchall()
+        cur.close()
+        conn.close()
+        return render_template('pruebaBD.html', encuestados=bdEncuestados)
+
     return app
-    
-    #@jsf.use(app)
-    #class App:
-    #    def __init__(self):
+
 
 '''
 @app.route('/antenas', methods=['GET'])
