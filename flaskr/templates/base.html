@@ -1,4 +1,3 @@
-<!-- Home sacado de: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_make_a_website -->
 <!DOCTYPE html> 
 <html lang="en">
 <head>
@@ -114,39 +113,13 @@ body {
 <body>
 
 <div class="header">
-  <h1>Parte Diego</h1>
-  <p>a</p> <!-- (Descripción/Slogan) -->
+  <h1>Nombre Software</h1>
+  <p>Software para crear encuestas.</p> <!-- (Descripción/Slogan) -->
 </div>
 
 <div class="navbar">
+  <a href="/login" class="right">Login</a> 
   <a href="/">Home</a>
+  <a href="/bd">Crear Encuesta</a>
+  <a href="/logged">Usuario Logeado</a>
 </div>
-
-<div class="row">
-  <div class="side">
-    {%for i in range(0, data.nombre_encuestas|length)%}
-    <form method="POST" action=/encuestas_privadas>
-          <button type="submit" name={{i}} value={{i}}> {{data.nombre_encuestas[i]}} </button>
-          <button class="button-63" role="button">Button 63</button>  
-          <a href="/">Home</a>
-      </form>
-    {%endfor%}
-    </div>
-
-    {% if data.encuesta_activa+1 %}
-    <div class="main">
-      {%for i in range(0, data.preguntas[data.encuesta_activa]|length)%}
-        <h2>Pregunta {{ i+1 }}</h2>
-        <h1>{{data.preguntas[data.encuesta_activa][i]}}</h1>
-        <h2>Respuestas</h2>
-        {%for j in range(0, data.respuestas[data.encuesta_activa][i]|length)%}
-          <h3>{{data.respuestas[data.encuesta_activa][i][j]}}</h3>
-        {%endfor%}
-        <br>
-      {%endfor%}
-    </div>        
-    {% endif %}
-</div>
-
-</body>
-</html>

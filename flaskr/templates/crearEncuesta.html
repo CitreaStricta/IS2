@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Create Survey</title>
+</head>
+<body onload="addTitle()">
+	<h1 id="titulo">Crear Encuesta</h1>
+	
+	<div id="containerTitle"></div>	
+
+	<!--Container de preguntas-->
+	<div id="containerQuestions"></div>
+
+	
+	<button id="addElement" onclick="addQuestion()">Agregar pregunta(+)</button>
+	<button id="save" onclick="saveQuestions()">Guardar</button> <!-- deberia ser saveSurvey -->
+
+
+</body>
+</html>
+
+<script src="{{url_for('static', filename='js/script.js')}}"></script>
+
+
+
