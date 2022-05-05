@@ -8,6 +8,7 @@ from wtforms.validators import DataRequired
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 
+# este es un comentario de prueba
 
 class SurveyForm(FlaskForm):
     pass
