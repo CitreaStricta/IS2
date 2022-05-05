@@ -141,7 +141,37 @@ def create_app(test_config=None):
 
     @app.route('/mostrarEncuesta')
     def show_survey():
+        conn = get_db_connection()
+        cur = conn.cursor()
+        sentenciaSQL = 'SELECT * FROM encuesta WHERE id_encuesta = 1;'
+        cur.execute(sentenciaSQL)
+        bdPreguntas = cur.fetchall()
+        cur.close()
+        conn.close()
+        print(bdPreguntas)
+        titulo = []
+        preguntas= []
+        tipo_preguntas = []
+        # la forma que viene es (0: identificador, 1: Titulo y 2: preguntas)
+        for i in range(len(bdPreguntas)):
+            preguntas_encuesta_i = []
+            tipo_encuesta_i = []
+            titulo.append(bdPreguntas[i][1])
 
+            for pregunta in bdPreguntas[i][2]['Preguntas']:
+                print("tipo pregunta:",pregunta[0])
+                print("nombre pregunta:",pregunta[1])
+
+                tipo_encuesta_i.append(pregunta[0])
+                preguntas_encuesta_i.append(pregunta[1])
+
+            preguntas.append(preguntas_encuesta_i)
+            tipo_preguntas.append(tipo_encuesta_i)
+
+
+        data = {"Encuestas":titulo,"Preguntas":preguntas,"Tipo":tipo_preguntas}
+        return render_template('mostrarEncuesta.html', encuestas=data)
+        '''
         class DynamicForm(SurveyForm):
             pass
 
@@ -169,6 +199,7 @@ def create_app(test_config=None):
                 print("Enviado")
                 return render_template("mostrarEncuesta.html", form=form , title=title)
         return render_template("mostrarEncuesta.html", form=form, title=title)
+        '''
     
     @app.route('/verEncuestas')
     def rutaDesplegarEncuestas():
