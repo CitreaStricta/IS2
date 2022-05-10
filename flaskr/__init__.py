@@ -12,6 +12,7 @@ class SurveyForm(FlaskForm):
     pass
 
 def get_db_connection():
+    #xd
     DBHOST="ec2-52-5-110-35.compute-1.amazonaws.com"
     DATABASE="d28t56b7dpk32k"
     DBUSER="zntctcuflomgsk"
