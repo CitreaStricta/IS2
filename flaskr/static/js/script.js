@@ -13,38 +13,50 @@ function addTitle(){
     container.appendChild(document.createElement("br")) // br es un salto de linea
 }
 
+function addAlternativa(contenedor){
+    var containerAlternativa = contenedor // la div class en donde va
+    var input = contenedor.getElementsByTagName("input") //pregunta
+    //containerAlternativa.appendChild(document.createElement("&nbsp"))
+    // generacion de un campo input (la pregunta en si) 
+	var alternativa = document.createElement("input") // se refiere a un h1, un div, un boton, un elemento HTML
+    alternativa.id = "alternativaId" + input.numberOfAlternativas;
+    alternativa.placeholder = "Add Alternativa here" // place holder
+    alternativa.name = "input" + input.numberOfAlternativas;
+
+    containerAlternativa.appendChild(alternativa)
+}
+
 // genera nuevo campo dinamico al apretar "mas" o "agrega otro campo de pregunta"
 function addQuestion(){
 	var container = document.getElementById("containerQuestions")
+    container.appendChild(document.createElement("br"))
     // generacion de un campo input (la pregunta en si) 
 	var input = document.createElement("input")
-    input.type = "text"
     input.name = "input" + numberOfQuestion;
     input.id = "inputId" + numberOfQuestion
-    input.placeholder = "Add question here" // place holder
-    // el drop down
-    var select = document.createElement("select")
-    select.id = "selectId" + numberOfQuestion
-    select.name = "selectName" + numberOfQuestion
-    // las opciones del select al usar el drop down
-    var textOption = document.createElement("option") 
-    const optionText = document.createTextNode("text");
-    textOption.appendChild(optionText)
-	textOption.setAttribute('value','text');
-    // lo mismo que antes pero para la parte multiple
-    var multipleOptions = document.createElement("option")
-    const multipleOptionText = document.createTextNode("multiple");
-    multipleOptions.appendChild(multipleOptionText)
-    multipleOptions.setAttribute('value','multiple');
+    input.numberOfAlternativas = 0
 
-    select.add(textOption,undefined)
-    select.add(multipleOptions,undefined)
+    
+    var inputElement = document.createElement('button');
+    inputElement.innerHTML = "+ alternativa"
+    //inputElement.type = "button"
+    inputElement.addEventListener('click', function(){
+        addAlternativa(container);
+        input.numberOfAlternativas++;
+    });
+
+    input.placeholder = "Add question here" // place holder
+    //addAlternativa(input.number)
+    //addAlternativa()
 
     numberOfQuestion++
 
     container.appendChild(input)
-    container.appendChild(select)
+    container.appendChild(inputElement)
     container.appendChild(document.createElement("br"))
+
+    addAlternativa(container)
+    addAlternativa(container)
 }
 
 /*function removeQuestion(index){
@@ -130,7 +142,47 @@ function saveQuestions(){
 
 
 
+/*
+// genera nuevo campo dinamico al apretar "mas" o "agrega otro campo de pregunta"
+function addQuestion(){
+	var container = document.getElementById("containerQuestions")
+    // generacion de un campo input (la pregunta en si) 
+	var input = document.createElement("input")
+    input.name = "input" + numberOfQuestion;
+    input.id = "inputId" + numberOfQuestion
+    input.contenedor = document.createElement("div")
+    input.contenedor.id="contenedorAlternativas"
+    input.numberOfAlternativas = 0
 
+    
+    var button = document.createElement("button")
+    button.innerHTML = '+ alternativa';
+    button.value = numberOfAlternativas
+    button.onclick = function(){
+        console.log("se apreto el boton")
+        
+        // generacion de un campo input (la pregunta en si) 
+        var alternativa = document.createElement("input") // se refiere a un h1, un div, un boton, un elemento HTML
+        alternativa.id = "alternativaId" + input.numberOfAlternativas;
+        alternativa.placeholder = "Add Alternativa here" // place holder
+        alternativa.name = "input" + input.numberOfAlternativas;
+        input.numberOfAlternativas++;
+
+        input.contenedor.appendChild(alternativa)
+        input.contenedor.appendChild(document.createElement("br")) // br es un salto de linea
+    };
+
+    input.placeholder = "Add question here" // place holder
+    //addAlternativa(input.number)
+    //addAlternativa()
+
+    numberOfQuestion++
+
+    container.appendChild(input)
+    container.appendChild(button)
+    container.appendChild(document.createElement("br"))
+}
+*/
 
 
 
