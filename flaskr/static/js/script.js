@@ -1,16 +1,40 @@
 //let XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest; //same as import
 var numberOfQuestion = 0;
 
+// FALTA IMPLEMENTAR BOTON PARA ELIMINAR PREGUNTAS Y BOTON PARA ELIMINAR ALTERNATIVAS
+// FALTA INDICAR EL NUMERO DE LA PREGUNTA
 function addTitle(){
     var container = document.getElementById("containerTitle") // la div class
-    // generacion de un campo input (la pregunta en si) 
+    // generacion de un campo input (Para asignar titulo) 
 	var title = document.createElement("input") // se refiere a un h1, un div, un boton, un elemento HTML
     title.id = "titleId"
     title.placeholder = "Add Title here" // place holder
     
+    var descripcion = document.createElement("input") // se refiere a un h1, un div, un boton, un elemento HTML
+    descripcion.id = "descripcionId"
+    descripcion.placeholder = "Add Descripción here" // place holder
+
+    var fechaComienzo = document.createElement("input")
+    fechaComienzo.id= "fechaComienzoId"
+    fechaComienzo.type= "date"
+    var fechaTermino = document.createElement("input")
+    fechaTermino.id= "fechaTerminoId"
+    fechaTermino.type= "date"
+
+    container.appendChild(document.createTextNode("Titulo:"))
+    container.appendChild(document.createElement("br")) // br es un salto de linea
     container.appendChild(title)
     container.appendChild(document.createElement("br")) // br es un salto de linea
     container.appendChild(document.createElement("br")) // br es un salto de linea
+    container.appendChild(document.createTextNode("Descripcion:"))
+    container.appendChild(document.createElement("br")) // br es un salto de linea
+    container.appendChild(descripcion)
+    container.appendChild(document.createElement("br")) // br es un salto de linea
+    container.appendChild(document.createElement("br")) // br es un salto de linea
+    container.appendChild(document.createTextNode("Fecha Comienzo:"))
+    container.appendChild(fechaComienzo)
+    container.appendChild(document.createTextNode("   Fecha Termino:"))
+    container.appendChild(fechaTermino)
 }
 
 function addAlternativa(listAlternativa){
