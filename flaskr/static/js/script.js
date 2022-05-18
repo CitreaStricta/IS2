@@ -40,13 +40,26 @@ function addTitle(){
 function addAlternativa(listAlternativa){
     //containerAlternativa.appendChild(document.createElement("&nbsp"))
     // generacion de un campo input (la pregunta en si) 
-	var alternativa = document.createElement("input") // se refiere a un h1, un div, un boton, un elemento HTML
-    alternativa.id = "alternativaId" + listAlternativa.length;
-    alternativa.placeholder = "Add Alternativa here" // place holder
-    alternativa.name = "input" + listAlternativa.length;
+
+    var alternativa = document.createElement("div")
+
+	alternativa.contenido = document.createElement("input") // se refiere a un h1, un div, un boton, un elemento HTML
+    alternativa.contenido.id = "alternativaId" + listAlternativa.length;
+    alternativa.contenido.placeholder = "Add Alternativa here" // place holder
+    alternativa.contenido.name = "input" + listAlternativa.length;
+
+    alternativa.boton = document.createElement('button');
+    alternativa.boton.innerHTML = "- alternativa"
+    alternativa.boton.addEventListener('click', function(){
+        // funcion que elimina la alternativa
+        listAlternativa.removeChild(alternativa)
+    });
+
+    alternativa.appendChild(alternativa.contenido)
+    alternativa.appendChild(alternativa.boton)
+    alternativa.appendChild(document.createElement("br"))
 
     listAlternativa.appendChild(alternativa)
-    listAlternativa.appendChild(document.createElement("br"))
 }
 
 // genera nuevo campo dinamico al apretar "mas" o "agrega otro campo de pregunta"
@@ -65,20 +78,28 @@ function addQuestion(){
     var pregunta = document.createElement("div")
 
     pregunta.contenidoPregunta = document.createElement("input")
-    pregunta.contenidoPregunta.name = "input" + numberOfQuestion;
+    pregunta.contenidoPregunta.name = "input" + numberOfQuestion
     pregunta.contenidoPregunta.id = "inputId" + numberOfQuestion
+    pregunta.contenidoPregunta.placeholder = "Add Pregunta here"
 
     pregunta.alternativas = document.createElement("ul")
 
     pregunta.botonAlternativas = document.createElement('button');
     pregunta.botonAlternativas.innerHTML = "+ alternativa"
-    //botonAlternativas.type = "button"
     pregunta.botonAlternativas.addEventListener('click', function(){
         addAlternativa(pregunta.alternativas);
     });
 
+    pregunta.botonPregunta = document.createElement('button');
+    pregunta.botonPregunta.innerHTML = "- pregunta"
+    pregunta.botonPregunta.addEventListener('click', function(){
+        // funcion que elimina la pregunta
+        encuesta.listPreguntas.removeChild(pregunta)
+    });
+
     pregunta.appendChild(document.createElement("br"))
     pregunta.appendChild(pregunta.contenidoPregunta)
+    pregunta.appendChild(pregunta.botonPregunta)
     pregunta.appendChild(pregunta.botonAlternativas)
     pregunta.appendChild(pregunta.alternativas)
 
@@ -90,10 +111,6 @@ function addQuestion(){
     console.log(encuesta.listPreguntas);
 }
 
-/*function removeQuestion(index){
-    var container = document.getElementById("containerQuestions")
-    container.remove()
-}*/
 
 
 const fetchData = (url_api,listOfQuestions) => {
