@@ -13,50 +13,57 @@ function addTitle(){
     container.appendChild(document.createElement("br")) // br es un salto de linea
 }
 
-function addAlternativa(contenedor){
-    var containerAlternativa = contenedor // la div class en donde va
-    var input = contenedor.getElementsByTagName("input") //pregunta
+function addAlternativa(listAlternativa){
     //containerAlternativa.appendChild(document.createElement("&nbsp"))
     // generacion de un campo input (la pregunta en si) 
 	var alternativa = document.createElement("input") // se refiere a un h1, un div, un boton, un elemento HTML
-    alternativa.id = "alternativaId" + input.numberOfAlternativas;
+    alternativa.id = "alternativaId" + listAlternativa.length;
     alternativa.placeholder = "Add Alternativa here" // place holder
-    alternativa.name = "input" + input.numberOfAlternativas;
+    alternativa.name = "input" + listAlternativa.length;
 
-    containerAlternativa.appendChild(alternativa)
+    listAlternativa.appendChild(alternativa)
+    listAlternativa.appendChild(document.createElement("br"))
 }
 
 // genera nuevo campo dinamico al apretar "mas" o "agrega otro campo de pregunta"
-function addQuestion(){
-	var container = document.getElementById("containerQuestions")
-    container.appendChild(document.createElement("br"))
-    // generacion de un campo input (la pregunta en si) 
-	var input = document.createElement("input")
-    input.name = "input" + numberOfQuestion;
-    input.id = "inputId" + numberOfQuestion
-    input.numberOfAlternativas = 0
+function addEncuesta(){
+    var encuesta = document.getElementById("containerEncuesta")
+    var listPregunta = document.createElement("ul")
+    encuesta.listPreguntas = listPregunta
 
+    encuesta.appendChild(encuesta.listPreguntas)
     
-    var inputElement = document.createElement('button');
-    inputElement.innerHTML = "+ alternativa"
-    //inputElement.type = "button"
-    inputElement.addEventListener('click', function(){
-        addAlternativa(container);
-        input.numberOfAlternativas++;
+}
+
+function addQuestion(){
+    var encuesta = document.getElementById("containerEncuesta")
+    
+    var pregunta = document.createElement("div")
+
+    pregunta.contenidoPregunta = document.createElement("input")
+    pregunta.contenidoPregunta.name = "input" + numberOfQuestion;
+    pregunta.contenidoPregunta.id = "inputId" + numberOfQuestion
+
+    pregunta.alternativas = document.createElement("ul")
+
+    pregunta.botonAlternativas = document.createElement('button');
+    pregunta.botonAlternativas.innerHTML = "+ alternativa"
+    //botonAlternativas.type = "button"
+    pregunta.botonAlternativas.addEventListener('click', function(){
+        addAlternativa(pregunta.alternativas);
     });
 
-    input.placeholder = "Add question here" // place holder
-    //addAlternativa(input.number)
-    //addAlternativa()
+    pregunta.appendChild(document.createElement("br"))
+    pregunta.appendChild(pregunta.contenidoPregunta)
+    pregunta.appendChild(pregunta.botonAlternativas)
+    pregunta.appendChild(pregunta.alternativas)
 
-    numberOfQuestion++
+    encuesta.listPreguntas.appendChild(pregunta)
 
-    container.appendChild(input)
-    container.appendChild(inputElement)
-    container.appendChild(document.createElement("br"))
+    addAlternativa(pregunta.alternativas)
 
-    addAlternativa(container)
-    addAlternativa(container)
+    numberOfQuestion++;
+    console.log(encuesta.listPreguntas);
 }
 
 /*function removeQuestion(index){
