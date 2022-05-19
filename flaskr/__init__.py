@@ -7,7 +7,6 @@ from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
-
 class SurveyForm(FlaskForm):
     pass
 
@@ -320,6 +319,9 @@ def create_app(test_config=None):
         cur.close()
         conn.close()
         return render_template('pruebaBD.html', encuestados=bdEncuestados)
+    @app.route('/agregarmail')
+    def agregarmail():
+        return render_template('agregarmails.html')
 
     return app
 
