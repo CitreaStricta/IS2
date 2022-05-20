@@ -3,63 +3,65 @@ var numberOfQuestion = 0;
 
 // FALTA IMPLEMENTAR BOTON PARA ELIMINAR PREGUNTAS Y BOTON PARA ELIMINAR ALTERNATIVAS
 // FALTA INDICAR EL NUMERO DE LA PREGUNTA
-function addTitle(){
-    var container = document.getElementById("containerTitle") // la div class
+function addTitulo(){
+    var container = document.getElementById("containerTitulo") // la div class
     // generacion de un campo input (Para asignar titulo) 
-	var title = document.createElement("input") // se refiere a un h1, un div, un boton, un elemento HTML
-    title.id = "titleId"
-    title.placeholder = "Add Title here" // place holder
+	container.titulo = document.createElement("input") // se refiere a un h1, un div, un boton, un elemento HTML
+    container.titulo.id = "titleId"
+    container.titulo.placeholder = "Add Title here" // place holder
     
-    var descripcion = document.createElement("input") // se refiere a un h1, un div, un boton, un elemento HTML
-    descripcion.id = "descripcionId"
-    descripcion.placeholder = "Add Descripción here" // place holder
+    container.descripcion = document.createElement("input") // se refiere a un h1, un div, un boton, un elemento HTML
+    container.descripcion.id = "descripcionId"
+    container.descripcion.placeholder = "Add Descripción here" // place holder
 
-    var fechaComienzo = document.createElement("input")
-    fechaComienzo.id= "fechaComienzoId"
-    fechaComienzo.type= "date"
-    var fechaTermino = document.createElement("input")
-    fechaTermino.id= "fechaTerminoId"
-    fechaTermino.type= "date"
+    container.fechaComienzo = document.createElement("input")
+    container.fechaComienzo.id= "fechaComienzoId"
+    container.fechaComienzo.type= "date"
+    container.fechaTermino = document.createElement("input")
+    container.fechaTermino.id= "fechaTerminoId"
+    container.fechaTermino.type= "date"
 
     container.appendChild(document.createTextNode("Titulo:"))
     container.appendChild(document.createElement("br")) // br es un salto de linea
-    container.appendChild(title)
+    container.appendChild(container.titulo)
     container.appendChild(document.createElement("br")) // br es un salto de linea
     container.appendChild(document.createElement("br")) // br es un salto de linea
     container.appendChild(document.createTextNode("Descripcion:"))
     container.appendChild(document.createElement("br")) // br es un salto de linea
-    container.appendChild(descripcion)
+    container.appendChild(container.descripcion)
     container.appendChild(document.createElement("br")) // br es un salto de linea
     container.appendChild(document.createElement("br")) // br es un salto de linea
     container.appendChild(document.createTextNode("Fecha Comienzo:"))
-    container.appendChild(fechaComienzo)
+    container.appendChild(container.fechaComienzo)
     container.appendChild(document.createTextNode("   Fecha Termino:"))
-    container.appendChild(fechaTermino)
+    container.appendChild(container.fechaTermino)
 }
 
-function addAlternativa(listAlternativa){
+function addAlternativa(pregunta){
     //containerAlternativa.appendChild(document.createElement("&nbsp"))
     // generacion de un campo input (la pregunta en si) 
 
     var alternativa = document.createElement("div")
 
 	alternativa.contenido = document.createElement("input") // se refiere a un h1, un div, un boton, un elemento HTML
-    alternativa.contenido.id = "alternativaId" + listAlternativa.length;
+    alternativa.contenido.id = "alternativaId" + pregunta.numAlternativas;
     alternativa.contenido.placeholder = "Add Alternativa here" // place holder
-    alternativa.contenido.name = "input" + listAlternativa.length;
+    alternativa.contenido.name = "input" + pregunta.numAlternativas;
 
     alternativa.boton = document.createElement('button');
     alternativa.boton.innerHTML = "- alternativa"
     alternativa.boton.addEventListener('click', function(){
         // funcion que elimina la alternativa
-        listAlternativa.removeChild(alternativa)
+        pregunta.alternativas.removeChild(alternativa)
+        pregunta.numAlternativas--
     });
 
     alternativa.appendChild(alternativa.contenido)
     alternativa.appendChild(alternativa.boton)
     alternativa.appendChild(document.createElement("br"))
 
-    listAlternativa.appendChild(alternativa)
+    pregunta.numAlternativas++
+    pregunta.alternativas.appendChild(alternativa)
 }
 
 // genera nuevo campo dinamico al apretar "mas" o "agrega otro campo de pregunta"
@@ -67,13 +69,14 @@ function addEncuesta(){
     var encuesta = document.getElementById("containerEncuesta")
     var listPregunta = document.createElement("ul")
     encuesta.listPreguntas = listPregunta
+    encuesta.numPreguntas=0
 
     encuesta.appendChild(encuesta.listPreguntas)
-    
 }
 
 function addQuestion(){
     var encuesta = document.getElementById("containerEncuesta")
+    encuesta.numPreguntas++
     
     var pregunta = document.createElement("div")
 
@@ -83,17 +86,19 @@ function addQuestion(){
     pregunta.contenidoPregunta.placeholder = "Add Pregunta here"
 
     pregunta.alternativas = document.createElement("ul")
+    pregunta.numAlternativas = 0
 
     pregunta.botonAlternativas = document.createElement('button');
     pregunta.botonAlternativas.innerHTML = "+ alternativa"
     pregunta.botonAlternativas.addEventListener('click', function(){
-        addAlternativa(pregunta.alternativas);
+        addAlternativa(pregunta);
     });
 
     pregunta.botonPregunta = document.createElement('button');
     pregunta.botonPregunta.innerHTML = "- pregunta"
     pregunta.botonPregunta.addEventListener('click', function(){
         // funcion que elimina la pregunta
+        encuesta.numPreguntas--
         encuesta.listPreguntas.removeChild(pregunta)
     });
 
@@ -105,13 +110,10 @@ function addQuestion(){
 
     encuesta.listPreguntas.appendChild(pregunta)
 
-    addAlternativa(pregunta.alternativas)
+    addAlternativa(pregunta)
 
     numberOfQuestion++;
-    console.log(encuesta.listPreguntas);
 }
-
-
 
 const fetchData = (url_api,listOfQuestions) => {
     
@@ -145,8 +147,53 @@ const fetchDataAsync = async(url_api,listOfQuestions) => {
     }
 }
 
+function saveQuestions(){
+    var container = document.getElementById("containerTitulo")
+    var encuesta = document.getElementById("containerEncuesta")
+    var titulo = container.titulo
+    var descripcion = container.descripcion
+    var fechaComienzo = container.fechaComienzo
+    var fechaTermino = container.fechaTermino
 
+    //console.log(container);
+    //console.log(encuesta);
 
+    // Falta ingresar formato para tener en JSON la encuesta
+    var listaPreguntas = encuesta.listPreguntas
+    var preguntas = listaPreguntas.getElementsByTagName("input")
+    //console.log(listaPreguntas);
+    //console.log(preguntas);
+    var preguntaActual = 0
+    var contadorDivs = 0 // este es el contador que iterara por listaPreguntas
+    var jsonTotal = []
+    while(preguntaActual<encuesta.numPreguntas){
+        //console.log(listaPreguntas.getElementsByTagName("div")[contadorDivs])
+        //console.log(preguntaActual);
+        //console.log(listaPreguntas.getElementsByTagName("div")[contadorDivs].contenidoPregunta.value)
+        //console.log(listaPreguntas.getElementsByTagName("div")[contadorDivs].numAlternativas)
+        var json = []
+        json.push(listaPreguntas.getElementsByTagName("div")[contadorDivs].contenidoPregunta.value)
+        var alternativaActual = 1
+        while(alternativaActual <= listaPreguntas.getElementsByTagName("div")[contadorDivs].numAlternativas){
+            json.push(listaPreguntas.getElementsByTagName("div")[contadorDivs+alternativaActual].contenido.value)
+            alternativaActual++
+        }
+        jsonTotal.push(json)
+        contadorDivs += listaPreguntas.getElementsByTagName("div")[contadorDivs].numAlternativas
+        contadorDivs++
+        preguntaActual++
+    }
+    console.log(jsonTotal);
+
+    /*
+    for(var i=0; i<encuesta.numPreguntas;i++){
+        console.log(listaPreguntas.getElementsByTagName("div"))
+        console.log(i)
+    }
+    */
+}
+
+/*
 function saveQuestions(){
     // estructurador de la encuesta (aun no se estan guardando en ninguna parte)
 	var container = document.getElementById("containerQuestions") // donde se encuentran todas las preguntas
@@ -187,6 +234,7 @@ function saveQuestions(){
 
 
 }
+*/
 
 
 
