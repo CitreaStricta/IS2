@@ -1,7 +1,7 @@
 from flask import render_template
 from db import get_db_connection
 from collections import Counter
-from __init__2 import app
+from __init__ import app
 
 @app.route('/crearEncuesta')
 def rutaCrearEncuesta():
