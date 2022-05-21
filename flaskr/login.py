@@ -1,5 +1,5 @@
 from flask import render_template
-from __init__2 import app
+from __init__ import app
 
 @app.route('/login')
 def rutaLogin():
