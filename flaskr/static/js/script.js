@@ -115,7 +115,7 @@ function addQuestion(){
     numberOfQuestion++;
 }
 
-const fetchData = (url_api,listOfQuestions) => {
+const fetchData = (url_api,datosEncuesta) => {
     
     return new Promise((resolve, reject) => { // resolve se ejecuta cuando la peticion fue exitosa (reject cuando no)
 
@@ -133,15 +133,17 @@ const fetchData = (url_api,listOfQuestions) => {
             }
         }
 
-        xhttp.send(JSON.stringify(listOfQuestions));
+        xhttp.send(JSON.stringify(datosEncuesta));
+        //xhttp.send(datosEncuesta);
     });
 }
 
-const fetchDataAsync = async(url_api,listOfQuestions) => {
+const fetchDataAsync = async(url_api,datosEncuesta) => {
     try {
-        const response = await fetchData(url_api,listOfQuestions);
+        const response = await fetchData(url_api,datosEncuesta);
         
         console.log(response)
+        alert("¿Encuesta enviada con exito?")
     } catch (error) {
         console.error(error.message);
     }
@@ -150,40 +152,47 @@ const fetchDataAsync = async(url_api,listOfQuestions) => {
 function saveQuestions(){
     var container = document.getElementById("containerTitulo")
     var encuesta = document.getElementById("containerEncuesta")
-    var titulo = container.titulo
-    var descripcion = container.descripcion
-    var fechaComienzo = container.fechaComienzo
-    var fechaTermino = container.fechaTermino
 
-    //console.log(container);
-    //console.log(encuesta);
+    var datosEncuesta = []
+    var jsonEncuesta = []
+
+    datosEncuesta.push(container.titulo.value)
+    datosEncuesta.push(container.descripcion.value)
+    datosEncuesta.push(container.fechaComienzo.value)
+    datosEncuesta.push(container.fechaTermino.value)
+
+    console.log(datosEncuesta);
 
     // Falta ingresar formato para tener en JSON la encuesta
     var listaPreguntas = encuesta.listPreguntas
-    var preguntas = listaPreguntas.getElementsByTagName("input")
-    //console.log(listaPreguntas);
-    //console.log(preguntas);
     var preguntaActual = 0
     var contadorDivs = 0 // este es el contador que iterara por listaPreguntas
-    var jsonTotal = []
     while(preguntaActual<encuesta.numPreguntas){
         //console.log(listaPreguntas.getElementsByTagName("div")[contadorDivs])
         //console.log(preguntaActual);
         //console.log(listaPreguntas.getElementsByTagName("div")[contadorDivs].contenidoPregunta.value)
         //console.log(listaPreguntas.getElementsByTagName("div")[contadorDivs].numAlternativas)
-        var json = []
-        json.push(listaPreguntas.getElementsByTagName("div")[contadorDivs].contenidoPregunta.value)
+        var json = {}
+        var alternativasDePregunta = []
+        json['Pregunta'] = (listaPreguntas.getElementsByTagName("div")[contadorDivs].contenidoPregunta.value)
         var alternativaActual = 1
         while(alternativaActual <= listaPreguntas.getElementsByTagName("div")[contadorDivs].numAlternativas){
-            json.push(listaPreguntas.getElementsByTagName("div")[contadorDivs+alternativaActual].contenido.value)
+            alternativasDePregunta.push(listaPreguntas.getElementsByTagName("div")[contadorDivs+alternativaActual].contenido.value)
             alternativaActual++
         }
-        jsonTotal.push(json)
+        json['Alternativas'] = alternativasDePregunta
+        jsonEncuesta.push(json)
         contadorDivs += listaPreguntas.getElementsByTagName("div")[contadorDivs].numAlternativas
         contadorDivs++
         preguntaActual++
     }
-    console.log(jsonTotal);
+    console.log(jsonEncuesta);
+    datosEncuesta.push(jsonEncuesta)
+    
+    var url_api = "http://127.0.0.1:5000/guardarEncuesta"
+    fetchDataAsync(url_api, datosEncuesta);
+
+    // mandar esto a python para enviar los datos con un json.stringify
 
     /*
     for(var i=0; i<encuesta.numPreguntas;i++){

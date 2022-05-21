@@ -1,6 +1,7 @@
 import os
+from pickle import TRUE
 import psycopg2
-from flask import Flask, render_template,request,url_for
+from flask import Flask, jsonify, render_template,request,url_for
 from flask_sqlalchemy import SQLAlchemy
 import json
 from wtforms import StringField, SubmitField
@@ -67,78 +68,29 @@ def create_app(test_config=None):
     def guardar_encuesta():
         if request.method == 'POST':
             # try:
-            preguntas = []
-            list_of_json = request.get_json(force=True)
-            for i in range(len(list_of_json)-1):
-            # print(list_of_json[i]['questionText'])
-            # preguntas = preguntas + [[list_of_json[i]['typeValue'], list_of_json[i]['questionText']]]
-                preguntas.append([list_of_json[i]['typeValue'], list_of_json[i]['questionText']])
-            # except Exception as e:
-            # print(e)
-            # parcear las preguntas para entregarselas a la base de datos
-            dict_a = {"Preguntas": preguntas}
-            print(dict_a)
+            datosEncuesta = request.get_json(force = True)
+            titulo=datosEncuesta[0]
+            descripcion=datosEncuesta[1]
+            fechaComienzo=datosEncuesta[2]
+            fechaTermino=datosEncuesta[3]
+            preguntas=datosEncuesta[4]
+            numPreguntas=len(preguntas)
 
             try:
                 conn = get_db_connection()
                 cur = conn.cursor()
-                print(list_of_json[len(list_of_json)-1])
-                #insert into encuesta values (1,'Como te sientes', '{"Preguntas": [["texto","¿Como te sientes hoy?"],["texto","¿Como te sentiste ayer?"]]}')
-                sql = 'INSERT INTO encuesta (id_encuesta, titulo_encuesta, preguntas) VALUES (DEFAULT,%s,%s);'
-                cur.execute(sql, (list_of_json[len(list_of_json)-1],json.dumps(dict_a)))
-                # print(cur.fetchone()[0])
-                # cur.execute('INSERT INTO encuesta[p')
-                    # sql = 'INSERT INTO pregunta(id_pregunta, tipo, encabezado, encuesta_asociada)'
-                    # cur.execute(sql, list_of_json[i]['questionNumber'], list_of_json[i]['typeValue'], list_of_json[i]['questionText'], list_of_json[i]['questionText'])
-                    # cur.execute('SELECT * FROM encuestado;')
-                    # id = cur.fetchone()[0]
+                #insert into encuesta (id_encuesta, titulo_encuesta, descripcion,fecha_comienzo,fecha_termino,preguntas[numPreguntas])
+                sql = 'INSERT INTO encuesta (id_encuesta, titulo_encuesta, descripcion,fecha_comienzo,fecha_termino,preguntas[%s]) VALUES (DEFAULT,%s,%s,%s,%s,%s);'
+                cur.execute(sql, (numPreguntas,titulo,descripcion,fechaComienzo,fechaTermino,json.dumps(preguntas)))
+                
                 conn.commit()
                 cur.close()
                 conn.close()
+                #return render_template('home.html')
             except Exception as e:
                 print(e)
 
         return {"hola": "mundo!"}
-
-    '''
-    @app.route('/guardarRespuesta', methods=['POST'] ) # Agregar parametro en el link
-    def guardar_encuesta():
-        if request.method == 'POST':
-            # try:
-            preguntas = []
-            list_of_json = request.get_json(force=True)
-            for i in range(len(list_of_json)):
-            # print(list_of_json[i]['questionText'])
-            # preguntas = preguntas + [[list_of_json[i]['typeValue'], list_of_json[i]['questionText']]]
-                preguntas.append([list_of_json[i]['typeValue'], list_of_json[i]['questionText']])
-            # except Exception as e:
-            # print(e)
-            # parcear las preguntas para entregarselas a la base de datos
-            dict_a = {"Preguntas": preguntas}
-            print(dict_a)
-
-            # print(json.dumps(json_preguntas))
-            print(json_preguntas)
-            try:
-                conn = get_db_connection()
-                cur = conn.cursor()
-                #insert into encuesta values (1,'Como te sientes', '{"Preguntas": [["texto","¿Como te sientes hoy?"],["texto","¿Como te sentiste ayer?"]]}')
-                sql = 'INSERT INTO responde (id_encuesta, titulo_encuesta, preguntas) VALUES (%s,%s,%s);'
-                cur.execute(sql, ('4', 'primera encuesta de prueba',json.dumps(dict_a)))
-                # print(cur.fetchone()[0])
-                # cur.execute('INSERT INTO encuesta[p')
-                    # sql = 'INSERT INTO pregunta(id_pregunta, tipo, encabezado, encuesta_asociada)'
-                    # cur.execute(sql, list_of_json[i]['questionNumber'], list_of_json[i]['typeValue'], list_of_json[i]['questionText'], list_of_json[i]['questionText'])
-                    # cur.execute('SELECT * FROM encuestado;')
-                    # id = cur.fetchone()[0]
-                conn.commit()
-                cur.close()
-                conn.close()
-            except Exception as e:
-                print(e)
-
-        return {"hola": "mundo!"}
-    '''
 
     @app.route('/mostrarEncuesta')
     def show_survey():
@@ -320,13 +272,8 @@ def create_app(test_config=None):
         cur.close()
         conn.close()
         return render_template('pruebaBD.html', encuestados=bdEncuestados)
-
+    
     return app
 
 
-'''
-@app.route('/antenas', methods=['GET'])
-def antenas():
-    return render_template('antenas.html') #el sistema sabe que tiene que buscar en la carpeta templates, por lo que
 
-'''
