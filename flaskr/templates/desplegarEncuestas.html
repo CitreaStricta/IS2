@@ -1,63 +1,66 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8">
-<title>HTML</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
- button {
-    width: 100%;
-    padding: 50px 0;
-    text-align: center;
-    background-color: lightblue;
-    margin-top: 20px;
-  }
-div {
-  display: none;
-}
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <meta charset="utf-8">
+  <title>HTML</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    button {
+      width: 100%;
+      padding: 50px 0;
+      text-align: center;
+      background-color: lightblue;
+      margin-top: 20px;
+    }
+
+    div {
+      display: none;
+    }
+
+    .button_answers button {
+      width: 10%;
+      padding: 20px 0;
+      text-align: center;
+      background-color: lightblue;
+      margin-top: 20px;
+      float: right
+    }
   </style>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 </head>
 
 <body>
+  <div id="text">a</div>
   <center>
-  <br>
-  {%for encuesta_i in range(encuestas.Encuestas|length)%}
+    <br>
+    {%for encuesta_i in range(datos.id|length)%}
 
     <div align="left" class="card bg-success text-white w-75 p-3">
-    <button id = {{encuestas.Id[encuesta_i]}} onclick=DesplegarEncuestas(this)>
-    Encuesta {{ encuesta_i+1 }} 
-    <br>{{encuestas.Encuestas[encuesta_i]}}<br>
-    </button>
-    <div id = {{encuestas.Id[encuesta_i]}}_>
+      <button id={{datos.id[encuesta_i]}} onclick=DesplegarEncuestas(this)> Encuesta {{ encuesta_i+1 }}
+        <br>{{datos.titulo[encuesta_i]}}<br>
+      </button>
+      <div id={{datos.id[encuesta_i]}}_ class="button_answers">
+        <button id={{datos.id[encuesta_i]}}_respuestas onclick=DesplegarRespuestas(this)>Ver respuestas</button>
 
-    {%for pregunta_i in range(encuestas.Preguntas[encuesta_i]|length)%}
+        {%for pregunta_i in range(datos.preguntas[encuesta_i]|length)%}
+        <h2>Pregunta {{pregunta_i + 1}}: {{datos.preguntas[encuesta_i][pregunta_i]}}</h2>
 
-      <h2>Pregunta {{pregunta_i + 1}}: {{encuestas.Preguntas[encuesta_i][pregunta_i]}} 
-      {% if encuestas.Porcentajes[encuesta_i][pregunta_i][0]|length != 0 %}
-      <br>No hay respuestas</br>
-      {% endif %}
-      </h2>
+          {%for respuesta_i in range(datos.alternativas[encuesta_i][pregunta_i]|length)%}
+          <h2 id="{{datos.id[encuesta_i]}}_respuestas_{{pregunta_i}}_{{respuesta_i}}">{{respuesta_i + 1}}) {{datos.alternativas[encuesta_i][pregunta_i][respuesta_i]}}
 
-      {%for respuesta_i in range(encuestas.Alternativas[encuesta_i][pregunta_i]|length)%}
+          </h2>
 
-        <h2>{{respuesta_i + 1}}) {{encuestas.Alternativas[encuesta_i][pregunta_i][respuesta_i]}}
-        {% if encuestas.Porcentajes[encuesta_i][pregunta_i][respuesta_i+1] != null  %}
-        {{encuestas.Porcentajes[encuesta_i][pregunta_i][respuesta_i+1]}} %
-        {% endif %}
-        </h2>
+          {%endfor%}
 
-      {%endfor%}
-    
-
-    {%endfor%}
-    </div>
+        {%endfor%}
+      </div>
     </div>
     <br>
-  {%endfor%}
+    {%endfor%}
   </center>
 </body>
 </html>
-
 
 <script src="{{url_for('static', filename='js/desplegar_encuestas.js')}}"></script>
