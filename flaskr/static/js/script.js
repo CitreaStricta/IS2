@@ -156,15 +156,40 @@ function saveQuestions(){
     var datosEncuesta = []
     var jsonEncuesta = []
 
-    datosEncuesta.push(container.titulo.value)
-    datosEncuesta.push(container.descripcion.value)
-    datosEncuesta.push(container.fechaComienzo.value)
-    datosEncuesta.push(container.fechaTermino.value)
+    var titulo = container.titulo.value
+    var descripcion = container.descripcion.value
+    var fechaComienzo = container.fechaComienzo.value
+    var fechaTermino = container.fechaTermino.value
 
-    console.log(datosEncuesta);
+    if(!titulo){
+        alert("Inserte un Titulo a la encuesta")
+        return
+    }
+    datosEncuesta.push(titulo)
+    if(!descripcion){
+        alert("Inserte una Descripción a la encuesta")
+        return
+    }
+    datosEncuesta.push(descripcion)
+    if(!fechaComienzo){
+        alert("Designe una fecha de comienzo a la encuesta")
+        return
+    }
+    datosEncuesta.push(fechaComienzo)
+    if(!fechaTermino){
+        alert("Designe una fecha de termino a la encuesta")
+        return
+    }
+    datosEncuesta.push(fechaTermino)
+
+    //console.log(datosEncuesta);
 
     // Falta ingresar formato para tener en JSON la encuesta
     var listaPreguntas = encuesta.listPreguntas
+    if(encuesta.numPreguntas==0){
+        alert("Agregue al menos una pregunta a la encuesta")
+        return
+    }
     var preguntaActual = 0
     var contadorDivs = 0 // este es el contador que iterara por listaPreguntas
     while(preguntaActual<encuesta.numPreguntas){
@@ -174,10 +199,25 @@ function saveQuestions(){
         //console.log(listaPreguntas.getElementsByTagName("div")[contadorDivs].numAlternativas)
         var json = {}
         var alternativasDePregunta = []
-        json['Pregunta'] = (listaPreguntas.getElementsByTagName("div")[contadorDivs].contenidoPregunta.value)
+        var contenidoDePregunta = listaPreguntas.getElementsByTagName("div")[contadorDivs].contenidoPregunta.value
+        if(!contenidoDePregunta){
+            alert("inserte el enunciado de la pregunta " + (preguntaActual+1))
+            return;
+        }
+        json['Pregunta'] = contenidoDePregunta
         var alternativaActual = 1
-        while(alternativaActual <= listaPreguntas.getElementsByTagName("div")[contadorDivs].numAlternativas){
-            alternativasDePregunta.push(listaPreguntas.getElementsByTagName("div")[contadorDivs+alternativaActual].contenido.value)
+        var numAlternativasActual = listaPreguntas.getElementsByTagName("div")[contadorDivs].numAlternativas
+        if(numAlternativasActual==0){
+            alert("La pregunta " + (preguntaActual+1) + " no tiene alternativas")
+            return
+        }
+        while(alternativaActual <= numAlternativasActual){
+            contenidoAlternativa = listaPreguntas.getElementsByTagName("div")[contadorDivs+alternativaActual].contenido.value
+            if(!contenidoAlternativa){
+                alert("La pregunta " + (preguntaActual+1) + " no tiene contenido en la alternativa " + alternativaActual)
+                return
+            }
+            alternativasDePregunta.push(contenidoAlternativa)
             alternativaActual++
         }
         json['Alternativas'] = alternativasDePregunta
@@ -186,110 +226,9 @@ function saveQuestions(){
         contadorDivs++
         preguntaActual++
     }
-    console.log(jsonEncuesta);
+    //console.log(jsonEncuesta);
     datosEncuesta.push(jsonEncuesta)
     
     var url_api = "http://127.0.0.1:5000/guardarEncuesta"
     fetchDataAsync(url_api, datosEncuesta);
-
-    // mandar esto a python para enviar los datos con un json.stringify
-
-    /*
-    for(var i=0; i<encuesta.numPreguntas;i++){
-        console.log(listaPreguntas.getElementsByTagName("div"))
-        console.log(i)
-    }
-    */
 }
-
-/*
-function saveQuestions(){
-    // estructurador de la encuesta (aun no se estan guardando en ninguna parte)
-	var container = document.getElementById("containerQuestions") // donde se encuentran todas las preguntas
-	var title = document.getElementById("containerTitle").getElementsByTagName("input") // obtiene el elemento de la div class con nombre containerTitle
-    var questions = container.getElementsByTagName("input") //pregunta
-	var select = container.getElementsByTagName("select") //tipo de respuesta
-
-	var totalQuestions = questions.length // cantidad de preguntas (?)
-
-    // le entrega sus valores a cada pregunta (?)
-    listOfQuestions = []
-	for(let i=0 ; i<totalQuestions ; i++){
-		var questionObject = {}
-		var numberOfCurrentquestion = i + 1
-		var currentQuestion = questions[i].value
-		var typeValue = select[i].value
-
-		questionObject['questionNumber'] = numberOfCurrentquestion
-		questionObject['questionText'] = currentQuestion
-		questionObject['typeValue'] = typeValue
-
-		listOfQuestions.push(questionObject)
-	}
-    console.log(title[0].value)
-    listOfQuestions.push(title[0].value)
-
-    var url_api = "http://127.0.0.1:5000/guardarEncuesta"
-    fetchDataAsync(url_api, listOfQuestions);
-
-
-
-	console.log(listOfQuestions)
-
-    
-
-    // aqui debe ir la coneccion con la bd
-    // asegurarse de que no se ingresen multiples encuestas iguales cada vez que se precione Guardar
-
-
-}
-*/
-
-
-
-/*
-// genera nuevo campo dinamico al apretar "mas" o "agrega otro campo de pregunta"
-function addQuestion(){
-	var container = document.getElementById("containerQuestions")
-    // generacion de un campo input (la pregunta en si) 
-	var input = document.createElement("input")
-    input.name = "input" + numberOfQuestion;
-    input.id = "inputId" + numberOfQuestion
-    input.contenedor = document.createElement("div")
-    input.contenedor.id="contenedorAlternativas"
-    input.numberOfAlternativas = 0
-
-    
-    var button = document.createElement("button")
-    button.innerHTML = '+ alternativa';
-    button.value = numberOfAlternativas
-    button.onclick = function(){
-        console.log("se apreto el boton")
-        
-        // generacion de un campo input (la pregunta en si) 
-        var alternativa = document.createElement("input") // se refiere a un h1, un div, un boton, un elemento HTML
-        alternativa.id = "alternativaId" + input.numberOfAlternativas;
-        alternativa.placeholder = "Add Alternativa here" // place holder
-        alternativa.name = "input" + input.numberOfAlternativas;
-        input.numberOfAlternativas++;
-
-        input.contenedor.appendChild(alternativa)
-        input.contenedor.appendChild(document.createElement("br")) // br es un salto de linea
-    };
-
-    input.placeholder = "Add question here" // place holder
-    //addAlternativa(input.number)
-    //addAlternativa()
-
-    numberOfQuestion++
-
-    container.appendChild(input)
-    container.appendChild(button)
-    container.appendChild(document.createElement("br"))
-}
-*/
-
-
-
-
-
