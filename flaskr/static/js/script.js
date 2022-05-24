@@ -153,7 +153,6 @@ function addQuestion(){
     input.contenedor = document.createElement("div")
     input.contenedor.id="contenedorAlternativas"
     input.numberOfAlternativas = 0
-
     
     var button = document.createElement("button")
     button.innerHTML = '+ alternativa';
@@ -167,24 +166,15 @@ function addQuestion(){
         alternativa.placeholder = "Add Alternativa here" // place holder
         alternativa.name = "input" + input.numberOfAlternativas;
         input.numberOfAlternativas++;
-
         input.contenedor.appendChild(alternativa)
         input.contenedor.appendChild(document.createElement("br")) // br es un salto de linea
     };
-
     input.placeholder = "Add question here" // place holder
     //addAlternativa(input.number)
     //addAlternativa()
-
     numberOfQuestion++
-
     container.appendChild(input)
     container.appendChild(button)
     container.appendChild(document.createElement("br"))
 }
 */
-
-
-
-
-
