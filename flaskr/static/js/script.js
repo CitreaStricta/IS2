@@ -1,116 +1,68 @@
 //let XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest; //same as import
 var numberOfQuestion = 0;
 
-// FALTA IMPLEMENTAR BOTON PARA ELIMINAR PREGUNTAS Y BOTON PARA ELIMINAR ALTERNATIVAS
-// FALTA INDICAR EL NUMERO DE LA PREGUNTA
 function addTitle(){
     var container = document.getElementById("containerTitle") // la div class
-    // generacion de un campo input (Para asignar titulo) 
+    // generacion de un campo input (la pregunta en si) 
 	var title = document.createElement("input") // se refiere a un h1, un div, un boton, un elemento HTML
     title.id = "titleId"
     title.placeholder = "Add Title here" // place holder
     
-    var descripcion = document.createElement("input") // se refiere a un h1, un div, un boton, un elemento HTML
-    descripcion.id = "descripcionId"
-    descripcion.placeholder = "Add Descripción here" // place holder
-
-    var fechaComienzo = document.createElement("input")
-    fechaComienzo.id= "fechaComienzoId"
-    fechaComienzo.type= "date"
-    var fechaTermino = document.createElement("input")
-    fechaTermino.id= "fechaTerminoId"
-    fechaTermino.type= "date"
-
-    container.appendChild(document.createTextNode("Titulo:"))
-    container.appendChild(document.createElement("br")) // br es un salto de linea
     container.appendChild(title)
     container.appendChild(document.createElement("br")) // br es un salto de linea
     container.appendChild(document.createElement("br")) // br es un salto de linea
-    container.appendChild(document.createTextNode("Descripcion:"))
-    container.appendChild(document.createElement("br")) // br es un salto de linea
-    container.appendChild(descripcion)
-    container.appendChild(document.createElement("br")) // br es un salto de linea
-    container.appendChild(document.createElement("br")) // br es un salto de linea
-    container.appendChild(document.createTextNode("Fecha Comienzo:"))
-    container.appendChild(fechaComienzo)
-    container.appendChild(document.createTextNode("   Fecha Termino:"))
-    container.appendChild(fechaTermino)
 }
 
-function addAlternativa(listAlternativa){
+function addAlternativa(contenedor){
+    var containerAlternativa = contenedor // la div class en donde va
+    var input = contenedor.getElementsByTagName("input") //pregunta
     //containerAlternativa.appendChild(document.createElement("&nbsp"))
     // generacion de un campo input (la pregunta en si) 
+	var alternativa = document.createElement("input") // se refiere a un h1, un div, un boton, un elemento HTML
+    alternativa.id = "alternativaId" + input.numberOfAlternativas;
+    alternativa.placeholder = "Add Alternativa here" // place holder
+    alternativa.name = "input" + input.numberOfAlternativas;
 
-    var alternativa = document.createElement("div")
-
-	alternativa.contenido = document.createElement("input") // se refiere a un h1, un div, un boton, un elemento HTML
-    alternativa.contenido.id = "alternativaId" + listAlternativa.length;
-    alternativa.contenido.placeholder = "Add Alternativa here" // place holder
-    alternativa.contenido.name = "input" + listAlternativa.length;
-
-    alternativa.boton = document.createElement('button');
-    alternativa.boton.innerHTML = "- alternativa"
-    alternativa.boton.addEventListener('click', function(){
-        // funcion que elimina la alternativa
-        listAlternativa.removeChild(alternativa)
-    });
-
-    alternativa.appendChild(alternativa.contenido)
-    alternativa.appendChild(alternativa.boton)
-    alternativa.appendChild(document.createElement("br"))
-
-    listAlternativa.appendChild(alternativa)
+    containerAlternativa.appendChild(alternativa)
 }
 
 // genera nuevo campo dinamico al apretar "mas" o "agrega otro campo de pregunta"
-function addEncuesta(){
-    var encuesta = document.getElementById("containerEncuesta")
-    var listPregunta = document.createElement("ul")
-    encuesta.listPreguntas = listPregunta
-
-    encuesta.appendChild(encuesta.listPreguntas)
-    
-}
-
 function addQuestion(){
-    var encuesta = document.getElementById("containerEncuesta")
+	var container = document.getElementById("containerQuestions")
+    container.appendChild(document.createElement("br"))
+    // generacion de un campo input (la pregunta en si) 
+	var input = document.createElement("input")
+    input.name = "input" + numberOfQuestion;
+    input.id = "inputId" + numberOfQuestion
+    input.numberOfAlternativas = 0
+
     
-    var pregunta = document.createElement("div")
-
-    pregunta.contenidoPregunta = document.createElement("input")
-    pregunta.contenidoPregunta.name = "input" + numberOfQuestion
-    pregunta.contenidoPregunta.id = "inputId" + numberOfQuestion
-    pregunta.contenidoPregunta.placeholder = "Add Pregunta here"
-
-    pregunta.alternativas = document.createElement("ul")
-
-    pregunta.botonAlternativas = document.createElement('button');
-    pregunta.botonAlternativas.innerHTML = "+ alternativa"
-    pregunta.botonAlternativas.addEventListener('click', function(){
-        addAlternativa(pregunta.alternativas);
+    var inputElement = document.createElement('button');
+    inputElement.innerHTML = "+ alternativa"
+    //inputElement.type = "button"
+    inputElement.addEventListener('click', function(){
+        addAlternativa(container);
+        input.numberOfAlternativas++;
     });
 
-    pregunta.botonPregunta = document.createElement('button');
-    pregunta.botonPregunta.innerHTML = "- pregunta"
-    pregunta.botonPregunta.addEventListener('click', function(){
-        // funcion que elimina la pregunta
-        encuesta.listPreguntas.removeChild(pregunta)
-    });
+    input.placeholder = "Add question here" // place holder
+    //addAlternativa(input.number)
+    //addAlternativa()
 
-    pregunta.appendChild(document.createElement("br"))
-    pregunta.appendChild(pregunta.contenidoPregunta)
-    pregunta.appendChild(pregunta.botonPregunta)
-    pregunta.appendChild(pregunta.botonAlternativas)
-    pregunta.appendChild(pregunta.alternativas)
+    numberOfQuestion++
 
-    encuesta.listPreguntas.appendChild(pregunta)
+    container.appendChild(input)
+    container.appendChild(inputElement)
+    container.appendChild(document.createElement("br"))
 
-    addAlternativa(pregunta.alternativas)
-
-    numberOfQuestion++;
-    console.log(encuesta.listPreguntas);
+    addAlternativa(container)
+    addAlternativa(container)
 }
 
+/*function removeQuestion(index){
+    var container = document.getElementById("containerQuestions")
+    container.remove()
+}*/
 
 
 const fetchData = (url_api,listOfQuestions) => {
