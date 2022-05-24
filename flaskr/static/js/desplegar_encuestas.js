@@ -1,5 +1,5 @@
 function DesplegarEncuestas(btn) {
-    var x = document.getElementById(btn.id + "_");
+    var x = document.getElementById("contenido_"+btn.id);
     //alert(btn.id );
     if (x.style.display === "none" || x.style.display === "") {
       x.style.display = "block";
@@ -9,7 +9,8 @@ function DesplegarEncuestas(btn) {
     }
   }
 function DesplegarRespuestas(btn){
-  //alert(document.getElementById("text"));
+  var element = document.getElementById(btn.id)
+  element.classList.add("active");
   var id_encuesta = btn.id;
   $.ajax({
     url: "/get_word",
@@ -17,22 +18,26 @@ function DesplegarRespuestas(btn){
     data: {id_encuesta: id_encuesta},
     success: function(response) {
       if($.type(response.porcentajes) === "string"){
+        element.classList.remove("active");
         $("#"+id_encuesta).html(response.porcentajes);
-        console.log("#"+id_encuesta);
+        
       }
       else{
         for (var i = 0; i < response.porcentajes.length; i++) {
           for (var j = 0; j < response.porcentajes[0].length; j++) {
             $("#"+id_encuesta+"_"+i+"_"+j).append(" ("+response.porcentajes[i][j]+"%)");
-            //document.getElementById(id_encuesta+"_"+i+"_"+j).innerHTML = " ("+response.porcentajes[i][j]+"%)";
-            console.log("#"+id_encuesta+"_"+i+"_"+j);
           }
         }
+        setTimeout(function(){
+          element.classList.add("success");
+        },100)
       }
   },
   error: function(xhr) {
     //Do Something to handle error
+    alert("Error al conectar con la base de datos");
   }
   });
-  //document.getElementById("text").innerHTML="My First JavaScript Function";
+
+  btn.disabled = true;
 }
