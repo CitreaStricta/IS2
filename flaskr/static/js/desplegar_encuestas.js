@@ -8,6 +8,7 @@ function DesplegarEncuestas(btn) {
       //alert(btn.id);
     }
   }
+
 function DesplegarRespuestas(btn){
   var element = document.getElementById(btn.id)
   element.classList.add("active");

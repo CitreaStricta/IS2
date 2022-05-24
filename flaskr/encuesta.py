@@ -1,8 +1,7 @@
-from flask import render_template
+from flask import render_template,request
 import flask
 from db import get_db_connection
 from collections import Counter
-import pandas as pd
 from __init__ import app
 
 @app.route('/crearEncuesta')
@@ -13,34 +12,25 @@ def rutaCrearEncuesta():
 def guardar_encuesta():
     if request.method == 'POST':
         # try:
-        preguntas = []
-        list_of_json = request.get_json(force=True)
-        for i in range(len(list_of_json)-1):
-        # print(list_of_json[i]['questionText'])
-        # preguntas = preguntas + [[list_of_json[i]['typeValue'], list_of_json[i]['questionText']]]
-            preguntas.append([list_of_json[i]['typeValue'], list_of_json[i]['questionText']])
-        # except Exception as e:
-        # print(e)
-        # parcear las preguntas para entregarselas a la base de datos
-        dict_a = {"Preguntas": preguntas}
-        print(dict_a)
+        datosEncuesta = request.get_json(force = True)
+        titulo=datosEncuesta[0]
+        descripcion=datosEncuesta[1]
+        fechaComienzo=datosEncuesta[2]
+        fechaTermino=datosEncuesta[3]
+        preguntas=datosEncuesta[4]
+        numPreguntas=len(preguntas)
 
         try:
             conn = get_db_connection()
             cur = conn.cursor()
-            print(list_of_json[len(list_of_json)-1])
-            #insert into encuesta values (1,'Como te sientes', '{"Preguntas": [["texto","¿Como te sientes hoy?"],["texto","¿Como te sentiste ayer?"]]}')
-            sql = 'INSERT INTO encuesta (id_encuesta, titulo_encuesta, preguntas) VALUES (DEFAULT,%s,%s);'
-            cur.execute(sql, (list_of_json[len(list_of_json)-1],json.dumps(dict_a)))
-            # print(cur.fetchone()[0])
-            # cur.execute('INSERT INTO encuesta[p')
-                # sql = 'INSERT INTO pregunta(id_pregunta, tipo, encabezado, encuesta_asociada)'
-                # cur.execute(sql, list_of_json[i]['questionNumber'], list_of_json[i]['typeValue'], list_of_json[i]['questionText'], list_of_json[i]['questionText'])
-                # cur.execute('SELECT * FROM encuestado;')
-                # id = cur.fetchone()[0]
+            #insert into encuesta (id_encuesta, titulo_encuesta, descripcion,fecha_comienzo,fecha_termino,preguntas[numPreguntas])
+            sql = 'INSERT INTO encuesta (id_encuesta, titulo_encuesta, descripcion,fecha_comienzo,fecha_termino,preguntas[%s]) VALUES (DEFAULT,%s,%s,%s,%s,%s);'
+            cur.execute(sql, (numPreguntas,titulo,descripcion,fechaComienzo,fechaTermino,json.dumps(preguntas)))
+            
             conn.commit()
             cur.close()
             conn.close()
+            #return render_template('home.html')
         except Exception as e:
             print(e)
 
