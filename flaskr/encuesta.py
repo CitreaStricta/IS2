@@ -36,6 +36,58 @@ def guardar_encuesta():
 
     return {"hola": "mundo!"}
 
+@app.route('/editarEncuestas')
+def rutaEditarEncuestas():
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    # EN VOLA ESTO DSPS HAY QUE EDITARLO 
+    id_encuestas = [1,2,3,4,5,6,7,8] #encuestas a seleccionar
+
+    #creo texto para usar en la sentencias sql seleccionando id de las encuestas con respecto al usuario
+    text_id_encuesta = ''
+    cantidad_id_encuesta = len(id_encuestas)
+
+    for i in range(cantidad_id_encuesta):
+        text_id_encuesta += 'id_encuesta = ' + str(id_encuestas[i])
+
+        if i is not cantidad_id_encuesta - 1:
+            text_id_encuesta += ' OR '
+        else:
+            text_id_encuesta += ' '
+    
+    #EXTRAE DATOS DE_TODO LO NECESARIO DE LA DB
+    sentenciaSQL = '''\
+    SELECT encuesta.id_encuesta, encuesta.titulo_encuesta, encuesta.descripcion, encuesta.fecha_comienzo, encuesta.fecha_termino,
+    encuesta.preguntas FROM encuesta WHERE ''' + text_id_encuesta + '''ORDER BY encuesta.id_encuesta'''
+    cur.execute(sentenciaSQL)
+    db_data = cur.fetchall()
+    cur.close()
+    conn.close()
+
+    id_encuesta = [item[0] for item in db_data]
+    titulo_encuesta = [item[1] for item in db_data]
+    descripcion_encuesta = [item[2] for item in db_data]
+    fecha_comienzo_encuesta = [item[3] for item in db_data]
+    fecha_termino_encuesta = [item[4] for item in db_data]
+    preguntas_alternativas_encuesta = [item[5][0] for item in db_data]
+
+    preguntas_encuesta = []
+    alternativas_encuesta = []
+
+    
+    for i in range(len(preguntas_alternativas_encuesta)):
+        preguntas = [item['Pregunta'] for item in preguntas_alternativas_encuesta[i]]
+        alternativas = [item['Alternativas'] for item in preguntas_alternativas_encuesta[i]]
+        
+        preguntas_encuesta.append(preguntas)
+        alternativas_encuesta.append(alternativas)
+    
+    datos = {"id":id_encuesta, "titulo":titulo_encuesta, "descripcion":descripcion_encuesta, "fecha_comienzo":fecha_comienzo_encuesta, 
+            "fecha_termino":fecha_termino_encuesta, "preguntas":preguntas_encuesta, "alternativas":alternativas_encuesta}
+
+    return render_template('desplegarEditarEncuestas.html', datos=datos)
+
 @app.route('/verEncuestas')
 def rutaDesplegarEncuestas():
     conn = get_db_connection()
