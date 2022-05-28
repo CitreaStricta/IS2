@@ -1,0 +1,9 @@
+<div>
+        {% if current_user.is_anonymous %}
+        <a href="/login" class="right">Entrar</a>
+        <a href="/signup" class="right">Registrar</a>
+        {% else %}
+        <a href="/logout" class="right">Salir</a>
+        <a class="right">Bienvenido {{current_user.name}}</a>
+        {% endif %}
+</div>

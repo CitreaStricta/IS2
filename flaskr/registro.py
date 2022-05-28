@@ -2,7 +2,6 @@ from flask import render_template, request, redirect, url_for
 from forms import SignupForm
 from __init__ import app
 from flask_login import current_user,login_user
-from base_de_datos_prueba import users,get_user
 from usuario import User
 
 @app.route("/signup/", methods=["GET", "POST"])

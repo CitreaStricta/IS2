@@ -2,7 +2,7 @@ from flask import render_template,request
 import flask
 from db import get_db_connection
 from collections import Counter
-from __init__ import app
+from __init__ import app ,db
 
 @app.route('/crearEncuesta')
 #@login_required
@@ -22,16 +22,8 @@ def guardar_encuesta():
         numPreguntas=len(preguntas)
 
         try:
-            conn = get_db_connection()
-            cur = conn.cursor()
-            #insert into encuesta (id_encuesta, titulo_encuesta, descripcion,fecha_comienzo,fecha_termino,preguntas[numPreguntas])
             sql = 'INSERT INTO encuesta (id_encuesta, titulo_encuesta, descripcion,fecha_comienzo,fecha_termino,preguntas[%s]) VALUES (DEFAULT,%s,%s,%s,%s,%s);'
-            cur.execute(sql, (numPreguntas,titulo,descripcion,fechaComienzo,fechaTermino,json.dumps(preguntas)))
-            
-            conn.commit()
-            cur.close()
-            conn.close()
-            #return render_template('home.html')
+            db.execute(sql, (numPreguntas,titulo,descripcion,fechaComienzo,fechaTermino,json.dumps(preguntas)))
         except Exception as e:
             print(e)
 
@@ -88,44 +80,6 @@ def rutaDesplegarEncuestas():
 
     return render_template('desplegarEncuestas.html', datos=datos)
 
-@app.route('/verResumenEncuestas')
-def verResumenEncuesta():
-    conn = get_db_connection()
-    cur = conn.cursor()
-
-    id_encuestas = [1,2,3] #encuestas a seleccionar
-
-    text_id_encuesta = ''
-    cantidad_id_encuesta = len(id_encuestas)
-
-    for i in range(cantidad_id_encuesta):
-        text_id_encuesta += 'id_encuesta = ' + str(id_encuestas[i])
-
-        if i is not cantidad_id_encuesta - 1:
-            text_id_encuesta += ' OR '
-        else:
-            text_id_encuesta += ';'
-    
-    #EXTRAE DATOS DE LAS ENCUESTAS EN LA DB
-    sentenciaSQL = 'SELECT * FROM encuesta WHERE ' + text_id_encuesta
-    print("Sentencia SQL",sentenciaSQL)
-    cur.execute(sentenciaSQL)
-    bdEncuestas = cur.fetchall()
-    
-    #EXTRAE DATOS DE LAS RESPUESTAS DE LA DB
-    sentenciaSQL = 'SELECT * FROM respuesta WHERE ' + text_id_encuesta
-    cur.execute(sentenciaSQL)
-    bdRespuestas = cur.fetchall()
-
-    cur.close()
-    conn.close()
-
-
-    print("*"*60)
-    print("bd_encuestas",bdEncuestas)
-    print("bd_respuestas",bdRespuestas)
-    return render_template('verResumenEncuestas.html',data = bdRespuestas)
-
 @app.route('/get_word')
 def get_prediction():
     id_encuesta = flask.request.args.get('id_encuesta')[0]
@@ -152,10 +106,6 @@ def get_prediction():
             porcentajes_i.append(count[str(i+1)] / total * 100)
         porcentajes.append(porcentajes_i)
     return flask.jsonify({'porcentajes':porcentajes})
-
-@app.route('/prueba')
-def prueba():
-    return flask.render_template('prueba.html')
     
 @app.route('/agregarmail')
 def agregarmail():

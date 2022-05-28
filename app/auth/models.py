@@ -1,7 +1,6 @@
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-from db import get_db_connection
-from __init__ import db 
+from app import db 
 
 class User(UserMixin):
     def __init__(self, name ,email, password, is_admin=False):
@@ -32,7 +31,7 @@ class User(UserMixin):
         return check_password_hash(self.password, password)
 
     def select_user(email):
-        user = db.fetch_one('SELECT * FROM encuestado_prueba WHERE correo = (%s);', (str(email),))
+        user = db.fetch_one('SELECT * FROM encuestado_prueba WHERE correo = (%s);', (email,))
         print("user:",user)
         if user is not None:
             return User(user[1],user[0],user[2])

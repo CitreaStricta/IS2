@@ -3,8 +3,6 @@ from werkzeug.urls import url_parse
 from forms import LoginForm
 from flask_login import LoginManager, logout_user, current_user, login_user, login_required
 from __init__ import app
-
-from base_de_datos_prueba import users,get_user
 from usuario import User
 
 login_manager = LoginManager(app)
