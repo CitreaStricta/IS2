@@ -5,6 +5,7 @@ from collections import Counter
 from __init__ import app
 
 @app.route('/crearEncuesta')
+#@login_required
 def rutaCrearEncuesta():
     return render_template('crearEncuesta.html')
 

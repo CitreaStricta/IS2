@@ -123,7 +123,13 @@ body {
   <a href="/crearEncuesta">Crear Encuesta</a>
   <a href="/verEncuestas">Ver Encuestas Creadas</a>
   <a href="/agregarmail">Agregar Mails</a>
-  <a href="/login" class="right">Login</a> 
+  {% if current_user.is_anonymous %}
+    <a href="/login" class="right">Login</a> 
+    <a href="/signup" class="right">Register</a> 
+  {% else %}
+  <a href="/logout" class="right">Logout</a> 
+  <a class="right">Welcome {{current_user.name}}</a>
+  {% endif %}
 </div>
 
 <div class="row">

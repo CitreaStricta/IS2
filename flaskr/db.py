@@ -9,3 +9,43 @@ def get_db_connection():
     connstr = "host=%s port=%s user=%s password=%s dbname=%s" % (DBHOST, DBPORT, DBUSER, DBPASSWORD, DATABASE)
     conn = psycopg2.connect(connstr)
     return conn
+
+class Database:
+    def __init__(self, db, user, password, port, host):
+        self.db = db
+        self.user = user
+        self.password = password
+        self.port = port 
+        self.host = host
+
+    def connect(self):
+        self.connection = psycopg2.connect(
+            database=self.db,
+            user=self.user,
+            password=self.password,
+            port=self.port,
+            host=self.host
+        )
+
+    def fetch_all(self, query, values=None):
+        cursor = self.connection.cursor()
+        cursor.execute(query, values)
+        result = cursor.fetchall()
+        cursor.close()
+        return result
+    
+    def fetch_one(self, query, values=None):
+        cursor = self.connection.cursor()
+        cursor.execute(query, values)
+        result = cursor.fetchone()
+        cursor.close()
+        return result
+
+    def execute(self, query, values=None):
+        cursor = self.connection.cursor()
+        cursor.execute(query, values)
+        self.connection.commit()
+        cursor.close() 
+
+    def close(self):
+        self.connection.close()  

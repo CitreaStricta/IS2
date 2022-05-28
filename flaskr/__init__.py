@@ -42,10 +42,24 @@ def create_app(test_config=None):
     return app
 
 app = create_app()
+app.config['SECRET_KEY'] = '7110c8ae51a4b5af97be6534caef90e4bb9bdcb3380af008f90b23a5d1616bf319bc298105da20fe'
+
+from db import Database
+
+db = Database(
+    db = "d28t56b7dpk32k",
+    user = "zntctcuflomgsk",
+    password = "43061258b91aaa3cf85b9c222443c57f889531d4478e8e0e69abcd715daf419c",
+    port = "5432",
+    host = "ec2-52-5-110-35.compute-1.amazonaws.com"
+)
+db.connect()
 
 from home import *
 from login import *
 from encuesta import *
+from registro import *
+from login import *
 
 
 
