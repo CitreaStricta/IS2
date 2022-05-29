@@ -31,7 +31,8 @@ class User(UserMixin):
     def check_password(self, password):
         return check_password_hash(self.password, password)
 
-    def select_user(email):
+    @classmethod
+    def select_user(self,email):
         user = db.fetch_one('SELECT * FROM encuestado_prueba WHERE correo = (%s);', (str(email),))
         print("user:",user)
         if user is not None:

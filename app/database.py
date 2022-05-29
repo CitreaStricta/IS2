@@ -28,24 +28,30 @@ class Database:
         )
 
     def fetch_all(self, query, values=None):
+        self.connect()
         cursor = self.connection.cursor()
         cursor.execute(query, values)
         result = cursor.fetchall()
         cursor.close()
+        self.close()
         return result
     
     def fetch_one(self, query, values=None):
+        self.connect()
         cursor = self.connection.cursor()
         cursor.execute(query, values)
         result = cursor.fetchone()
         cursor.close()
+        self.close()
         return result
 
     def execute(self, query, values=None):
+        self.connect()
         cursor = self.connection.cursor()
         cursor.execute(query, values)
         self.connection.commit()
         cursor.close() 
+        self.close()
 
     def close(self):
         self.connection.close()  

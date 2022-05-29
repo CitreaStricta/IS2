@@ -11,7 +11,6 @@ db = Database(
     port = "5432",
     host = "ec2-52-5-110-35.compute-1.amazonaws.com"
 )
-db.connect()
 
 def create_app():
     app = Flask(__name__)
@@ -23,8 +22,8 @@ def create_app():
     # Registro de los Blueprints
     from .auth import auth_bp
     app.register_blueprint(auth_bp)
-    #from .admin import admin_bp
-    #app.register_blueprint(admin_bp)
+    from .admin import admin_bp
+    app.register_blueprint(admin_bp)
     from .public import public_bp
     app.register_blueprint(public_bp)
     return app

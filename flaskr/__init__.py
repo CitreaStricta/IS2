@@ -53,7 +53,6 @@ db = Database(
     port = "5432",
     host = "ec2-52-5-110-35.compute-1.amazonaws.com"
 )
-db.connect()
 
 from home import *
 from login import *

@@ -22,16 +22,29 @@ def login():
         email = form.email.data
         passoword = form.password.data
         remember = form.remember_me.data
+        print("emailemail",email)
+        user = User.select_user(str(email))
 
-        user = User.select_user(email)
-        if user is not None and user.check_password(form.password.data):
-            login_user(user, remember=remember)
-            next_page = request.args.get('next')
-            if not next_page or url_parse(next_page).netloc != '':
-                next_page = url_for('rutaBase')
-            return redirect(next_page)
+        if user is None:
+            error = f'Email no registrado'
         else:
-            error = f'Datos incorrectos, intentelo nuevamente'
+            if user.check_password(form.password.data) is False:
+                error = f'Contraseña invalida'
+            else:
+                login_user(user, remember=remember)
+                next_page = request.args.get('next')
+                if not next_page or url_parse(next_page).netloc != '':
+                    next_page = url_for('rutaBase')
+                return redirect(next_page)
+
+        #if user is not None and user.check_password(form.password.data):
+        #    login_user(user, remember=remember)
+        #    next_page = request.args.get('next')
+        #    if not next_page or url_parse(next_page).netloc != '':
+        #        next_page = url_for('rutaBase')
+        #    return redirect(next_page)
+        #else:
+        #    error = f'Datos incorrectos, intentelo nuevamente'
     return render_template('login_form.html', form=form,error=error)
 
 @app.route('/logout')
