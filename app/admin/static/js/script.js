@@ -134,7 +134,6 @@ const fetchData = (url_api,datosEncuesta) => {
         }
 
         xhttp.send(JSON.stringify(datosEncuesta));
-        xhttp.send(datosEncuesta);
     });
 }
 

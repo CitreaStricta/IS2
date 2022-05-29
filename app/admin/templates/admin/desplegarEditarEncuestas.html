@@ -83,11 +83,16 @@
     {%for encuesta_i in range(datos.id|length)%}
 
     <div align="left" class="card bg-success text-white w-75 p-3">
+      <!-- Boton para mostrar o invisibilizar las preguntas y sus alternativas -->
       <button class="button_questions" id={{datos.id[encuesta_i]}} onclick=DesplegarEncuestas(this)> Encuesta {{ encuesta_i+1 }}
-        <br>{{datos.titulo[encuesta_i]}}<br>
+        <br>Titulo: {{datos.titulo[encuesta_i]}}
+        <br>Descripcion: {{datos.descripcion[encuesta_i]}}
+        <br>Fecha Comienzo: {{datos.fecha_comienzo[encuesta_i]}} Fecha Termino: {{datos.fecha_termino[encuesta_i]}}
       </button>
       <div class="contenido" id="contenido_{{datos.id[encuesta_i]}}">
-        <button class="button_answers" id={{datos.id[encuesta_i]}}_respuestas onclick=DesplegarRespuestas(this)>Ver respuestas</button>
+        <form action="/editarEncuesta" method="POST">
+          <button type="submit" class="button_answers" name="encuestaSeleccionada" value="{{datos.id[encuesta_i]}}">Editar Encuesta</button>
+        </form>
 
         {%for pregunta_i in range(datos.preguntas[encuesta_i]|length)%}
         <h2>Pregunta {{pregunta_i + 1}}: {{datos.preguntas[encuesta_i][pregunta_i]}}</h2>
