@@ -6,4 +6,7 @@
         <a href="/logout" class="right">Salir</a>
         <a class="right">Bienvenido {{current_user.name}}</a>
         {% endif %}
+        {% if current_user.is_admin %}
+        <a class="right">Bienvenido admin</a>
+        {% endif %}
 </div>

@@ -121,10 +121,9 @@ body {
 <div class="navbar">
   <a href="/">Home</a>
   {% if current_user.is_anonymous %}
-  <a href="/login">Crear Encuesta</a>
   {% else %}
   <a href="/crearEncuesta">Crear Encuesta</a>
-  <a href="/crearEncuesta">Ver Encuestas</a>
+  <a href="/verEncuestas">Ver Encuestas</a>
   {% endif %}
   {% extends "base_login_template.html" %}
 
