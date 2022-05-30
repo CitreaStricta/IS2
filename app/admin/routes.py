@@ -1,18 +1,22 @@
-from flask import render_template, redirect, url_for, request
-from flask_login import current_user
+from flask import render_template, url_for, request, jsonify
+from flask_login import current_user, login_required
+from app.auth.routes import admin_required
 import json
-from app import admin, db, get_db_connection
+from collections import Counter
+from app import admin, db
 from . import admin_bp
 
 @admin_bp.route('/crearEncuesta')
-#@login_required
+@login_required
+@admin_required
 def rutaCrearEncuesta():
     return render_template('admin/crearEncuesta.html')
 
 @admin_bp.route('/guardarEncuesta', methods=['POST'] )
+@login_required
+@admin_required
 def guardar_encuesta():
     if request.method == 'POST':
-        # try:
         datosEncuesta = request.get_json(force = True)
         titulo=datosEncuesta[0]
         descripcion=datosEncuesta[1]
@@ -31,6 +35,8 @@ def guardar_encuesta():
     return {"hola": "mundo!"}
 
 @admin_bp.route('/guardarEditEncuesta', methods=['POST'] )
+@login_required
+@admin_required
 def guardar_editar_encuesta():
     if request.method == 'POST':
         datosEncuesta = request.get_json(force = True)
@@ -51,20 +57,16 @@ def guardar_editar_encuesta():
     return {"hola": "mundo!"}    
 
 @admin_bp.route('/editarEncuesta', methods=['GET', 'POST'])
+@login_required
+@admin_required
 def rutaEditarEncuesta():
-    conn = get_db_connection()
-    cur = conn.cursor()
-
     idEncuesta = request.form.get("encuestaSeleccionada")
     
     #EXTRAE DATOS DE_TODO LO NECESARIO DE LA DB
     sentenciaSQL = '''\
     SELECT encuesta.id_encuesta, encuesta.titulo_encuesta, encuesta.descripcion, encuesta.fecha_comienzo, encuesta.fecha_termino,
-    encuesta.preguntas FROM encuesta WHERE id_encuesta = ''' + idEncuesta
-    cur.execute(sentenciaSQL)
-    db_data = cur.fetchall()
-    cur.close()
-    conn.close()
+    encuesta.preguntas FROM encuesta WHERE id_encuesta = %s;'''
+    db_data = db.fetch_all(sentenciaSQL,str(idEncuesta))
 
     id_encuesta = [item[0] for item in db_data]
     titulo_encuesta = [item[1] for item in db_data]
@@ -90,33 +92,20 @@ def rutaEditarEncuesta():
     return render_template('admin/editarEncuesta.html', datos=datos)
 
 @admin_bp.route('/verEditarEncuestas')
+@login_required
+@admin_required
 def rutaEditarEncuestas():
-    conn = get_db_connection()
-    cur = conn.cursor()
-
     # EN VOLA ESTO DSPS HAY QUE EDITARLO 
     id_encuestas = [1,2,3,4,5,6,7,8,9,10] #encuestas a seleccionar
 
-    #creo texto para usar en la sentencias sql seleccionando id de las encuestas con respecto al usuario
-    text_id_encuesta = ''
-    cantidad_id_encuesta = len(id_encuestas)
-
-    for i in range(cantidad_id_encuesta):
-        text_id_encuesta += 'id_encuesta = ' + str(id_encuestas[i])
-
-        if i is not cantidad_id_encuesta - 1:
-            text_id_encuesta += ' OR '
-        else:
-            text_id_encuesta += ' '
-    
-    #EXTRAE DATOS DE_TODO LO NECESARIO DE LA DB
-    sentenciaSQL = '''\
-    SELECT encuesta.id_encuesta, encuesta.titulo_encuesta, encuesta.descripcion, encuesta.fecha_comienzo, encuesta.fecha_termino,
-    encuesta.preguntas FROM encuesta WHERE ''' + text_id_encuesta + '''ORDER BY encuesta.id_encuesta'''
-    cur.execute(sentenciaSQL)
-    db_data = cur.fetchall()
-    cur.close()
-    conn.close()
+    try:
+        strings = '%s,'*(len(id_encuestas)-1) + '%s'
+        sentenciaSQL = '''\
+        SELECT encuesta.id_encuesta, encuesta.titulo_encuesta, encuesta.descripcion, encuesta.fecha_comienzo, encuesta.fecha_termino,
+        encuesta.preguntas FROM encuesta WHERE id_encuesta in ('''+ strings +''') ORDER BY encuesta.id_encuesta'''
+        db_data = db.fetch_all(sentenciaSQL,tuple(id_encuestas))
+    except Exception as e:
+            print(e)
 
     id_encuesta = [item[0] for item in db_data]
     titulo_encuesta = [item[1] for item in db_data]
@@ -142,32 +131,20 @@ def rutaEditarEncuestas():
     return render_template('admin/desplegarEditarEncuestas.html', datos=datos)
 
 @admin_bp.route('/verEncuestas')
+@login_required
+@admin_required
 def rutaDesplegarEncuestas():
-    conn = get_db_connection()
-    cur = conn.cursor()
 
     id_encuestas = [1,2,3,4,5,6,7,8] #encuestas a seleccionar
 
-    #creo texto para usar en la sentencias sql seleccionando id de las encuestas con respecto al usuario
-    text_id_encuesta = ''
-    cantidad_id_encuesta = len(id_encuestas)
-
-    for i in range(cantidad_id_encuesta):
-        text_id_encuesta += 'id_encuesta = ' + str(id_encuestas[i])
-
-        if i is not cantidad_id_encuesta - 1:
-            text_id_encuesta += ' OR '
-        else:
-            text_id_encuesta += ' '
-    
-    #EXTRAE DATOS DE_TODO LO NECESARIO DE LA DB
-    sentenciaSQL = '''\
-    SELECT encuesta.id_encuesta, encuesta.titulo_encuesta, encuesta.descripcion, encuesta.fecha_comienzo, encuesta.fecha_termino,
-    encuesta.preguntas FROM encuesta WHERE ''' + text_id_encuesta + '''ORDER BY encuesta.id_encuesta'''
-    cur.execute(sentenciaSQL)
-    db_data = cur.fetchall()
-    cur.close()
-    conn.close()
+    try:
+        strings = '%s,'*(len(id_encuestas)-1) + '%s'
+        sentenciaSQL = '''\
+        SELECT encuesta.id_encuesta, encuesta.titulo_encuesta, encuesta.descripcion, encuesta.fecha_comienzo, encuesta.fecha_termino,
+        encuesta.preguntas FROM encuesta WHERE id_encuesta in ('''+ strings +''') ORDER BY encuesta.id_encuesta'''
+        db_data = db.fetch_all(sentenciaSQL,tuple(id_encuestas))
+    except Exception as e:
+            print(e)
 
     id_encuesta = [item[0] for item in db_data]
     titulo_encuesta = [item[1] for item in db_data]
@@ -192,17 +169,17 @@ def rutaDesplegarEncuestas():
 
     return render_template('admin/desplegarEncuestas.html', datos=datos)
 
-@admin_bp.route('/get_word')
-def get_prediction():
-    id_encuesta = flask.request.args.get('id_encuesta')[0]
-    conn = get_db_connection()
-    cur = conn.cursor()
+@admin_bp.route('/obtener_respuestas')
+@login_required
+@admin_required
+def obtener_respuestas():
+    id_encuesta = request.args.get('id_encuesta')[0]
 
-    sentenciaSQL = 'SELECT respuesta.respuestas FROM respuesta WHERE respuesta.id_encuesta = ' + id_encuesta + ';'
-    cur.execute(sentenciaSQL)
-    todas_respuestas = cur.fetchall()
+    sentenciaSQL = 'SELECT respuesta.respuestas FROM respuesta WHERE respuesta.id_encuesta = %s;'
+    todas_respuestas = db.fetch_all(sentenciaSQL,str(id_encuesta))
+
     if(len(todas_respuestas) == 0):
-        return flask.jsonify({'porcentajes':'No hay respuestas'})
+        return jsonify({'porcentajes':'No hay respuestas'})
 
     #respuestas = [item[4]['Respuestas'] for item in todas_respuestas]
     respuestas = [item[0]['Respuestas'] for item in todas_respuestas]
@@ -217,8 +194,10 @@ def get_prediction():
         for i in range(len(respuestas)):
             porcentajes_i.append(count[str(i+1)] / total * 100)
         porcentajes.append(porcentajes_i)
-    return flask.jsonify({'porcentajes':porcentajes})
+    return jsonify({'porcentajes':porcentajes})
     
 @admin_bp.route('/agregarmail')
+@login_required
+@admin_required
 def agregarmail():
     return render_template('admin/agregarmails.html')

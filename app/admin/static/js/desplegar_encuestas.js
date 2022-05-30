@@ -1,11 +1,9 @@
 function DesplegarEncuestas(btn) {
     var x = document.getElementById("contenido_"+btn.id);
-    //alert(btn.id );
     if (x.style.display === "none" || x.style.display === "") {
       x.style.display = "block";
     } else {
       x.style.display = "none";
-      //alert(btn.id);
     }
   }
 
@@ -14,7 +12,7 @@ function DesplegarRespuestas(btn){
   element.classList.add("active");
   var id_encuesta = btn.id;
   $.ajax({
-    url: "/get_word",
+    url: "/obtener_respuestas",
     type: "get",
     data: {id_encuesta: id_encuesta},
     success: function(response) {
