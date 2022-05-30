@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Page Title</title>
+    <link rel="stylesheet" href="static/css/bootstrap.min.css"> <!--el html busca el .css aqui-->
+    <link rel="stylesheet" href="static/css/main.css"> <!--el html busca el .css aqui-->
+
+
+
+    <style>
+        /* aqui puede ir codigo css */
+    </style>
+
+
+
+  </head>
+  <body>
+
+
+
+    <div class="container">
+      <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+          <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
+          <span class="fs-4"> Marchelo Survey's </span>
+        </a>
+  
+        <ul class="nav nav-pills nav-principal">
+          <li class="nav-item"><a href="/home" class="nav-link active" aria-current="page">Home</a></li>
+          <li class="nav-item"><a href="/crearEncuesta" class="nav-link nav-letras">Crear</a></li>
+          <li class="nav-item"><a href="/verEncuestas" class="nav-link nav-letras">Ver</a></li>
+          <li class="nav-item"><a href="/agregarmails" class="nav-link nav-letras">Agregar Mail</a></li>
+          <li class="nav-item"><a href="#" class="nav-link nav-letras">About</a></li>
+        </ul>
+      </header>
+    </div>
+
+
+
+    <div class="centrado">
+      
+      <!-- espacio con el boton para crear encuesta -->
+      <div class="p-5 mb-4 bg-light rounded-3 contenedor-barraconboton">
+        <div class="container-fluid py-5">
+          <h1 class="display-5 fw-bold texto-elrobot">Crea Una encuesta</h1>
+          <p class="col-md-8 fs-4">Usa la herramienta para generar preguntas de seleccion multiple en los formularios</p>
+          <button class="btn btn-primary btn-lg boton-enlace" type="button"><a href="/crearEncuesta" class="nav-link">Crear Encuesta</a></button>
+        </div>
+      </div>
+
+
+      <!-- espacio con las dos casillas con botones -->
+      <div class="row align-items-md-stretch">
+        <!-- espacio con casilla de crear encuesta -->
+        <div class="col-md-6">
+          <div class="h-100 p-5 text-white bg-dark rounded-3">
+            <h2>Analiza los datos</h2>
+            <p>Mira los resultados de tus encuestas</p>
+            <button class="btn btn-outline-light boton-enlace" type="button"><a href="/verEncuestas" class="nav-link">Ver Encuestas</a></button>
+          </div>
+        </div>
+        
+        <!-- espacio con casilla de ingresar mails -->
+        <div class="col-md-6">
+          <div class="h-100 p-5 bg-light border rounded-3">
+            <h2>Agrega mails de posibles encuestados</h2>
+            <p>Una forma simple para aumentar los datos recopilador</p>
+            <button class="btn btn-outline-secondary" type="button"><a href="/agregarmails" class="nav-link">Ingresa mails</a></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JS -->
+    <script src="static/js/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+    <script src="static/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+  </body>
+</html>

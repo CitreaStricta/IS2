@@ -1,0 +1,29 @@
+body{
+  background-color: #4574bb;
+}
+
+.nav-letras{
+  color:#ffffff;
+}
+
+.texto-elrobot{
+  color: #0f1abe;
+
+}
+
+.boton-enlace{
+  background-color: #596597;
+
+}
+
+.contenedor-barraconboton{
+  padding: 1000px;
+  background-color: #1ed3c4 !important;
+  
+}
+
+.centrado{
+   margin-left: auto;
+   margin-right: auto;
+   width: 80%;
+}

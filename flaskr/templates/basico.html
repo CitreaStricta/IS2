@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Page Title</title>
+    <link rel="stylesheet" href="static/css/bootstrap.min.css"> <!--el html busca el .css aqui-->
+    <link rel="stylesheet" href="static/css/main.css"> <!--el html busca el .css aqui-->
+
+
+    <!-- dentro de Style se puede colocar codigo .css pero es preferible hacer un archivo css nuevo en static/css -->
+    <style>
+
+    </style>
+
+
+
+</head>
+<body style="background-color:#1ABC9C;" onload="addTitle(), addEncuesta(), addQuestion()">
+    <!-- de aqui hasta el comentario JS se pueden poner div's y mas elementos -->
+        <center>
+        <h1 id="titulo" class="bd-title text-white" style="background-color: #1ABC9C;">Crear Encuesta</h1>
+        <div id="containerTitle" class="form-control form-control-lg" style="background-color: #1ABC9C;" alt="Max-width 75%" align="center"></div>	
+        <!--Container de preguntas-->
+        <div id="containerEncuesta" align="center" class="card bg-dark text-white w-75 p-3">
+            <div id="containerPreguntas"></div>
+        </div>
+        <button id="addElement" onclick="addQuestion()">Agregar pregunta(+)</button>
+        <button id="save"  onclick="saveQuestions()">Guardar</button> <!-- deberia ser saveSurvey -->
+        </center>
+    </body>
+
+
+    <!-- JS -->
+    <script src="static/js/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+    <script src="static/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+    </body>
+</html>
