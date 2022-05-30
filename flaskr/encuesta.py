@@ -1,10 +1,8 @@
-from flask import render_template
+from flask import redirect, render_template, request, url_for
 import flask
 from db import get_db_connection
 from collections import Counter
-import pandas as pd
 from __init__ import app
-
 @app.route('/crearEncuesta')
 def rutaCrearEncuesta():
     return render_template('crearEncuesta.html')
@@ -169,3 +167,15 @@ def prueba():
 @app.route('/agregarmail')
 def agregarmail():
     return render_template('agregarmails.html')
+@app.route('/insertarmail',methods=['POST'])
+def insertarmail():
+    if request.method == 'POST':
+        correo = request.form['mail']
+        conn = get_db_connection()
+        suscrito= True
+        cur = conn.cursor()
+        cur.execute('INSERT INTO mails values(%s,%s)',(correo,suscrito))
+        conn.commit()
+        cur.close()
+        conn.close()
+    return redirect(url_for('agregarmail'))
