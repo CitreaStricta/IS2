@@ -3,6 +3,7 @@ from flask_login import current_user
 import json
 from app import admin, db, get_db_connection
 from . import admin_bp
+#from app.public import routes
 
 @admin_bp.route('/crearEncuesta')
 #@login_required
@@ -24,11 +25,10 @@ def guardar_encuesta():
         try:
             sql = 'INSERT INTO encuesta (id_encuesta, titulo_encuesta, descripcion,fecha_comienzo,fecha_termino,preguntas[%s]) VALUES (DEFAULT,%s,%s,%s,%s,%s);'
             db.execute(sql, (numPreguntas,titulo,descripcion,fechaComienzo,fechaTermino,json.dumps(preguntas)))
-            return render_template('public/index.html')
         except Exception as e:
             print(e)
 
-    return {"hola": "mundo!"}
+    return {"hola": "mundo!"}    
 
 @admin_bp.route('/guardarEditEncuesta', methods=['POST'] )
 def guardar_editar_encuesta():
@@ -43,8 +43,6 @@ def guardar_editar_encuesta():
         try: 
             sql = 'UPDATE encuesta SET titulo_encuesta = %s , descripcion = %s,fecha_comienzo = %s,fecha_termino = %s WHERE id_encuesta = %s'
             db.execute(sql, (titulo,descripcion,fechaComienzo,fechaTermino,id))
-            
-            return render_template('admin/index.html')
         except Exception as e:
             print(e)
 
@@ -95,14 +93,14 @@ def rutaEditarEncuestas():
     cur = conn.cursor()
 
     # EN VOLA ESTO DSPS HAY QUE EDITARLO 
-    id_encuestas = [1,2,3,4,5,6,7,8,9,10] #encuestas a seleccionar
+    id_encuestas=db.fetch_all('SELECT id_encuesta from encuesta ORDER BY id_encuesta ASC;')
 
     #creo texto para usar en la sentencias sql seleccionando id de las encuestas con respecto al usuario
     text_id_encuesta = ''
     cantidad_id_encuesta = len(id_encuestas)
 
     for i in range(cantidad_id_encuesta):
-        text_id_encuesta += 'id_encuesta = ' + str(id_encuestas[i])
+        text_id_encuesta += 'id_encuesta = ' + str(id_encuestas[i][0])
 
         if i is not cantidad_id_encuesta - 1:
             text_id_encuesta += ' OR '
