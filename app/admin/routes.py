@@ -92,9 +92,7 @@ def rutaEditarEncuestas():
     conn = get_db_connection()
     cur = conn.cursor()
 
-    # EN VOLA ESTO DSPS HAY QUE EDITARLO 
     id_encuestas=db.fetch_all('SELECT id_encuesta from encuesta ORDER BY id_encuesta ASC;')
-
     #creo texto para usar en la sentencias sql seleccionando id de las encuestas con respecto al usuario
     text_id_encuesta = ''
     cantidad_id_encuesta = len(id_encuestas)
@@ -144,14 +142,13 @@ def rutaDesplegarEncuestas():
     conn = get_db_connection()
     cur = conn.cursor()
 
-    id_encuestas = [1,2,3,4,5,6,7,8] #encuestas a seleccionar
-
+    id_encuestas=db.fetch_all('SELECT id_encuesta from encuesta ORDER BY id_encuesta ASC;')
     #creo texto para usar en la sentencias sql seleccionando id de las encuestas con respecto al usuario
     text_id_encuesta = ''
     cantidad_id_encuesta = len(id_encuestas)
 
     for i in range(cantidad_id_encuesta):
-        text_id_encuesta += 'id_encuesta = ' + str(id_encuestas[i])
+        text_id_encuesta += 'id_encuesta = ' + str(id_encuestas[i][0])
 
         if i is not cantidad_id_encuesta - 1:
             text_id_encuesta += ' OR '
