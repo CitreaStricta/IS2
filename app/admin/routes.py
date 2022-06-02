@@ -201,3 +201,18 @@ def obtener_respuestas():
 @admin_required
 def agregarmail():
     return render_template('admin/agregarmails.html')
+
+@admin_bp.route('/insertarmail',methods=['POST'])
+@login_required
+@admin_required
+def insertarmail():
+    if request.method == 'POST':
+        correo = request.form['mail']
+        conn = get_db_connection()
+        suscrito= True
+        cur = conn.cursor()
+        cur.execute('INSERT INTO mails values(%s,%s)',(correo,suscrito))
+        conn.commit()
+        cur.close()
+        conn.close()
+    return redirect(url_for('agregarmail'))
