@@ -18,7 +18,7 @@ class User(UserMixin):
         if data is None:
             return None
         else:
-            return User(data[1],data[0],None,False) # ESTE True dsps tiene que salir es para que se tome como ADMIN
+            return User(data[1],data[0],None,True) # ESTE True dsps tiene que salir es para que se tome como ADMIN
     
     @classmethod
     def select_user(self,email): # este es para seleccionar un usuario

@@ -196,7 +196,7 @@ def obtener_respuestas():
         porcentajes.append(porcentajes_i)
     return jsonify({'porcentajes':porcentajes})
     
-@admin_bp.route('/agregarmail')
+@admin_bp.route('/agregarmails')
 @login_required
 @admin_required
 def agregarmail():

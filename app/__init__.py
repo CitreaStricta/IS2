@@ -1,3 +1,4 @@
+from ensurepip import bootstrap
 from flask import Flask,render_template
 from flask_login import LoginManager
 from .database import Database ,get_db_connection
@@ -45,5 +46,7 @@ def create_app():
 
     #Errores
     register_error_handlers(app)
+    
+
 
     return app
