@@ -9,6 +9,7 @@
     .button_questions {
       width: 100%;
       padding: 50px 0;
+      text-align: center;
       background-color: lightblue;
       margin-top: 20px;
     }
@@ -79,29 +80,25 @@
 <body>
   <center>
     <br>
-    {%for datos_encuesta_i in db_data %}
+    {%for encuesta_i in range(datos.id|length)%}
 
     <div align="left" class="card bg-success text-white w-75 p-3">
-      <button class="button_questions" id="{{datos_encuesta_i[0]}}" onclick=DesplegarEncuestas(this)>
-        <span style="float:center;">Encuesta : {{datos_encuesta_i[1]}}</span>
-        <span style="float:right;">Fecha comienzo : {{datos_encuesta_i[3]}}</span>
-        <br><br>
-        <span style="float:center;">{{datos_encuesta_i[2]}}</span>
-        <span style="float:right;">Fecha final : {{datos_encuesta_i[4]}}</span>
-      </button> 
-      <div class="contenido" id="contenido_{{datos_encuesta_i[0]}}">
-        <button class="button_answers" id={{datos_encuesta_i[0]}}_respuestas onclick=DesplegarRespuestas(this)>Ver respuestas</button>
-        {% for preguntas_alternativas in datos_encuesta_i[5][0] %}
-          {% set pregunta_loop = loop %}
+      <button class="button_questions" id={{datos.id[encuesta_i]}} onclick=DesplegarEncuestas(this)> Encuesta {{ encuesta_i+1 }}
+        <br>{{datos.titulo[encuesta_i]}}<br>
+      </button>
+      <div class="contenido" id="contenido_{{datos.id[encuesta_i]}}">
+        <button class="button_answers" id={{datos.id[encuesta_i]}}_respuestas onclick=DesplegarRespuestas(this)>Ver respuestas</button>
+        {%for pregunta_i in range(datos.preguntas[encuesta_i]|length)%}
+        <h2>Pregunta {{pregunta_i + 1}}: {{datos.preguntas[encuesta_i][pregunta_i]}}</h2>
 
-          <h2>Pregunta {{pregunta_loop.index}} : {{preguntas_alternativas['Pregunta']}}</h2>
+          {%for respuesta_i in range(datos.alternativas[encuesta_i][pregunta_i]|length)%}
+          <h2 id="{{datos.id[encuesta_i]}}_respuestas_{{pregunta_i}}_{{respuesta_i}}">{{respuesta_i + 1}}) {{datos.alternativas[encuesta_i][pregunta_i][respuesta_i]}}
 
-          {% for alternativa in preguntas_alternativas['Alternativas'] %}
-            {% set alternativa_loop = loop %}
+          </h2>
 
-            <h3 id="{{datos_encuesta_i[0]}}_respuestas_{{pregunta_loop.index0}}_{{alternativa_loop.index0}}" >{{alternativa_loop.index}}) alternativa</h3>
-          {% endfor %}
-        {% endfor %}
+          {%endfor%}
+
+        {%endfor%}
       </div>
     </div>
     <br>

@@ -142,10 +142,11 @@ def rutaDesplegarEncuestas():
         sentenciaSQL = '''\
         SELECT encuesta.id_encuesta, encuesta.titulo_encuesta, encuesta.descripcion, encuesta.fecha_comienzo, encuesta.fecha_termino,
         encuesta.preguntas FROM encuesta WHERE id_encuesta in ('''+ strings +''') ORDER BY encuesta.id_encuesta'''
-        db_data = db.fetch_all(sentenciaSQL,tuple(id_encuestas))
+        db_data = db.fetch_all(sentenciaSQL,id_encuestas)
     except Exception as e:
             print(e)
-
+    print(db_data)
+    '''
     id_encuesta = [item[0] for item in db_data]
     titulo_encuesta = [item[1] for item in db_data]
     descripcion_encuesta = [item[2] for item in db_data]
@@ -167,12 +168,15 @@ def rutaDesplegarEncuestas():
     datos = {"id":id_encuesta, "titulo":titulo_encuesta, "descripcion":descripcion_encuesta, "fecha_comienzo":fecha_comienzo_encuesta, 
             "fecha_termino":fecha_termino_encuesta, "preguntas":preguntas_encuesta, "alternativas":alternativas_encuesta}
 
-    return render_template('admin/desplegarEncuestas.html', datos=datos)
+    return render_template('admin/desplegarEncuestas copy.html', datos=datos)
+    '''
+    return render_template('admin/desplegarEncuestas.html', db_data=db_data)
 
 @admin_bp.route('/obtener_respuestas')
 @login_required
 @admin_required
 def obtener_respuestas():
+    print("estoy obteniendo las respuestas")
     id_encuesta = request.args.get('id_encuesta')[0]
 
     sentenciaSQL = 'SELECT respuesta.respuestas FROM respuesta WHERE respuesta.id_encuesta = %s;'
@@ -181,6 +185,7 @@ def obtener_respuestas():
     if(len(todas_respuestas) == 0):
         return jsonify({'porcentajes':'No hay respuestas'})
 
+    print("todas las respuestas:",todas_respuestas) #POSIBLE OPTIMIZACION
     #respuestas = [item[4]['Respuestas'] for item in todas_respuestas]
     respuestas = [item[0]['Respuestas'] for item in todas_respuestas]
     n_preguntas = len(respuestas[0])
@@ -201,3 +206,18 @@ def obtener_respuestas():
 @admin_required
 def agregarmail():
     return render_template('admin/agregarmails.html')
+
+@admin_bp.route('/insertarmail',methods=['POST'])
+@login_required
+@admin_required
+def insertarmail():
+    if request.method == 'POST':
+        correo = request.form['mail']
+        conn = get_db_connection()
+        suscrito= True
+        cur = conn.cursor()
+        cur.execute('INSERT INTO mails values(%s,%s)',(correo,suscrito))
+        conn.commit()
+        cur.close()
+        conn.close()
+    return redirect(url_for('agregarmail'))
