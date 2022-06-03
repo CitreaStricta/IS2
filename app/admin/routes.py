@@ -1,4 +1,4 @@
-from flask import render_template, url_for, request, jsonify
+from flask import render_template, url_for, request, jsonify,abort
 from flask_login import current_user, login_required
 from app.auth.routes import admin_required
 import json
@@ -56,121 +56,45 @@ def guardar_editar_encuesta():
 
     return {"hola": "mundo!"}    
 
-@admin_bp.route('/editarEncuesta', methods=['GET', 'POST'])
+@admin_bp.route('/editarEncuesta/<string:id>/')
 @login_required
 @admin_required
-def rutaEditarEncuesta():
-    idEncuesta = request.form.get("encuestaSeleccionada")
-    
-    #EXTRAE DATOS DE_TODO LO NECESARIO DE LA DB
+def rutaEditarEncuesta(id):
     sentenciaSQL = '''\
-    SELECT encuesta.id_encuesta, encuesta.titulo_encuesta, encuesta.descripcion, encuesta.fecha_comienzo, encuesta.fecha_termino,
-    encuesta.preguntas FROM encuesta WHERE id_encuesta = %s;'''
-    db_data = db.fetch_all(sentenciaSQL,str(idEncuesta))
+    SELECT * FROM encuesta WHERE encuesta.id_encuesta = %s;'''
+    db_data = db.fetch_all(sentenciaSQL,(str(id),))[0]
 
-    id_encuesta = [item[0] for item in db_data]
-    titulo_encuesta = [item[1] for item in db_data]
-    descripcion_encuesta = [item[2] for item in db_data]
-    fecha_comienzo_encuesta = [item[3] for item in db_data]
-    fecha_termino_encuesta = [item[4] for item in db_data]
-    preguntas_alternativas_encuesta = [item[5][0] for item in db_data]
+    if db_data is None:
+        abort(404)
 
-    preguntas_encuesta = []
-    alternativas_encuesta = []
+    return render_template('admin/editarEncuesta.html', db_data=db_data)
 
-    
-    for i in range(len(preguntas_alternativas_encuesta)):
-        preguntas = [item['Pregunta'] for item in preguntas_alternativas_encuesta[i]]
-        alternativas = [item['Alternativas'] for item in preguntas_alternativas_encuesta[i]]
-        
-        preguntas_encuesta.append(preguntas)
-        alternativas_encuesta.append(alternativas)
-    
-    datos = {"id":id_encuesta, "titulo":titulo_encuesta, "descripcion":descripcion_encuesta, "fecha_comienzo":fecha_comienzo_encuesta, 
-            "fecha_termino":fecha_termino_encuesta, "preguntas":preguntas_encuesta, "alternativas":alternativas_encuesta}
-
-    return render_template('admin/editarEncuesta.html', datos=datos)
-
-@admin_bp.route('/verEditarEncuestas')
-@login_required
-@admin_required
-def rutaEditarEncuestas():
-    # EN VOLA ESTO DSPS HAY QUE EDITARLO 
-    id_encuestas = [1,2,3,4,5,6,7,8,9,10] #encuestas a seleccionar
-
-    try:
-        strings = '%s,'*(len(id_encuestas)-1) + '%s'
-        sentenciaSQL = '''\
-        SELECT encuesta.id_encuesta, encuesta.titulo_encuesta, encuesta.descripcion, encuesta.fecha_comienzo, encuesta.fecha_termino,
-        encuesta.preguntas FROM encuesta WHERE id_encuesta in ('''+ strings +''') ORDER BY encuesta.id_encuesta'''
-        db_data = db.fetch_all(sentenciaSQL,tuple(id_encuestas))
-    except Exception as e:
-            print(e)
-
-    id_encuesta = [item[0] for item in db_data]
-    titulo_encuesta = [item[1] for item in db_data]
-    descripcion_encuesta = [item[2] for item in db_data]
-    fecha_comienzo_encuesta = [item[3] for item in db_data]
-    fecha_termino_encuesta = [item[4] for item in db_data]
-    preguntas_alternativas_encuesta = [item[5][0] for item in db_data]
-
-    preguntas_encuesta = []
-    alternativas_encuesta = []
-
-    
-    for i in range(len(preguntas_alternativas_encuesta)):
-        preguntas = [item['Pregunta'] for item in preguntas_alternativas_encuesta[i]]
-        alternativas = [item['Alternativas'] for item in preguntas_alternativas_encuesta[i]]
-        
-        preguntas_encuesta.append(preguntas)
-        alternativas_encuesta.append(alternativas)
-    
-    datos = {"id":id_encuesta, "titulo":titulo_encuesta, "descripcion":descripcion_encuesta, "fecha_comienzo":fecha_comienzo_encuesta, 
-            "fecha_termino":fecha_termino_encuesta, "preguntas":preguntas_encuesta, "alternativas":alternativas_encuesta}
-
-    return render_template('admin/desplegarEditarEncuestas.html', datos=datos)
-
-@admin_bp.route('/verEncuestas')
+@admin_bp.route('/verEncuestas',methods=['GET', 'POST'])
 @login_required
 @admin_required
 def rutaDesplegarEncuestas():
-
-    id_encuestas = [1,2,3,4,5,6,7,8] #encuestas a seleccionar
-
+    db_data = None
     try:
-        strings = '%s,'*(len(id_encuestas)-1) + '%s'
         sentenciaSQL = '''\
-        SELECT encuesta.id_encuesta, encuesta.titulo_encuesta, encuesta.descripcion, encuesta.fecha_comienzo, encuesta.fecha_termino,
-        encuesta.preguntas FROM encuesta WHERE id_encuesta in ('''+ strings +''') ORDER BY encuesta.id_encuesta'''
-        db_data = db.fetch_all(sentenciaSQL,id_encuestas)
+        SELECT encuesta.id_encuesta,encuesta.titulo_encuesta FROM encuesta'''
+        db_data = db.fetch_all(sentenciaSQL,)
     except Exception as e:
             print(e)
-    print(db_data)
-    '''
-    id_encuesta = [item[0] for item in db_data]
-    titulo_encuesta = [item[1] for item in db_data]
-    descripcion_encuesta = [item[2] for item in db_data]
-    fecha_comienzo_encuesta = [item[3] for item in db_data]
-    fecha_termino_encuesta = [item[4] for item in db_data]
-    preguntas_alternativas_encuesta = [item[5][0] for item in db_data]
+    if db_data is None:
+        abort(404)
+    return render_template('admin/desplegarMisEncuestas.html', db_data=db_data)
 
-    preguntas_encuesta = []
-    alternativas_encuesta = []
+@admin_bp.route("/verEncuestas/<string:id>/")
+@login_required
+@admin_required
+def mostrar_preguntas_alternativas(id):
+    sentenciaSQL = '''\
+    SELECT * FROM encuesta WHERE encuesta.id_encuesta = %s;'''
+    db_data = db.fetch_all(sentenciaSQL,(str(id),))[0]
 
-    
-    for i in range(len(preguntas_alternativas_encuesta)):
-        preguntas = [item['Pregunta'] for item in preguntas_alternativas_encuesta[i]]
-        alternativas = [item['Alternativas'] for item in preguntas_alternativas_encuesta[i]]
-        
-        preguntas_encuesta.append(preguntas)
-        alternativas_encuesta.append(alternativas)
-    
-    datos = {"id":id_encuesta, "titulo":titulo_encuesta, "descripcion":descripcion_encuesta, "fecha_comienzo":fecha_comienzo_encuesta, 
-            "fecha_termino":fecha_termino_encuesta, "preguntas":preguntas_encuesta, "alternativas":alternativas_encuesta}
-
-    return render_template('admin/desplegarEncuestas copy.html', datos=datos)
-    '''
-    return render_template('admin/desplegarEncuestas.html', db_data=db_data)
+    if db_data is None:
+        abort(404)
+    return render_template('admin/desplegarVerEncuesta.html',db_data=db_data)
 
 @admin_bp.route('/obtener_respuestas')
 @login_required

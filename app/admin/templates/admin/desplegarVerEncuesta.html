@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <meta charset="utf-8">
@@ -37,7 +38,8 @@
       outline: none;
       transition: all ease 0.5s;
     }
-    .active{
+
+    .active {
       font-size: 0;
       width: 50px;
       height: 50px;
@@ -45,22 +47,26 @@
       border-left-color: transparent;
       animation: rotate 0.5s ease 0s infinite;
     }
+
     @keyframes rotate {
-      0%{
+      0% {
         transform: rotate(360deg);
       }
     }
-    .success{
+
+    .success {
       position: relative;
       background-color: #fff;
       animation: bounce .3s ease-in;
     }
+
     @keyframes bounce {
-      0%{
+      0% {
         transform: scale(0.9);
       }
     }
-    .success:before{
+
+    .success:before {
       content: '';
       position: absolute;
       background: url("https://www.svgrepo.com/show/313685/check-solid.svg") no-repeat;
@@ -79,32 +85,23 @@
 
 <body>
   <center>
-    <br>
-    {%for encuesta_i in range(datos.id|length)%}
+    <div align="center" class="card bg-success text-white w-75 p-3">
+      <h3 align="right">Fecha Comienzo: {{db_data[3]}}</h3>
+      <h3 align="right">Fecha Final: {{db_data[4]}}</h3>
+      <h1>{{db_data[1]}}</h1>
+      <h2>{{db_data[2]}}</h2>
+      <br></br>
+      {% for pregunta_alternativa in db_data[5][0]%}
+        <h2>{{pregunta_alternativa['Pregunta']}}</h2>
+        {% for alternativa in pregunta_alternativa['Alternativas'] %}
+          <h3>{{alternativa}}</h3>
+        {% endfor %}
+      {% endfor %}
 
-    <div align="left" class="card bg-success text-white w-75 p-3">
-      <button class="button_questions" id={{datos.id[encuesta_i]}} onclick=DesplegarEncuestas(this)> Encuesta {{ encuesta_i+1 }}
-        <br>{{datos.titulo[encuesta_i]}}<br>
-      </button>
-      <div class="contenido" id="contenido_{{datos.id[encuesta_i]}}">
-        <button class="button_answers" id={{datos.id[encuesta_i]}}_respuestas onclick=DesplegarRespuestas(this)>Ver respuestas</button>
-        {%for pregunta_i in range(datos.preguntas[encuesta_i]|length)%}
-        <h2>Pregunta {{pregunta_i + 1}}: {{datos.preguntas[encuesta_i][pregunta_i]}}</h2>
-
-          {%for respuesta_i in range(datos.alternativas[encuesta_i][pregunta_i]|length)%}
-          <h2 id="{{datos.id[encuesta_i]}}_respuestas_{{pregunta_i}}_{{respuesta_i}}">{{respuesta_i + 1}}) {{datos.alternativas[encuesta_i][pregunta_i][respuesta_i]}}
-
-          </h2>
-
-          {%endfor%}
-
-        {%endfor%}
-      </div>
     </div>
-    <br>
-    {%endfor%}
   </center>
 </body>
+
 </html>
 
 <script src="{{url_for('admin.static', filename='js/desplegar_encuestas.js')}}"></script>
