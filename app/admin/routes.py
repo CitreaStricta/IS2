@@ -1,10 +1,12 @@
-from flask import render_template, url_for, request, jsonify
+from flask import render_template, url_for, request, jsonify, redirect
 from flask_login import current_user, login_required
 from app.auth.routes import admin_required
 import json
 from collections import Counter
 from app import admin, db
 from . import admin_bp
+from .forms import MailForm
+import re
 
 @admin_bp.route('/crearEncuesta')
 @login_required
@@ -200,24 +202,18 @@ def obtener_respuestas():
             porcentajes_i.append(count[str(i+1)] / total * 100)
         porcentajes.append(porcentajes_i)
     return jsonify({'porcentajes':porcentajes})
-    
-@admin_bp.route('/agregarmails')
-@login_required
-@admin_required
-def agregarmail():
-    return render_template('admin/agregarmails.html')
 
-@admin_bp.route('/insertarmail',methods=['POST'])
+@admin_bp.route('/agregarmails',methods=['GET','POST'])
 @login_required
 @admin_required
 def insertarmail():
-    if request.method == 'POST':
-        correo = request.form['mail']
-        conn = get_db_connection()
-        suscrito= True
-        cur = conn.cursor()
-        cur.execute('INSERT INTO mails values(%s,%s)',(correo,suscrito))
-        conn.commit()
-        cur.close()
-        conn.close()
-    return redirect(url_for('agregarmail'))
+    form=MailForm()
+    error=None
+    if request.method=='POST':
+        if form.validate_on_submit():
+            email=form.email.data
+            suscrito= True
+            db.execute('INSERT INTO mails values(%s,%s)',(email,suscrito))
+        else:
+            error = f'Datos incorrectos, intentelo nuevamente'
+    return render_template('admin/agregarmails.html', form=form,error=error)
