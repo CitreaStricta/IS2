@@ -76,7 +76,7 @@ def rutaDesplegarEncuestas():
     db_data = None
     try:
         sentenciaSQL = '''\
-        SELECT encuesta.id_encuesta,encuesta.titulo_encuesta FROM encuesta'''
+        SELECT encuesta.id_encuesta,encuesta.titulo_encuesta FROM encuesta ORDER BY encuesta.id_encuesta ASC'''
         db_data = db.fetch_all(sentenciaSQL,)
     except Exception as e:
             print(e)
