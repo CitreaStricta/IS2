@@ -4,10 +4,17 @@
         <a href="/signup" class="right">Registrar</a>
         {% else %}
         <a href="/logout" class="right">Salir</a>
+<<<<<<< HEAD
                 {% if current_user.is_admin %}
                 <a class="right">Bienvenido admin {{current_user.name}}</a>
                 {% else %}
                 <a class="right">Bienvenido {{current_user.name}}</a>
                 {% endif %}
+=======
+        <a class="right">Bienvenido {{current_user.name}}</a>
+        {% endif %}
+        {% if current_user.is_admin %}
+        <a class="right">Bienvenido admin</a>
+>>>>>>> f887af468785d130194acbcb78a3d9d1bf04ca04
         {% endif %}
 </div>

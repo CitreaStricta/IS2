@@ -84,11 +84,14 @@ function addQuestion(){
     pregunta.contenidoPregunta.name = "input" + numberOfQuestion
     pregunta.contenidoPregunta.id = "inputId" + numberOfQuestion
     pregunta.contenidoPregunta.placeholder = "Add Pregunta here"
+<<<<<<< HEAD
     pregunta.revisarContenidoPregunta = document.createElement("div")
     pregunta.revisarContenidoPregunta.appendChild(document.createTextNode("Vacio"))
     if(!pregunta.contenidoPregunta){
         pregunta.revisarContenidoPregunta.style.display="block";
     }
+=======
+>>>>>>> f887af468785d130194acbcb78a3d9d1bf04ca04
 
     pregunta.alternativas = document.createElement("ul")
     pregunta.numAlternativas = 0
@@ -111,7 +114,10 @@ function addQuestion(){
     pregunta.appendChild(pregunta.contenidoPregunta)
     pregunta.appendChild(pregunta.botonPregunta)
     pregunta.appendChild(pregunta.botonAlternativas)
+<<<<<<< HEAD
     pregunta.appendChild(pregunta.revisarContenidoPregunta)
+=======
+>>>>>>> f887af468785d130194acbcb78a3d9d1bf04ca04
     pregunta.appendChild(pregunta.alternativas)
 
     encuesta.listPreguntas.appendChild(pregunta)
@@ -148,8 +154,12 @@ const fetchDataAsync = async(url_api,datosEncuesta) => {
         const response = await fetchData(url_api,datosEncuesta);
         
         console.log(response)
+<<<<<<< HEAD
         alert("Encuesta " + datosEncuesta[0] +" enviada con exito")
         window.location.replace("http://127.0.0.1:5000/");
+=======
+        alert("¿Encuesta enviada con exito?")
+>>>>>>> f887af468785d130194acbcb78a3d9d1bf04ca04
     } catch (error) {
         console.error(error.message);
     }
