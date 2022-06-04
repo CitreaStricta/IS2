@@ -9,10 +9,6 @@
     .button_questions {
       width: 100%;
       padding: 50px 0;
-<<<<<<< HEAD
-      text-align: center;
-=======
->>>>>>> f887af468785d130194acbcb78a3d9d1bf04ca04
       background-color: lightblue;
       margin-top: 20px;
     }
@@ -83,28 +79,6 @@
 <body>
   <center>
     <br>
-<<<<<<< HEAD
-    {%for encuesta_i in range(datos.id|length)%}
-
-    <div align="left" class="card bg-success text-white w-75 p-3">
-      <button class="button_questions" id={{datos.id[encuesta_i]}} onclick=DesplegarEncuestas(this)> Encuesta {{ encuesta_i+1 }}
-        <br>{{datos.titulo[encuesta_i]}}<br>
-      </button>
-      <div class="contenido" id="contenido_{{datos.id[encuesta_i]}}">
-        <button class="button_answers" id={{datos.id[encuesta_i]}}_respuestas onclick=DesplegarRespuestas(this)>Ver respuestas</button>
-
-        {%for pregunta_i in range(datos.preguntas[encuesta_i]|length)%}
-        <h2>Pregunta {{pregunta_i + 1}}: {{datos.preguntas[encuesta_i][pregunta_i]}}</h2>
-
-          {%for respuesta_i in range(datos.alternativas[encuesta_i][pregunta_i]|length)%}
-          <h2 id="{{datos.id[encuesta_i]}}_respuestas_{{pregunta_i}}_{{respuesta_i}}">{{respuesta_i + 1}}) {{datos.alternativas[encuesta_i][pregunta_i][respuesta_i]}}
-
-          </h2>
-
-          {%endfor%}
-
-        {%endfor%}
-=======
     {%for datos_encuesta_i in db_data %}
 
     <div align="left" class="card bg-success text-white w-75 p-3">
@@ -128,7 +102,6 @@
             <h3 id="{{datos_encuesta_i[0]}}_respuestas_{{pregunta_loop.index0}}_{{alternativa_loop.index0}}" >{{alternativa_loop.index}}) alternativa</h3>
           {% endfor %}
         {% endfor %}
->>>>>>> f887af468785d130194acbcb78a3d9d1bf04ca04
       </div>
     </div>
     <br>

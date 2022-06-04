@@ -25,12 +25,7 @@ const fetchDataAsync = async(url_api,datosEncuesta) => {
         const response = await fetchData(url_api,datosEncuesta);
         
         console.log(response)
-<<<<<<< HEAD
-        alert("Encuesta " + datosEncuesta[0] +" editada con exito")
-        window.location.replace("http://127.0.0.1:5000/");
-=======
         alert("¿Encuesta enviada con exito?")
->>>>>>> f887af468785d130194acbcb78a3d9d1bf04ca04
     } catch (error) {
         console.error(error.message);
     }

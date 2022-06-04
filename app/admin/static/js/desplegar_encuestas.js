@@ -1,17 +1,9 @@
 function DesplegarEncuestas(btn) {
     var x = document.getElementById("contenido_"+btn.id);
-<<<<<<< HEAD
-    //alert(btn.id );
-=======
->>>>>>> f887af468785d130194acbcb78a3d9d1bf04ca04
     if (x.style.display === "none" || x.style.display === "") {
       x.style.display = "block";
     } else {
       x.style.display = "none";
-<<<<<<< HEAD
-      //alert(btn.id);
-=======
->>>>>>> f887af468785d130194acbcb78a3d9d1bf04ca04
     }
   }
 
@@ -20,11 +12,7 @@ function DesplegarRespuestas(btn){
   element.classList.add("active");
   var id_encuesta = btn.id;
   $.ajax({
-<<<<<<< HEAD
-    url: "/get_word",
-=======
     url: "/obtener_respuestas",
->>>>>>> f887af468785d130194acbcb78a3d9d1bf04ca04
     type: "get",
     data: {id_encuesta: id_encuesta},
     success: function(response) {

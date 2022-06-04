@@ -1,27 +1,16 @@
-<<<<<<< HEAD
-from flask import render_template, redirect, url_for, request
-=======
 from flask import render_template, redirect, url_for, request,abort
->>>>>>> f887af468785d130194acbcb78a3d9d1bf04ca04
 from flask_login import current_user, login_user, logout_user
 from werkzeug.urls import url_parse
 from app import login_manager
 from . import auth_bp
 from .forms import SignupForm, LoginForm
 from .models import User
-<<<<<<< HEAD
-=======
 from functools import wraps
->>>>>>> f887af468785d130194acbcb78a3d9d1bf04ca04
 
 @auth_bp.route("/signup/", methods=["GET", "POST"])
 def show_signup_form():
     if current_user.is_authenticated:
-<<<<<<< HEAD
-        return redirect(url_for('rutaBase'))
-=======
         return redirect(url_for('public.index'))
->>>>>>> f887af468785d130194acbcb78a3d9d1bf04ca04
     form = SignupForm()
     error = None
     if form.validate_on_submit():
@@ -49,11 +38,7 @@ def show_signup_form():
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-<<<<<<< HEAD
-        return redirect(url_for('rutaBase'))
-=======
         return redirect(url_for('public.index'))
->>>>>>> f887af468785d130194acbcb78a3d9d1bf04ca04
     form = LoginForm()
     error = None
     if form.validate_on_submit():
@@ -79,9 +64,6 @@ def logout():
 
 @login_manager.user_loader
 def load_user(email):
-<<<<<<< HEAD
-    return User.get_by_email(email)
-=======
     return User.get_by_email(email)
 
 def admin_required(f):
@@ -104,4 +86,3 @@ def admin_required(f):
 #            return fn(*args, **kwargs)
 #        return decorated_view
 #    return wrapper
->>>>>>> f887af468785d130194acbcb78a3d9d1bf04ca04
