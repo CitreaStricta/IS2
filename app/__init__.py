@@ -1,4 +1,4 @@
-from ensurepip import bootstrap
+
 from flask import Flask,render_template
 from flask_login import LoginManager
 from flask_mail import Mail
