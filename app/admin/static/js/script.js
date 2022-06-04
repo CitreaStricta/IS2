@@ -84,6 +84,11 @@ function addQuestion(){
     pregunta.contenidoPregunta.name = "input" + numberOfQuestion
     pregunta.contenidoPregunta.id = "inputId" + numberOfQuestion
     pregunta.contenidoPregunta.placeholder = "Add Pregunta here"
+    pregunta.revisarContenidoPregunta = document.createElement("div")
+    pregunta.revisarContenidoPregunta.appendChild(document.createTextNode("Vacio"))
+    if(!pregunta.contenidoPregunta){
+        pregunta.revisarContenidoPregunta.style.display="block";
+    }
 
     pregunta.alternativas = document.createElement("ul")
     pregunta.numAlternativas = 0
@@ -106,6 +111,7 @@ function addQuestion(){
     pregunta.appendChild(pregunta.contenidoPregunta)
     pregunta.appendChild(pregunta.botonPregunta)
     pregunta.appendChild(pregunta.botonAlternativas)
+    pregunta.appendChild(pregunta.revisarContenidoPregunta)
     pregunta.appendChild(pregunta.alternativas)
 
     encuesta.listPreguntas.appendChild(pregunta)

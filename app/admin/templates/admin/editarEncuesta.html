@@ -11,22 +11,22 @@
 	<h1 id="titulo" class="bd-title text-white" style="background-color: #1ABC9C;">Editar Encuesta</h1>
 	<div id="containerTitulo" class="form-control form-control-lg" style="background-color: #1ABC9C;" alt="Max-width 75%" align="center">
 		<h1>Titulo: 
-			<input class="titulo" value="{{datos.titulo[0]}}"></input>
+			<input class="titulo" value="{{db_data[1]}}"></input>
 		</h1>
 		<h3>Descripcion: 
-			<input class="descripcion" value="{{datos.descripcion[0]}}"></input>
+			<input class="descripcion" value="{{db_data[2]}}"></input>
 		</h3>
 		<h4>Fecha Comienzo: 
-			<input class="fechaComienzo" type="date" value="{{datos.fecha_comienzo[0]}}"></input>
+			<input class="fechaComienzo" type="date" value="{{db_data[3]}}"></input>
 			 Fecha Termino:
-			<input class="fechaTermino" type="date" value="{{datos.fecha_termino[0]}}"></input>
+			<input class="fechaTermino" type="date" value="{{db_data[4]}}"></input>
 		</h4>
 		
 	</div>	
 	<!--Container de preguntas-->
 	<!--div id="containerEncuesta" align="center" class="card bg-dark text-white w-75 p-3">
 	</div-->
-	<button id="save"  onclick="saveEdit('{{datos.id[0]}}')"">Guardar</button> <!-- deberia ser saveSurvey -->
+	<button id="save"  onclick="saveEdit('{{db_data[0]}}')"">Guardar</button> <!-- deberia ser saveSurvey -->
 	</center>
 </body>
 </html>
