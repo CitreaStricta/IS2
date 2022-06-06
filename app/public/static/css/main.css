@@ -1,0 +1,33 @@
+body{
+  background-color: #4574bb;
+}
+
+.nav-letras{
+  color:#ffffff;
+}
+
+.texto-elrobot{
+  color: #ffffff;
+
+}
+
+.boton-enlace{
+  background-color: #596597;
+
+}
+
+.contenedor-barraconboton{
+  padding: 1000px;
+  background-color: #2336a3 !important;
+  
+}
+
+.centrado{
+   margin-left: auto;
+   margin-right: auto;
+   width: 75%;
+}
+
+.texto-titulo-marchelo{
+  color:#ffffff;
+}
