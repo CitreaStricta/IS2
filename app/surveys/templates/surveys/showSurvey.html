@@ -98,7 +98,7 @@
             var alternativesDiv = document.createElement("div"); //Div para conjunto de alternativas
             for(let key in data){
                 let label = document.createElement("label")
-                label.innerHTML = key
+                label.innerHTML = " " + key
                 label.className = "form-check-label"
 
                 let input = document.createElement("input");
@@ -114,8 +114,8 @@
                     data[key] = true;
                 });
 
-                label.appendChild(input);
-
+                label.prepend(input);
+                console.log(label);
                 alternativesDiv.appendChild(label)
                 alternativesDiv.appendChild(document.createElement("br"))
             }
@@ -171,7 +171,7 @@
 
             //Notificar si falta una pregunta
             if(counterOfInputs == inputs.length){
-                alert("completar pregunta " + i.toString())
+                alert("completar pregunta " + (i+1).toString())
                 canSubmit = false;
             }
         }
