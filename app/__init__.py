@@ -34,6 +34,9 @@ def create_app():
     login_manager.init_app(app)
     login_manager.login_view = "auth.login"
 
+    #Bootstrap
+    bootstrap = Bootstrap(app)
+
     # Registro de los Blueprints
     from .auth import auth_bp
     app.register_blueprint(auth_bp)
@@ -46,6 +49,9 @@ def create_app():
     
     #bootstrap
     Bootstrap(app)
+
+    from .surveys import surveys_bp
+    app.register_blueprint(surveys_bp)
 
     #Errores
     register_error_handlers(app)
