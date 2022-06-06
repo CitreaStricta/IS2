@@ -1,6 +1,7 @@
 from flask import Flask,render_template
 from flask_login import LoginManager
 from .database import Database ,get_db_connection
+from flask_bootstrap import Bootstrap
 
 login_manager = LoginManager()
 
@@ -33,6 +34,9 @@ def create_app():
     login_manager.init_app(app)
     login_manager.login_view = "auth.login"
 
+    #Bootstrap
+    bootstrap = Bootstrap(app)
+
     # Registro de los Blueprints
     from .auth import auth_bp
     app.register_blueprint(auth_bp)
@@ -42,6 +46,9 @@ def create_app():
 
     from .public import public_bp
     app.register_blueprint(public_bp)
+
+    from .surveys import surveys_bp
+    app.register_blueprint(surveys_bp)
 
     #Errores
     register_error_handlers(app)
