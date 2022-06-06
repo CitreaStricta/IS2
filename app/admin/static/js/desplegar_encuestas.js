@@ -23,7 +23,7 @@ function DesplegarRespuestas(btn){
       }
       else{
         for (var i = 0; i < response.porcentajes.length; i++) {
-          for (var j = 0; j < response.porcentajes[0].length; j++) {
+          for (var j = 0; j < response.porcentajes[i].length; j++) {
             $("#"+id_encuesta+"_"+i+"_"+j).append(" ("+response.porcentajes[i][j]+"%)");
           }
         }
