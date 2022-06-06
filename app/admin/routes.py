@@ -118,15 +118,20 @@ def mostrar_preguntas_alternativas(id):
 @admin_required
 def obtener_respuestas():
     print("estoy obteniendo las respuestas")
-    id_encuesta = request.args.get('id_encuesta')[0]
+    id_encuesta = request.args.get('id_encuesta')
+    print(id_encuesta)
 
     sentenciaSQL = 'SELECT respuesta.respuestas FROM respuesta WHERE respuesta.id_encuesta = %s;'
-    todas_respuestas = db.fetch_all(sentenciaSQL,str(id_encuesta))
+    todas_respuestas = db.fetch_all(sentenciaSQL,(str(id_encuesta),))
+
+    sentenciaSQL = 'SELECT encuesta.preguntas FROM encuesta WHERE encuesta.id_encuesta = %s;'
+    todas_preguntas = db.fetch_one(sentenciaSQL,(str(id_encuesta),))
 
     if(len(todas_respuestas) == 0):
         return jsonify({'porcentajes':'No hay respuestas'})
 
-    print("todas las respuestas:",todas_respuestas) #POSIBLE OPTIMIZACION
+    #print("todas las respuestas:",todas_respuestas) #POSIBLE OPTIMIZACION
+    #print("todas las preguntas",todas_preguntas[0][0][0])
     #respuestas = [item[4]['Respuestas'] for item in todas_respuestas]
     respuestas = [item[0]['Respuestas'] for item in todas_respuestas]
     n_preguntas = len(respuestas[0])
@@ -137,9 +142,12 @@ def obtener_respuestas():
         respuesta_i = [x[i] for x in respuestas]
         count = Counter(respuesta_i)
         total = sum(count.values())
-        for i in range(len(respuestas)):
+        for i in range(len(todas_preguntas[0][0][i]['Alternativas'])):
+            #print("counter",count[str(i+1)])
             porcentajes_i.append(count[str(i+1)] / total * 100)
+        
         porcentajes.append(porcentajes_i)
+    #print(porcentajes)
     return jsonify({'porcentajes':porcentajes})
 
 @admin_bp.route('/agregarmails',methods=['GET','POST'])
