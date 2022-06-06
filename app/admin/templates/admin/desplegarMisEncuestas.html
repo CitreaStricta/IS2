@@ -24,8 +24,9 @@
     <div class="card bg-success text-white w-75 p-3 ">
       <span style="float:center;">Encuesta : {{ loop.index }}</span>
       <span style="float:center;">{{datos_encuesta_i[1]}}</span>
-      <a href="{{ url_for('admin.mostrar_preguntas_alternativas',id=datos_encuesta_i[0]) }}"> Ver encuesta</a>
-      <a href="{{ url_for('admin.rutaEditarEncuesta',id=datos_encuesta_i[0]) }}">Editar Encuestas</a>
+      
+      <a class="links-Ver-Editar-Encuesta" href="{{ url_for('admin.mostrar_preguntas_alternativas',id=datos_encuesta_i[0]) }}"> Ver encuesta</a>
+      <a class="links-Ver-Editar-Encuesta" href="{{ url_for('admin.rutaEditarEncuesta',id=datos_encuesta_i[0]) }}">Editar Encuestas</a>
     </div>
     <br>
     {%endfor%}
