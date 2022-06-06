@@ -47,13 +47,20 @@ function addAlternativa(pregunta){
     alternativa.contenido.id = "alternativaId" + pregunta.numAlternativas;
     alternativa.contenido.placeholder = "Add Alternativa here" // place holder
     alternativa.contenido.name = "input" + pregunta.numAlternativas;
+    alternativa.contenido.className="text-warning"
 
     alternativa.boton = document.createElement('button');
     alternativa.boton.innerHTML = "- alternativa"
     alternativa.boton.addEventListener('click', function(){
         // funcion que elimina la alternativa
-        pregunta.alternativas.removeChild(alternativa)
-        pregunta.numAlternativas--
+        if(pregunta.numAlternativas<=2){
+            alert("Se tiene que tener un minimo de dos alternativas por pregunta")
+        }
+        else{
+            pregunta.alternativas.removeChild(alternativa)
+            pregunta.numAlternativas--    
+        }
+        
     });
 
     alternativa.appendChild(alternativa.contenido)
@@ -111,11 +118,12 @@ function addQuestion(){
     pregunta.appendChild(pregunta.contenidoPregunta)
     pregunta.appendChild(pregunta.botonPregunta)
     pregunta.appendChild(pregunta.botonAlternativas)
-    pregunta.appendChild(pregunta.revisarContenidoPregunta)
+    //pregunta.appendChild(pregunta.revisarContenidoPregunta)
     pregunta.appendChild(pregunta.alternativas)
 
     encuesta.listPreguntas.appendChild(pregunta)
 
+    addAlternativa(pregunta)
     addAlternativa(pregunta)
 
     numberOfQuestion++;
