@@ -1,6 +1,8 @@
 from . import surveys_bp
-from flask import render_template, url_for, request, jsonify
+from flask import render_template, url_for, request, jsonify,redirect
 from app import db
+from datetime import date
+import json
 
 @surveys_bp.route("/showSurvey/<id>")
 def showSurvey(id):
@@ -24,10 +26,28 @@ def showSurvey(id):
             alternatives.append(alternative)
         choices.append(alternatives)
 
-    return render_template("surveys/showSurvey.html",questions=questions,choices=choices ,surveyTitle=survey_title, surveyDescription=survey_description)
+    return render_template("surveys/showSurvey.html",idSurvey=id, questions=questions,choices=choices ,surveyTitle=survey_title, surveyDescription=survey_description)
 
 
 
 @surveys_bp.route("/saveSurveyAnswer/<id>", methods=['POST'])
-def saveSurveyAnswer():
-    pass
+def saveSurveyAnswer(id):
+    if request.method == 'POST':
+        datosEncuesta = request.get_json(force = True)
+        id_encuesta = id
+        id_encuestado = 1 #Cambiar a uno de forma automatica
+        fecha = date.today()
+
+        try: 
+            sql = 'INSERT INTO respuesta (id_respuesta, id_encuesta, id_encuestado, fecha, respuestas) VALUES (DEFAULT,%s,%s,%s,%s)'
+            db.execute(sql, (id_encuesta,id_encuestado,fecha,json.dumps(datosEncuesta)))
+        except Exception as e:
+            print(e)
+            return {"message": "error!"}
+
+    return {"hola": "mundo!"}    
+
+
+@surveys_bp.route("/success")
+def success():
+    return render_template("surveys/success.html")
