@@ -1,7 +1,8 @@
-from flask import render_template, url_for, request, jsonify,abort
+from flask import render_template, url_for, request, jsonify,abort,current_app
 from flask_login import current_user, login_required
 from app.auth.routes import admin_required
 import json
+from app.mail import send_email_libre,send_email
 from collections import Counter
 from app import admin, db
 from . import admin_bp
@@ -34,6 +35,17 @@ def guardar_encuesta():
             sql = 'INSERT INTO encuesta (id_encuesta, titulo_encuesta, descripcion,fecha_comienzo,fecha_termino,preguntas[%s]) VALUES (DEFAULT,%s,%s,%s,%s,%s);'
             db.execute(sql, (numPreguntas,titulo,descripcion,fechaComienzo,fechaTermino,json.dumps(preguntas)))
             print("se ejecuto consulta SQL para guardar encuesta")
+            sentenciaSQL = 'SELECT correo FROM mails WHERE mails.suscrito = True;'
+            todos_correos = db.fetch_all(sentenciaSQL)
+            todos_correos = [x[0] for x in todos_correos]
+            sentsql = 'SElECT MAX(id_encuesta) FROM encuesta;'
+            id_encuesta= db.fetch_one(sentsql)
+            for i in todos_correos:
+                send_email(subject='Encuesta para responder',
+                       sender=current_app.config['DONT_REPLY_FROM_EMAIL'],
+                       recipients=[i],
+                       text_body='Hola, puedes contestar la encuesta entrando en: http://127.0.0.1:5000/showSurvey/'+str(id_encuesta[0]),
+                       html_body=None)
             return {"hola": "mundo!"}
         except Exception as e:
             print(e)
