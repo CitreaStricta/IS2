@@ -11,14 +11,16 @@
         <li class="nav-item"><a href="/login" class="nav-link nav-letras">Log In</a></li>
         <li class="nav-item"><a href="/signup" class="nav-link nav-letras">Sign Up</a></li>
       {% else %}
-        <li class="nav-item"><a href="/crearEncuesta" class="nav-link nav-letras">Crear</a></li>
-        <li class="nav-item"><a href="/verEncuestas" class="nav-link nav-letras">Ver Encuestas</a></li>
-        <li class="nav-item"><a href="/agregarmails" class="nav-link nav-letras">Agregar Mail</a></li>
-        <li class="nav-item"><a href="/" class="nav-link nav-letras">Bienvenido {{current_user.name}}</a></li>
-        <li class="nav-item"><a href="/logout" class="nav-link nav-letras">Log Out</a></li>
         {% if current_user.is_admin %}
-          <li class="nav-item"><a href="#" class="nav-link nav-letras">Bienvenido admin</a></li>
+
+          <li class="nav-item"><a href="/crearEncuesta" class="nav-link nav-letras">Crear</a></li>
+          <li class="nav-item"><a href="/verEncuestas" class="nav-link nav-letras">Ver Encuestas</a></li>
+          <li class="nav-item"><a href="/agregarmails" class="nav-link nav-letras">Agregar Mail</a></li>
+          <li class="nav-item"><a href="#" class="nav-link nav-letras">Bienvenido admin {{current_user.name}}</a></li>
+        {% else %}
+          <li class="nav-item"><a href="/" class="nav-link nav-letras">Bienvenido {{current_user.name}}</a></li>
         {% endif %}
+        <li class="nav-item"><a href="/logout" class="nav-link nav-letras">Log Out</a></li>
       {% endif %}
     </ul>
   </header>
