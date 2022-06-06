@@ -1,22 +1,43 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-	<title>Crear Encuesta</title>
-</head>
-<body style="background-color:#1ABC9C;" onload="addTitulo(), addEncuesta(), addQuestion()">
-	<center>
-	<h1 id="titulo" class="bd-title text-white" style="background-color: #1ABC9C;">Crear Encuesta</h1>
-	<div id="containerTitulo" class="form-control form-control-lg" style="background-color: #1ABC9C;" alt="Max-width 75%" align="center"></div>	
-	<!--Container de preguntas-->
-	<div id="containerEncuesta" align="center" class="card bg-dark text-white w-75 p-3">
-	</div>
-	<button id="addElement" onclick="addQuestion()">Agregar pregunta(+)</button>
-	<button id="save"  onclick="saveQuestions()">Guardar</button> <!-- deberia ser saveSurvey -->
-	</center>
-</body>
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Page Title</title>
+    <link rel="stylesheet" href="{{ url_for('public.static', filename='css/bootstrap.min.css')}}">
+    <link rel="stylesheet" href="{{ url_for('public.static', filename='css/main.css')}}">
+	<link rel="stylesheet" href="{{ url_for('public.static', filename='css/para_crear_encuesta.css')}}">
+
+
+
+
+    <style>
+        /* aqui puede ir codigo css */
+    </style>
+
+
+
+	</head>
+	<body style="background-color:#4574bb;" onload="addTitulo(), addEncuesta(), addQuestion()">
+
+		{% include 'public/nav_bar.html' %}
+		<center>
+		<div id="containerTitulo" class="form-control form-control-lg creacion-encuesta-titulo" style="background-color: #4574bb;" alt="Max-width 75%" align="center">
+			<h1 id="titulo" class="bd-title text-white titulazo" style="background-color: #4574bb;">Crear Encuesta</h1>
+		</div>	
+		<!--Container de preguntas-->
+		<div id="containerEncuesta" align="center" class="card bg-dark text-white w-75 p-3 titulazo preguntas-container">
+			
+		</div>
+		<button id="addElement" onclick="addQuestion()" class="titulazozo">Agregar pregunta(+)</button>
+		<button id="save"  onclick="saveQuestions()" class="titulazozo">Guardar</button> <!-- deberia ser saveSurvey -->
+		</center>
+
+		<!-- JS -->
+		<script src="{{ url_for('public.static', filename='js/popper.min.js') }}"></script>
+		<script src="{{ url_for('public.static', filename='js/bootstrap.min.js') }}"></script>
+		<script src="{{ url_for('admin.static', filename='js/script.js') }}"></script>
+	</body>
 </html>
 
-<script src="{{ url_for('admin.static', filename='js/script.js') }}"></script>
