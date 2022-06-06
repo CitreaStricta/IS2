@@ -18,6 +18,7 @@ def rutaCrearEncuesta():
 @login_required
 @admin_required
 def guardar_encuesta():
+    print("guardar encuesta")
     if request.method == 'POST':
         datosEncuesta = request.get_json(force = True)
         titulo=datosEncuesta[0]
@@ -27,10 +28,13 @@ def guardar_encuesta():
         preguntas=datosEncuesta[4]
         numPreguntas=len(preguntas)
 
+        print(datosEncuesta)
+
         try:
             sql = 'INSERT INTO encuesta (id_encuesta, titulo_encuesta, descripcion,fecha_comienzo,fecha_termino,preguntas[%s]) VALUES (DEFAULT,%s,%s,%s,%s,%s);'
             db.execute(sql, (numPreguntas,titulo,descripcion,fechaComienzo,fechaTermino,json.dumps(preguntas)))
-            return render_template('public/index.html')
+            print("se ejecuto consulta SQL para guardar encuesta")
+            return {"hola": "mundo!"}
         except Exception as e:
             print(e)
 
@@ -51,8 +55,7 @@ def guardar_editar_encuesta():
         try: 
             sql = 'UPDATE encuesta SET titulo_encuesta = %s , descripcion = %s,fecha_comienzo = %s,fecha_termino = %s WHERE id_encuesta = %s'
             db.execute(sql, (titulo,descripcion,fechaComienzo,fechaTermino,id))
-            
-            return render_template('admin/index.html')
+            return {"hola": "mundo!"}
         except Exception as e:
             print(e)
 

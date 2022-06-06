@@ -9,10 +9,12 @@ function addTitulo(){
 	container.titulo = document.createElement("input") // se refiere a un h1, un div, un boton, un elemento HTML
     container.titulo.id = "titleId"
     container.titulo.placeholder = "Add Title here" // place holder
+    //container.titulo.className = "form-control form-control-lg"
     
     container.descripcion = document.createElement("input") // se refiere a un h1, un div, un boton, un elemento HTML
     container.descripcion.id = "descripcionId"
     container.descripcion.placeholder = "Add Descripción here" // place holder
+    //container.descripcion.className = "form-control"
 
     container.fechaComienzo = document.createElement("input")
     container.fechaComienzo.id= "fechaComienzoId"
@@ -47,7 +49,7 @@ function addAlternativa(pregunta){
     alternativa.contenido.id = "alternativaId" + pregunta.numAlternativas;
     alternativa.contenido.placeholder = "Add Alternativa here" // place holder
     alternativa.contenido.name = "input" + pregunta.numAlternativas;
-    alternativa.contenido.className="text-warning"
+    //alternativa.contenido.className="text-warning"
 
     alternativa.boton = document.createElement('button');
     alternativa.boton.innerHTML = "- alternativa"
@@ -160,6 +162,7 @@ const fetchDataAsync = async(url_api,datosEncuesta) => {
         window.location.replace("http://127.0.0.1:5000/");
     } catch (error) {
         console.error(error.message);
+        alert("Ocurrio un error, vuelva a intentarlo mas tarde")
     }
 }
 
@@ -242,6 +245,8 @@ function saveQuestions(){
     }
     //console.log(jsonEncuesta);
     datosEncuesta.push(jsonEncuesta)
+
+    console.log(datosEncuesta);
     
     var url_api = "http://127.0.0.1:5000/guardarEncuesta"
     fetchDataAsync(url_api, datosEncuesta);

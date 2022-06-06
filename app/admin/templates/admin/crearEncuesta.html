@@ -27,7 +27,7 @@
 			<h1 id="titulo" class="bd-title text-white titulazo" style="background-color: #4574bb;">Crear Encuesta</h1>
 		</div>	
 		<!--Container de preguntas-->
-		<div id="containerEncuesta" align="center" class="card bg-dark text-white w-75 p-3 titulazo preguntas-container">
+		<div id="containerEncuesta" class="form-control form-control-lg creacion-encuesta-titulo" style="background-color: #4574bb;" alt="Max-width 75%" align="center">
 			
 		</div>
 		<button id="addElement" onclick="addQuestion()" class="titulazozo">Agregar pregunta(+)</button>
@@ -35,7 +35,7 @@
 		</center>
 
 		<!-- JS -->
-		<script src="{{ url_for('public.static', filename='js/popper.min.js') }}"></script>
+		<script src="{{ url_for('public.static', filename='js/popper.min.js') }}"></script> <!--Lucas no le carga esto-->
 		<script src="{{ url_for('public.static', filename='js/bootstrap.min.js') }}"></script>
 		<script src="{{ url_for('admin.static', filename='js/script.js') }}"></script>
 	</body>
