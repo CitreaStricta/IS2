@@ -3,6 +3,7 @@ from flask import Flask,render_template
 from flask_login import LoginManager
 from flask_mail import Mail
 from .database import Database ,get_db_connection
+from flask_bootstrap import Bootstrap
 
 login_manager = LoginManager()
 
@@ -42,6 +43,9 @@ def create_app():
 
     from .public import public_bp
     app.register_blueprint(public_bp)
+    
+    #bootstrap
+    Bootstrap(app)
 
     #Errores
     register_error_handlers(app)
