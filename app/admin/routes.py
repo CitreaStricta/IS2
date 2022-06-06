@@ -148,11 +148,14 @@ def obtener_respuestas():
 def insertarmail():
     form=MailForm()
     error=None
+    creado=None
     if request.method=='POST':
         if form.validate_on_submit():
             email=form.email.data
             suscrito= True
             db.execute('INSERT INTO mails values(%s,%s)',(email,suscrito))
+            creado= f'Mail ingresado exitosamente'
+            return render_template('admin/agregarmails.html', form=form,creado=creado)
         else:
             error = f'Datos incorrectos, intentelo nuevamente'
     return render_template('admin/agregarmails.html', form=form,error=error)

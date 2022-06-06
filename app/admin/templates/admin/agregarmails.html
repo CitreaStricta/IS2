@@ -37,6 +37,19 @@
             </div>
         </form>
     </div>
+    <div class="container-fluid form-orden-campos">
+        {% if creado %}
+            <p style="color: yellow;"><strong>Creado:</strong> {{ creado }}
+        {% endif %}
+        <form action="" method="post" novalidate>
+            {{form.hidden_tag()}}
+            <div>
+                {% for error in form.email.errors %}
+                <span style="color: yellow;">{{ creado }}</span>
+                {% endfor %}
+            </div>
+        </form>
+    </div>
 
     <!-- JS -->
     <script src="{{ url_for('public.static', filename='js/popper.min.js') }}"></script>
