@@ -18,7 +18,7 @@ function DesplegarRespuestas(btn){
     success: function(response) {
       if($.type(response.porcentajes) === "string"){
         element.classList.remove("active");
-        $("#"+id_encuesta).html(response.porcentajes);
+        $("#"+id_encuesta+"_encuesta").html(response.porcentajes);
         
       }
       else{

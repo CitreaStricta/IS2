@@ -89,13 +89,16 @@
     <div align="center" class="card bg-success text-white w-75 p-3">
       <h3 align="right">Fecha Comienzo: {{db_data[3]}}</h3>
       <h3 align="right">Fecha Final: {{db_data[4]}}</h3>
-      <h1>{{db_data[1]}}</h1>
+      <h1 id="{{db_data[0]}}_encuesta">{{db_data[1]}}</h1>
       <h2>{{db_data[2]}}</h2>
       <br></br>
+      <button id="{{db_data[0]}}" onclick="DesplegarRespuestas(this)">Ver respuestas</button>
       {% for pregunta_alternativa in db_data[5][0]%}
+      {% set pregunta_loop = loop %}
         <h2>{{pregunta_alternativa['Pregunta']}}</h2>
         {% for alternativa in pregunta_alternativa['Alternativas'] %}
-          <h3>{{alternativa}}</h3>
+        {% set alternativa_loop = loop %}
+          <h3 id="{{db_data[0]}}_{{pregunta_loop.index0}}_{{alternativa_loop.index0}}">{{alternativa}}</h3>
         {% endfor %}
       {% endfor %}
 
