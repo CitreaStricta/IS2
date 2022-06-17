@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="es">
   <head>
@@ -51,6 +52,19 @@
 
 
 
+=======
+{% extends "public/base.html" %}
+
+{% block title %} Indice Principal {% endblock %}
+
+{% block specific_css_files %}
+  <link rel="stylesheet" href="{{ url_for('public.static', filename='css/main.css')}}">
+{% endblock %}
+
+{% block content %}
+
+  {% if current_user.is_admin %}
+>>>>>>> develop
     <div class="centrado">
       
       <!-- espacio con el boton para crear encuesta -->
@@ -64,7 +78,11 @@
 
 
       <!-- espacio con las dos casillas con botones -->
+<<<<<<< HEAD
       <div class="row align-items-md-stretch">
+=======
+      <div class="row align-items-md-stretch mb-4">
+>>>>>>> develop
         <!-- espacio con casilla de crear encuesta -->
         <div class="col-md-6">
           <div class="h-100 p-5 text-white bg-dark rounded-3">
@@ -84,6 +102,7 @@
         </div>
       </div>
     </div>
+<<<<<<< HEAD
 
     
 
@@ -94,3 +113,11 @@
     
   </body>
 </html>
+=======
+    <!--br-->
+
+  {% endif %}
+
+{% endblock %}
+
+>>>>>>> develop
