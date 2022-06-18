@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <title>Encuesta</title>
+</head>
+
+<body onload="showCuestions()" class="">
+
+    <div class="main-content">
+        <div class="divTitle">
+            <h1 class="center-title">{{surveyTitle}}</h1>
+        </div>
+        
+        <div class="divDescription">
+            <h4>{{surveyDescription}}</h2>
+        </div>
+        
+    
+        <div id="questionsContainer" class="questionsContainer">
+            
+        </div>
+    
+        <div class="divSubmit" id="divSubmit"></div>
+    </div>
+    
+
+</body>
+</html>
+
+<style>
+    body{
+        max-width: 500px;
+        margin: auto;
+        background-image: radial-gradient(#4055c3 2px, transparent 2px), radial-gradient(#4055c3 2px, transparent 2px);
+        background-size: 32px 32px;
+        background-position: 0 0, 16px 16px;
+        background-color: #4dadf0;
+    }
+
+    .main-content{
+        background-color: #BABABA;
+    }
+
+    .divSubmit{
+        text-align: center;
+        justify-content: center;
+        padding-bottom: 40px;
+    }
+
+    .divTitle{
+        text-align: center;
+    }
+
+    .divDescription{
+        text-align: center;
+    }
+
+    .questionsContainer{
+        padding-left: 50px;
+    }
+
+
+</style>
+
+<script>
+
+    var redirect = false
+
+    function showCuestions() {
+        var questions = '{{ questions|tojson }}';
+        questions = JSON.parse(questions)
+
+        var choices = '{{ choices|tojson }}'
+        choices = JSON.parse(choices)
+        
+
+        var answers = []
+        var questionsContainer = document.getElementById("questionsContainer"); //Contenedor global
+        for(let i=0 ; i<choices.length ; i++){
+            var question = document.createElement("h4"); //titulo de la pregunta
+            var questionCointainer = document.createElement("div"); //Contenedor de la pregunta actual
+            questionCointainer.id = "questionContainer" + i.toString();
+            questionCointainer.className = "questionContainer" + i.toString();
+
+            question.innerHTML = (i+1).toString() + ". " + questions[i]; //i-esima pregunta
+
+            //Creo un objeto con las alternativas y en
+            //un comienzo están todas en falso (no marcadas)
+            var data = {}
+            for(let j=0 ; j<choices[i].length ; j++){
+                data[choices[i][j]] = false;      
+            }
+
+            var alternativesDiv = document.createElement("div"); //Div para conjunto de alternativas
+            for(let key in data){
+                let label = document.createElement("label")
+                label.innerHTML = " " + key
+                label.className = "form-check-label"
+
+                let input = document.createElement("input");
+                input.type = "radio";
+                input.name = "answers" + i.toString()
+                input.className = "form-check-input"
+                input.checked = data[key] ? data[key] : false;
+
+                input.addEventListener('change', () => {
+                    Object.keys(data).forEach(key => {
+                        data[key] = false;
+                    })
+                    data[key] = true;
+                });
+
+                label.prepend(input);
+                console.log(label);
+                alternativesDiv.appendChild(label)
+                alternativesDiv.appendChild(document.createElement("br"))
+            }
+
+        
+            questionCointainer.appendChild(question);
+            questionsContainer.appendChild(questionCointainer);
+            questionCointainer.appendChild(alternativesDiv)
+            
+        }
+
+
+        var divSubmit = document.getElementById("divSubmit");
+        var buttonSubmit = document.createElement("input");
+        buttonSubmit.type = "button"
+        buttonSubmit.value = "Enviar Respuesta"
+        buttonSubmit.className = "btn btn-primary"
+        buttonSubmit.addEventListener('click', function(){
+            submitAnswers();
+        });
+        divSubmit.appendChild(buttonSubmit)
+    }
+
+
+    function submitAnswers(){
+        var id = '{{ idSurvey|tojson }}'
+        id = JSON.parse(id) //Id de la encuesta
+
+        var questionsContainer = document.getElementById("questionsContainer");
+
+        var choices = '{{ choices|tojson }}'
+        choices = JSON.parse(choices)
+
+        var answers = {}
+        var toSend = []
+        var canSubmit = true;
+        for(let i=0 ; i<choices.length ; i++){
+            var questionContainer = questionsContainer.getElementsByClassName("questionContainer"+i.toString())
+            var divOfAlternatives = questionContainer[0].getElementsByTagName("div")
+
+            var labels = divOfAlternatives[0].getElementsByTagName("label")
+            var inputs = divOfAlternatives[0].getElementsByTagName("input")
+            
+            var counterOfInputs = 0;
+            for(let j=0 ; j<inputs.length ; j++){
+                if(inputs[j].checked == false){
+                    counterOfInputs++;
+                }else{
+                    answers[i] = j + 1;
+                    toSend.push(answers[i].toString())
+                }
+            }
+
+            //Notificar si falta una pregunta
+            if(counterOfInputs == inputs.length){
+                alert("completar pregunta " + (i+1).toString())
+                canSubmit = false;
+            }
+        }
+
+        if(!canSubmit){
+            console.log("No se puede enviar respuestas incompletas");
+        }else{
+            redirect = true;
+        }
+
+        if(redirect){
+            var url_api = "http://127.0.0.1:5000/saveSurveyAnswer/" + id.toString();
+            var data = {}
+            data["Respuestas"] = toSend
+            fetchDataAsync(url_api,data);
+        }
+    }
+
+
+    const fetchData = (url_api,datosEncuesta) => {
+    
+        return new Promise((resolve, reject) => { // resolve se ejecuta cuando la peticion fue exitosa (reject cuando no)
+
+            const xhttp = new XMLHttpRequest(); // instanciacion
+
+            xhttp.open('POST', url_api , true); // "vamos al url de tipo post para ejecutar de forma asincrona"
+
+            xhttp.onreadystatechange = () => {
+                if(xhttp.readyState === 4){
+                    if(xhttp.status === 200){
+                        resolve(JSON.parse(xhttp.responseText));
+                    }else{
+                        reject(new Error('Error : ' + url_api));
+                    }
+                }
+            }
+
+            xhttp.send(JSON.stringify(datosEncuesta));
+        });
+}
+
+const fetchDataAsync = async(url_api,datosEncuesta) => {
+    try {
+        const response = await fetchData(url_api,datosEncuesta);
+        
+        console.log(response)
+        if(redirect){  
+            window.location.replace("http://127.0.0.1:5000/success");
+        }
+    } catch (error) {
+        console.error(error.message);
+    }
+}
+
+
+</script>

@@ -68,48 +68,7 @@ function saveEdit(idEncuesta){
     datosEncuesta.push(idEncuesta)
 
     console.log(datosEncuesta);
-    /*
-    // Falta ingresar formato para tener en JSON la encuesta
-    var listaPreguntas = encuesta.listPreguntas
-    if(encuesta.numPreguntas==0){
-        alert("Agregue al menos una pregunta a la encuesta")
-        return
-    }
-    var preguntaActual = 0
-    var contadorDivs = 0 // este es el contador que iterara por listaPreguntas
-    while(preguntaActual<encuesta.numPreguntas){
-        var json = {}
-        var alternativasDePregunta = []
-        var contenidoDePregunta = listaPreguntas.getElementsByTagName("div")[contadorDivs].contenidoPregunta.value
-        if(!contenidoDePregunta){
-            alert("inserte el enunciado de la pregunta " + (preguntaActual+1))
-            return;
-        }
-        json['Pregunta'] = contenidoDePregunta
-        var alternativaActual = 1
-        var numAlternativasActual = listaPreguntas.getElementsByTagName("div")[contadorDivs].numAlternativas
-        if(numAlternativasActual==0){
-            alert("La pregunta " + (preguntaActual+1) + " no tiene alternativas")
-            return
-        }
-        while(alternativaActual <= numAlternativasActual){
-            contenidoAlternativa = listaPreguntas.getElementsByTagName("div")[contadorDivs+alternativaActual].contenido.value
-            if(!contenidoAlternativa){
-                alert("La pregunta " + (preguntaActual+1) + " no tiene contenido en la alternativa " + alternativaActual)
-                return
-            }
-            alternativasDePregunta.push(contenidoAlternativa)
-            alternativaActual++
-        }
-        json['Alternativas'] = alternativasDePregunta
-        jsonEncuesta.push(json)
-        contadorDivs += listaPreguntas.getElementsByTagName("div")[contadorDivs].numAlternativas
-        contadorDivs++
-        preguntaActual++
-    }
-    //console.log(jsonEncuesta);
-    datosEncuesta.push(jsonEncuesta)
-    */
+    
     var url_api = "http://127.0.0.1:5000/guardarEditEncuesta"
     fetchDataAsync(url_api, datosEncuesta);
 }
