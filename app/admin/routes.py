@@ -44,7 +44,7 @@ def guardar_encuesta():
                 send_email(subject='Encuesta para responder',
                        sender=current_app.config['DONT_REPLY_FROM_EMAIL'],
                        recipients=[i],
-                       text_body='Hola, puedes contestar la encuesta entrando en: http://127.0.0.1:5000/showSurvey/'+str(id_encuesta[0]),
+                       text_body='Hola, puedes contestar la encuesta entrando en: http://127.0.0.1:5004/showSurvey/'+str(id_encuesta[0]),
                        html_body=None)
             return {"hola": "mundo!"}
         except Exception as e:

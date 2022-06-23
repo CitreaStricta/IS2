@@ -46,16 +46,20 @@ def saveSurveyAnswer(id):
     if request.method == 'POST':
         datosEncuesta = request.get_json(force = True)
         id_encuesta = id
-        id_encuestado = 1 #Cambiar a uno de forma automatica
+        #id_encuestado = datosEncuesta[1]
+        id_encuestado = 1 #Esperar a cambio en la tabla
         fecha = date.today()
+
+        #return {"hola": "mundo!"} 
 
         try: 
             sql = 'INSERT INTO respuesta (id_respuesta, id_encuesta, id_encuestado, fecha, respuestas) VALUES (DEFAULT,%s,%s,%s,%s)'
-            db.execute(sql, (id_encuesta,id_encuestado,fecha,json.dumps(datosEncuesta)))
+            db.execute(sql, (id_encuesta,id_encuestado,fecha,json.dumps(datosEncuesta[0])))
         except Exception as e:
             print(e)
             return {"message": "error!"}
-    return {"message": "success!"}    
+
+    return {"hola": "mundo!"}     
 
 
 @surveys_bp.route("/success")
