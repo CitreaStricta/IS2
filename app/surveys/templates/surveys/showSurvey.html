@@ -11,6 +11,10 @@
 <body onload="showCuestions()" class="">
 
     <div class="main-content">
+
+        <div id="userMail" value="{{current_user.email}}">
+        </div>
+
         <div class="divTitle">
             <h1 class="center-title">{{surveyTitle}}</h1>
         </div>
@@ -145,6 +149,7 @@
         id = JSON.parse(id) //Id de la encuesta
 
         var questionsContainer = document.getElementById("questionsContainer");
+        var userMail = document.getElementById("userMail").getAttribute('value');
 
         var choices = '{{ choices|tojson }}'
         choices = JSON.parse(choices)
@@ -169,6 +174,8 @@
                 }
             }
 
+
+
             //Notificar si falta una pregunta
             if(counterOfInputs == inputs.length){
                 alert("completar pregunta " + (i+1).toString())
@@ -183,10 +190,13 @@
         }
 
         if(redirect){
-            var url_api = "http://127.0.0.1:5000/saveSurveyAnswer/" + id.toString();
+            var url_api = "http://127.0.0.1:5004/saveSurveyAnswer/" + id.toString();
             var data = {}
             data["Respuestas"] = toSend
-            fetchDataAsync(url_api,data);
+            dataSend=[]
+            dataSend.push(data)
+            dataSend.push(userMail)
+            fetchDataAsync(url_api,dataSend);
         }
     }
 
@@ -219,7 +229,7 @@ const fetchDataAsync = async(url_api,datosEncuesta) => {
         
         console.log(response)
         if(redirect){  
-            window.location.replace("http://127.0.0.1:5000/success");
+            window.location.replace("http://127.0.0.1:5004/success");
         }
     } catch (error) {
         console.error(error.message);
