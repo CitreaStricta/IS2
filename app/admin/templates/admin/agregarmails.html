@@ -1,12 +1,4 @@
 <!DOCTYPE html>
-<<<<<<< HEAD
-<html>
-<head>
-	<meta charset="utf-8">
-    <title>Añadir correos</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <div class="container-fluid">
-=======
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -28,31 +20,19 @@
     {% include 'public/nav_bar.html' %}
     <br><br><br><br><br><br><br><br><br><br><br>
     <div class="container-fluid form-orden-campos">
->>>>>>> develop
         {% if error %}
             <p style="color: red;"><strong>Error:</strong> {{ error }}
         {% endif %}
         <form action="" method="post" novalidate>
             {{form.hidden_tag()}}
             <div>
-<<<<<<< HEAD
-                {{ form.email.label }}
-                {{ form.email }}<br>
-=======
                 {{ form.email.label(class="form-label letras_en_login") }}
                 {{ form.email(class_="form-control letras_en_login") }}<br>
->>>>>>> develop
                 {% for error in form.email.errors %}
                 <span style="color: red;">{{ error }}</span>
                 {% endfor %}
             </div>
             <div>
-<<<<<<< HEAD
-                {{ form.submit() }}
-            </div>
-        </form>
-    </div>
-=======
                 {{ form.submit(class="btn btn-primary") }}
             </div>
         </form>
@@ -70,11 +50,40 @@
             </div>
         </form>
     </div>
-
+    <div class="container-fluid form-orden-campos">
+        {% if error %}
+            <p style="color: red;"><strong>Error:</strong> {{ error }}
+        {% endif %}
+        <form action="" method="post" novalidate>
+            {{form.hidden_tag()}}
+            <div>
+                {{ form.email.label(class="form-label letras_en_login") }}
+                {{ form.email(class_="form-control letras_en_login") }}<br>
+                {% for error in form.email.errors %}
+                <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div>
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
+        </form>
+    </div>
+    <div class="container-fluid form-orden-campos">
+        {% if creado %}
+            <p style="color: yellow;"><strong>Creado:</strong> {{ creado }}
+        {% endif %}
+        <form action="" method="post" novalidate>
+            {{form.hidden_tag()}}
+            <div>
+                {% for error in form.email.errors %}
+                <span style="color: yellow;">{{ creado }}</span>
+                {% endfor %}
+            </div>
+        </form>
+    </div>
     <!-- JS -->
     <script src="{{ url_for('public.static', filename='js/popper.min.js') }}"></script>
     <script src="{{ url_for('public.static', filename='js/bootstrap.min.js') }}"></script>
 </body>
->>>>>>> develop
 </head>
 </html>

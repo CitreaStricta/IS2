@@ -1,16 +1,5 @@
 
 import logging
-<<<<<<< HEAD
-from logging.handlers import SMTPHandler
-from flask import Flask,render_template
-from flask_login import LoginManager
-from .database import Database ,get_db_connection
-from flask_mail import Mail
-
-login_manager = LoginManager()
-mail = Mail()
-
-=======
 from flask import Flask,render_template
 from flask_login import LoginManager
 from logging.handlers import SMTPHandler
@@ -20,7 +9,6 @@ from flask_bootstrap import Bootstrap
 
 login_manager = LoginManager()
 mail=Mail()
->>>>>>> develop
 db = Database(
     db = "d28t56b7dpk32k",
     user = "zntctcuflomgsk",
@@ -28,23 +16,6 @@ db = Database(
     port = "5432",
     host = "ec2-52-5-110-35.compute-1.amazonaws.com"
 )
-<<<<<<< HEAD
-
-def register_error_handlers(app):
-    @app.errorhandler(500)
-    def base_error_handler(e):
-        return render_template('500.html'), 500
-
-    @app.errorhandler(404)
-    def error_404_handler(e):
-        return render_template('404.html'), 404
-
-    @app.errorhandler(401)
-    def error_404_handler(e):
-        return render_template('401.html'), 401
-
-=======
->>>>>>> develop
 def configure_mail(app):
     mail_handler = SMTPHandler((app.config['MAIL_SERVER'], app.config['MAIL_PORT']),
                                 app.config['DONT_REPLY_FROM_EMAIL'],
@@ -65,19 +36,11 @@ def mail_handler_formatter():
             Module:             %(module)s
             Function:           %(funcName)s
             Time:               %(asctime)s.%(msecs)d
-<<<<<<< HEAD
-
             Message:
-
-=======
-            Message:
->>>>>>> develop
             %(message)s
         ''',
         datefmt='%d/%m/%Y %H:%M:%S'
     )
-<<<<<<< HEAD
-=======
 def register_error_handlers(app):
     @app.errorhandler(500)
     def base_error_handler(e):
@@ -90,7 +53,6 @@ def register_error_handlers(app):
     @app.errorhandler(401)
     def error_404_handler(e):
         return render_template('401.html'), 401
->>>>>>> develop
 
 def create_app():
     app = Flask(__name__)
@@ -105,10 +67,6 @@ def create_app():
     app.config['DONT_REPLY_FROM_EMAIL'] = 'mails.empresa.is@gmail.com'
     app.config['MAIL_USE_TLS'] = True
     app.config['MAIL_USE_SSL'] = False
-<<<<<<< HEAD
-
-=======
->>>>>>> develop
     configure_mail(app)
     #Manejador de Login
     login_manager.init_app(app)
@@ -125,11 +83,6 @@ def create_app():
 
     from .public import public_bp
     app.register_blueprint(public_bp)
-<<<<<<< HEAD
-
-    #Errores
-    register_error_handlers(app)
-=======
     
     #bootstrap
     Bootstrap(app)
@@ -141,6 +94,5 @@ def create_app():
     register_error_handlers(app)
     
 
->>>>>>> develop
 
     return app

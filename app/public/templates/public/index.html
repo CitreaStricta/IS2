@@ -1,58 +1,3 @@
-<<<<<<< HEAD
-<!DOCTYPE html>
-<html lang="es">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Page Title</title>
-    <link rel="stylesheet" href="{{ url_for('public.static', filename='css/bootstrap.min.css')}}">
-    <link rel="stylesheet" href="{{ url_for('public.static', filename='css/main.css')}}">
-
-
-
-
-    <style>
-        /* aqui puede ir codigo css */
-    </style>
-
-
-
-  </head>
-  <body>
-
-
-
-    <div class="container">
-      <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
-          <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
-          <span class="fs-4 texto-titulo-marchelo"> Marchelo Survey's </span>
-        </a>
-  
-        <ul class="nav nav-pills nav-principal">
-          <li class="nav-item"><a href="/home" class="nav-link active" aria-current="page">Home</a></li>
-          {% if current_user.is_anonymous %}
-            <li class="nav-item"><a href="/login" class="nav-link nav-letras">Log In</a></li>
-            <li class="nav-item"><a href="/signup" class="nav-link nav-letras">Sign Up</a></li>
-          {% else %}
-            <li class="nav-item"><a href="/crearEncuesta" class="nav-link nav-letras">Crear</a></li>
-            <li class="nav-item"><a href="/verEncuestas" class="nav-link nav-letras">Ver Encuestas</a></li>
-            <li class="nav-item"><a href="/desplegarEditarEncuestas" class="nav-link nav-letras">Editar Encuestas</a></li>
-            <li class="nav-item"><a href="/agregarmails" class="nav-link nav-letras">Agregar Mail</a></li>
-            <li class="nav-item"><a href="/" class="nav-link nav-letras">Bienvenido {{current_user.name}}</a></li>
-            <li class="nav-item"><a href="/logout" class="nav-link nav-letras">Log Out</a></li>
-            {% if current_user.is_admin %}
-              <li class="nav-item"><a href="#" class="nav-link nav-letras">Bienvenido admin</a></li>
-            {% endif %}
-          {% endif %}
-        </ul>
-      </header>
-    </div>
-
-
-
-=======
 {% extends "public/base.html" %}
 
 {% block title %} Indice Principal {% endblock %}
@@ -64,7 +9,6 @@
 {% block content %}
 
   {% if current_user.is_admin %}
->>>>>>> develop
     <div class="centrado">
       
       <!-- espacio con el boton para crear encuesta -->
@@ -78,11 +22,7 @@
 
 
       <!-- espacio con las dos casillas con botones -->
-<<<<<<< HEAD
-      <div class="row align-items-md-stretch">
-=======
       <div class="row align-items-md-stretch mb-4">
->>>>>>> develop
         <!-- espacio con casilla de crear encuesta -->
         <div class="col-md-6">
           <div class="h-100 p-5 text-white bg-dark rounded-3">
@@ -102,22 +42,9 @@
         </div>
       </div>
     </div>
-<<<<<<< HEAD
-
-    
-
-    <!-- JS -->
-
-    <script src="{{ url_for('public.static', filename='js/popper.min.js') }}"></script>
-    <script src="{{ url_for('public.static', filename='js/bootstrap.min.js') }}"></script>
-    
-  </body>
-</html>
-=======
     <!--br-->
 
   {% endif %}
 
 {% endblock %}
 
->>>>>>> develop

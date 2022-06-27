@@ -2,17 +2,11 @@ from flask import render_template, url_for, request, jsonify,abort,current_app
 from flask_login import current_user, login_required
 from app.auth.routes import admin_required
 import json
-<<<<<<< HEAD
-from collections import Counter
-from app import admin, db
-from app.mail import send_email_libre,send_email
-=======
 from app.mail import send_email_libre,send_email
 from collections import Counter
 from app import admin, db
->>>>>>> develop
 from . import admin_bp
-from .forms import MailForm
+from .forms import MailForm,MailFormEliminar
 import re
 
 @admin_bp.route('/crearEncuesta')
@@ -25,10 +19,7 @@ def rutaCrearEncuesta():
 @login_required
 @admin_required
 def guardar_encuesta():
-<<<<<<< HEAD
-=======
     print("guardar encuesta")
->>>>>>> develop
     if request.method == 'POST':
         datosEncuesta = request.get_json(force = True)
         titulo=datosEncuesta[0]
@@ -38,21 +29,6 @@ def guardar_encuesta():
         preguntas=datosEncuesta[4]
         numPreguntas=len(preguntas)
 
-<<<<<<< HEAD
-        try:
-            sql = 'INSERT INTO encuesta (id_encuesta, titulo_encuesta, descripcion,fecha_comienzo,fecha_termino,preguntas[%s]) VALUES (DEFAULT,%s,%s,%s,%s,%s);'
-            db.execute(sql, (numPreguntas,titulo,descripcion,fechaComienzo,fechaTermino,json.dumps(preguntas)))
-            sentenciaSQL = 'SELECT correo FROM mails WHERE mails.suscrito = True;'
-            todos_correos = db.fetch_all(sentenciaSQL)
-            todos_correos = [x[0] for x in todos_correos]
-            for i in todos_correos:
-                send_email_libre(subject='Encuesta para responder',
-                       sender=current_app.config['DONT_REPLY_FROM_EMAIL'],
-                       recipients=[i],
-                       text_body=f'Hola, puedes contestar la encuesta entrando en: ',
-                       html_body=None)
-            return render_template('public/index.html')
-=======
         print(datosEncuesta)
 
         try:
@@ -71,7 +47,6 @@ def guardar_encuesta():
                        text_body='Hola, puedes contestar la encuesta entrando en: http://127.0.0.1:5000/showSurvey/'+str(id_encuesta[0]),
                        html_body=None)
             return {"hola": "mundo!"}
->>>>>>> develop
         except Exception as e:
             print(e)
 
@@ -92,12 +67,7 @@ def guardar_editar_encuesta():
         try: 
             sql = 'UPDATE encuesta SET titulo_encuesta = %s , descripcion = %s,fecha_comienzo = %s,fecha_termino = %s WHERE id_encuesta = %s'
             db.execute(sql, (titulo,descripcion,fechaComienzo,fechaTermino,id))
-<<<<<<< HEAD
-            
-            return render_template('admin/index.html')
-=======
             return {"hola": "mundo!"}
->>>>>>> develop
         except Exception as e:
             print(e)
 
@@ -148,12 +118,6 @@ def mostrar_preguntas_alternativas(id):
 @admin_required
 def obtener_respuestas():
     print("estoy obteniendo las respuestas")
-<<<<<<< HEAD
-    id_encuesta = request.args.get('id_encuesta')[0]
-
-    sentenciaSQL = 'SELECT respuesta.respuestas FROM respuesta WHERE respuesta.id_encuesta = %s;'
-    todas_respuestas = db.fetch_all(sentenciaSQL,str(id_encuesta))
-=======
     id_encuesta = request.args.get('id_encuesta')
     print(id_encuesta)
 
@@ -162,17 +126,12 @@ def obtener_respuestas():
 
     sentenciaSQL = 'SELECT encuesta.preguntas FROM encuesta WHERE encuesta.id_encuesta = %s;'
     todas_preguntas = db.fetch_one(sentenciaSQL,(str(id_encuesta),))
->>>>>>> develop
 
     if(len(todas_respuestas) == 0):
         return jsonify({'porcentajes':'No hay respuestas'})
 
-<<<<<<< HEAD
-    print("todas las respuestas:",todas_respuestas) #POSIBLE OPTIMIZACION
-=======
     #print("todas las respuestas:",todas_respuestas) #POSIBLE OPTIMIZACION
     #print("todas las preguntas",todas_preguntas[0][0][0])
->>>>>>> develop
     #respuestas = [item[4]['Respuestas'] for item in todas_respuestas]
     respuestas = [item[0]['Respuestas'] for item in todas_respuestas]
     n_preguntas = len(respuestas[0])
@@ -183,18 +142,12 @@ def obtener_respuestas():
         respuesta_i = [x[i] for x in respuestas]
         count = Counter(respuesta_i)
         total = sum(count.values())
-<<<<<<< HEAD
-        for i in range(len(respuestas)):
-            porcentajes_i.append(count[str(i+1)] / total * 100)
-        porcentajes.append(porcentajes_i)
-=======
         for i in range(len(todas_preguntas[0][0][i]['Alternativas'])):
             #print("counter",count[str(i+1)])
             porcentajes_i.append(count[str(i+1)] / total * 100)
         
         porcentajes.append(porcentajes_i)
     #print(porcentajes)
->>>>>>> develop
     return jsonify({'porcentajes':porcentajes})
 
 @admin_bp.route('/agregarmails',methods=['GET','POST'])
@@ -203,20 +156,14 @@ def obtener_respuestas():
 def insertarmail():
     form=MailForm()
     error=None
-<<<<<<< HEAD
-=======
     creado=None
->>>>>>> develop
     if request.method=='POST':
         if form.validate_on_submit():
             email=form.email.data
             suscrito= True
             db.execute('INSERT INTO mails values(%s,%s)',(email,suscrito))
-<<<<<<< HEAD
-=======
             creado= f'Mail ingresado exitosamente'
             return render_template('admin/agregarmails.html', form=form,creado=creado)
->>>>>>> develop
         else:
             error = f'Datos incorrectos, intentelo nuevamente'
     return render_template('admin/agregarmails.html', form=form,error=error)
