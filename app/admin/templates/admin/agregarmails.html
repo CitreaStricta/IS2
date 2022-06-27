@@ -35,11 +35,14 @@
             <div>
                 {{ form.submit(class="btn btn-primary") }}
             </div>
+            <div>
+                {{ form.delete(class="btn btn-primary") }}
+            </div>
         </form>
     </div>
     <div class="container-fluid form-orden-campos">
         {% if creado %}
-            <p style="color: yellow;"><strong>Creado:</strong> {{ creado }}
+            <p style="color: yellow;"><strong>Correcto:</strong> {{ creado }}
         {% endif %}
         <form action="" method="post" novalidate>
             {{form.hidden_tag()}}
@@ -50,37 +53,7 @@
             </div>
         </form>
     </div>
-    <div class="container-fluid form-orden-campos">
-        {% if error %}
-            <p style="color: red;"><strong>Error:</strong> {{ error }}
-        {% endif %}
-        <form action="" method="post" novalidate>
-            {{form.hidden_tag()}}
-            <div>
-                {{ form.email.label(class="form-label letras_en_login") }}
-                {{ form.email(class_="form-control letras_en_login") }}<br>
-                {% for error in form.email.errors %}
-                <span style="color: red;">{{ error }}</span>
-                {% endfor %}
-            </div>
-            <div>
-                {{ form.submit(class="btn btn-primary") }}
-            </div>
-        </form>
-    </div>
-    <div class="container-fluid form-orden-campos">
-        {% if creado %}
-            <p style="color: yellow;"><strong>Creado:</strong> {{ creado }}
-        {% endif %}
-        <form action="" method="post" novalidate>
-            {{form.hidden_tag()}}
-            <div>
-                {% for error in form.email.errors %}
-                <span style="color: yellow;">{{ creado }}</span>
-                {% endfor %}
-            </div>
-        </form>
-    </div>
+    
     <!-- JS -->
     <script src="{{ url_for('public.static', filename='js/popper.min.js') }}"></script>
     <script src="{{ url_for('public.static', filename='js/bootstrap.min.js') }}"></script>

@@ -6,7 +6,7 @@ from app.mail import send_email_libre,send_email
 from collections import Counter
 from app import admin, db
 from . import admin_bp
-from .forms import MailForm,MailFormEliminar
+from .forms import MailForm
 import re
 
 @admin_bp.route('/crearEncuesta')
@@ -159,11 +159,19 @@ def insertarmail():
     creado=None
     if request.method=='POST':
         if form.validate_on_submit():
-            email=form.email.data
-            suscrito= True
-            db.execute('INSERT INTO mails values(%s,%s)',(email,suscrito))
-            creado= f'Mail ingresado exitosamente'
-            return render_template('admin/agregarmails.html', form=form,creado=creado)
+            if form.submit.data:
+                email=form.email.data
+                suscrito= True
+                db.execute('INSERT INTO mails values(%s,%s)',(email,suscrito))
+                creado= f'Mail ingresado exitosamente'
+                return render_template('admin/agregarmails.html', form=form,creado=creado)
+            else:
+                email=form.email.data
+                suscrito= False
+                db.execute('UPDATE mails SET suscrito=%s where correo=%s',(suscrito,email))
+                creado= f'Mail desuscrito exitosamente'
+                return render_template('admin/agregarmails.html', form=form,creado=creado)
         else:
-            error = f'Datos incorrectos, intentelo nuevamente'
+            error= f'Datos incorrectos,intente de nuevo'
+            return render_template('admin/agregarmails.html', form=form,error=error)
     return render_template('admin/agregarmails.html', form=form,error=error)
