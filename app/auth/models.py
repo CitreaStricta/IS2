@@ -14,24 +14,42 @@ class User(UserMixin):
     
     @classmethod # usuario para mantener en la sesion
     def get_by_email(self,email):
-        data = db.fetch_one('SELECT * FROM encuestado_prueba WHERE correo = (%s);',(str(email),))
+        data = db.fetch_one('SELECT * FROM usuario WHERE correo = (%s);',(str(email),))
+        print(data)
+        is_admin = False
         if data is None:
             return None
         else:
-            return User(data[1],data[0],None,True) # ESTE True dsps tiene que salir es para que se tome como ADMIN
+            data_administrador = db.fetch_one('SELECT * FROM administrador WHERE id_usuario = (%s);',(str(data[0]),))
+            if data_administrador is not None:
+                is_admin = True
+            #return User(data[1],data[0],None,is_admin) # ESTE True dsps tiene que salir es para que se tome como ADMIN
+            return User(data[1],data[0],None,is_admin)
     
     @classmethod
     def select_user(self,email): # este es para seleccionar un usuario
-        user = db.fetch_one('SELECT * FROM encuestado_prueba WHERE correo = (%s);', (str(email),))
+        user = db.fetch_one('SELECT * FROM usuario WHERE correo = (%s);', (str(email),)) # verifica si existe el usuario
         if user is not None:
-            return User(user[1],user[0],user[2])
+
+            data = db.fetch_one('SELECT * FROM administrador WHERE id_usuario = (%s);',(str(user[0]),)) # data administrador
+            is_admin = True
+            if data is None:                                                                            # si no es administrador
+                data = db.fetch_one('SELECT * FROM encuestado WHERE id_usuario = (%s);',(str(user[0]),))# data encuestado
+                is_admin = False
+
+            return User(user[1],user[2],data[1],is_admin)
         return None
 
     def insert_user(self):
         email_from_db = db.fetch_one('SELECT * FROM mails WHERE correo = (%s);',(str(self.email),))
         if email_from_db is None:
             db.execute('INSERT INTO mails(correo,suscrito) VALUES(%s,%s)',(str(self.email),False))
-        db.execute('INSERT INTO encuestado_prueba(correo,nombre,hash_contraseña) VALUES(%s,%s,%s)',(self.email,self.name,self.password))
+        
+        #db.execute('INSERT INTO encuestado_prueba(correo,nombre,hash_contraseña) VALUES(%s,%s,%s)',(self.email,self.name,self.password))
+
+        id_user = db.execute_returning('INSERT INTO usuario(id_usuario,nombre,correo) VALUES(DEFAULT,%s,%s) RETURNING id_usuario',(self.name,self.email))
+        db.execute('INSERT INTO encuestado(id_usuario,hash_password) VALUES(%s,%s)',(id_user[0],self.password))
+        #db.execute('INSERT INTO administrador(id_usuario,hash_password) VALUES(%s,%s)',(id_user[0],self.password))
 
     def set_password(self,password):
         self.password =  generate_password_hash(password)

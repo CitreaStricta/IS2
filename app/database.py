@@ -52,6 +52,16 @@ class Database:
         self.connection.commit()
         cursor.close() 
         self.close()
+    
+    def execute_returning(self, query, values=None):
+        self.connect()
+        cursor = self.connection.cursor()
+        cursor.execute(query, values)
+        result = cursor.fetchone()
+        self.connection.commit()
+        cursor.close() 
+        self.close()
+        return result
 
     def close(self):
         self.connection.close()  

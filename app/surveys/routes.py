@@ -11,6 +11,17 @@ def showSurvey(id):
     if survey_structure is None:
         return render_template("surveys/alert.html")
 
+    start_date_of_survey = survey_structure[3]
+    end_date_of_survey = survey_structure[4]
+
+    #Encuesta aun no habilitada
+    if start_date_of_survey > date.today():
+        return render_template("surveys/notEnabled.html",endedSurvey=False)
+    elif end_date_of_survey < date.today():
+        #Encuesta finalizó su periodo de habilitacion
+        return render_template("surveys/notEnabled.html",endedSurvey=True)
+        
+
     survey_title = survey_structure[1]
     survey_description = survey_structure[2]
     survey_questions = survey_structure[5][0]
@@ -35,17 +46,20 @@ def saveSurveyAnswer(id):
     if request.method == 'POST':
         datosEncuesta = request.get_json(force = True)
         id_encuesta = id
-        id_encuestado = 1 #Cambiar a uno de forma automatica
+        #id_encuestado = datosEncuesta[1]
+        id_encuestado = 1 #Esperar a cambio en la tabla
         fecha = date.today()
+
+        #return {"hola": "mundo!"} 
 
         try: 
             sql = 'INSERT INTO respuesta (id_respuesta, id_encuesta, id_encuestado, fecha, respuestas) VALUES (DEFAULT,%s,%s,%s,%s)'
-            db.execute(sql, (id_encuesta,id_encuestado,fecha,json.dumps(datosEncuesta)))
+            db.execute(sql, (id_encuesta,id_encuestado,fecha,json.dumps(datosEncuesta[0])))
         except Exception as e:
             print(e)
             return {"message": "error!"}
 
-    return {"hola": "mundo!"}    
+    return {"hola": "mundo!"}     
 
 
 @surveys_bp.route("/success")

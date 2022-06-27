@@ -169,7 +169,7 @@ const fetchDataAsync = async(url_api,datosEncuesta) => {
         
         console.log(response)
         alert("Encuesta " + datosEncuesta[0] +" enviada con exito")
-        window.location.replace("http://127.0.0.1:5000/");
+        window.location.replace("http://127.0.0.1:5004/");
     } catch (error) {
         console.error(error.message);
 <<<<<<< HEAD
@@ -264,6 +264,6 @@ function saveQuestions(){
     console.log(datosEncuesta);
 >>>>>>> develop
     
-    var url_api = "http://127.0.0.1:5000/guardarEncuesta"
+    var url_api = "http://127.0.0.1:5004/guardarEncuesta"
     fetchDataAsync(url_api, datosEncuesta);
 }

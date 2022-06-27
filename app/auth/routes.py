@@ -43,11 +43,11 @@ def login():
     error = None
     if form.validate_on_submit():
         email = form.email.data
-        passoword = form.password.data
+        password = form.password.data
         remember = form.remember_me.data
 
         user = User.select_user(email)
-        if user is not None and user.check_password(form.password.data):
+        if user is not None and user.check_password(password):
             login_user(user, remember=remember)
             next_page = request.args.get('next')
             if not next_page or url_parse(next_page).netloc != '':
