@@ -9,18 +9,12 @@ function addTitulo(){
 	container.titulo = document.createElement("input") // se refiere a un h1, un div, un boton, un elemento HTML
     container.titulo.id = "titleId"
     container.titulo.placeholder = "Add Title here" // place holder
-<<<<<<< HEAD
-=======
     //container.titulo.className = "form-control form-control-lg"
->>>>>>> develop
     
     container.descripcion = document.createElement("input") // se refiere a un h1, un div, un boton, un elemento HTML
     container.descripcion.id = "descripcionId"
     container.descripcion.placeholder = "Add Descripción here" // place holder
-<<<<<<< HEAD
-=======
     //container.descripcion.className = "form-control"
->>>>>>> develop
 
     container.fechaComienzo = document.createElement("input")
     container.fechaComienzo.id= "fechaComienzoId"
@@ -55,11 +49,7 @@ function addAlternativa(pregunta){
     alternativa.contenido.id = "alternativaId" + pregunta.numAlternativas;
     alternativa.contenido.placeholder = "Add Alternativa here" // place holder
     alternativa.contenido.name = "input" + pregunta.numAlternativas;
-<<<<<<< HEAD
-    alternativa.contenido.className="text-warning"
-=======
     //alternativa.contenido.className="text-warning"
->>>>>>> develop
 
     alternativa.boton = document.createElement('button');
     alternativa.boton.innerHTML = "- alternativa"
@@ -172,10 +162,7 @@ const fetchDataAsync = async(url_api,datosEncuesta) => {
         window.location.replace("http://127.0.0.1:5004/");
     } catch (error) {
         console.error(error.message);
-<<<<<<< HEAD
-=======
         alert("Ocurrio un error, vuelva a intentarlo mas tarde")
->>>>>>> develop
     }
 }
 
@@ -258,11 +245,8 @@ function saveQuestions(){
     }
     //console.log(jsonEncuesta);
     datosEncuesta.push(jsonEncuesta)
-<<<<<<< HEAD
-=======
 
     console.log(datosEncuesta);
->>>>>>> develop
     
     var url_api = "http://127.0.0.1:5004/guardarEncuesta"
     fetchDataAsync(url_api, datosEncuesta);
