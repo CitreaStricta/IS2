@@ -69,8 +69,19 @@ def load_user(email):
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kws):
-        is_admin = getattr(current_user, 'is_admin', False)
+        #is_admin = getattr(current_user, 'is_admin', False)
+        is_admin = current_user.is_admin
         if not is_admin:
+            abort(401)
+        return f(*args, **kws)
+    return decorated_function
+
+def surveyed_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kws):
+        #is_admin = getattr(current_user, 'is_admin', False)
+        is_admin = current_user.is_admin
+        if is_admin:
             abort(401)
         return f(*args, **kws)
     return decorated_function

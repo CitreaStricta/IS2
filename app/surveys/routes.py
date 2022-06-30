@@ -1,3 +1,5 @@
+from flask_login import login_required
+from app.auth.routes import surveyed_required
 from . import surveys_bp
 from flask import render_template, url_for, request, jsonify,redirect
 from app import db
@@ -5,6 +7,8 @@ from datetime import date
 import json
 
 @surveys_bp.route("/showSurvey/<id>")
+@login_required
+@surveyed_required
 def showSurvey(id):
     survey_structure = db.fetch_one(f"SELECT * FROM encuesta WHERE id_encuesta = {id}") #cambiar a dinamico
 
@@ -42,6 +46,8 @@ def showSurvey(id):
 
 
 @surveys_bp.route("/saveSurveyAnswer/<id>", methods=['POST'])
+@login_required
+@surveyed_required
 def saveSurveyAnswer(id):
     if request.method == 'POST':
         datosEncuesta = request.get_json(force = True)
@@ -63,5 +69,7 @@ def saveSurveyAnswer(id):
 
 
 @surveys_bp.route("/success")
+@login_required
+@surveyed_required
 def success():
     return render_template("surveys/success.html")
