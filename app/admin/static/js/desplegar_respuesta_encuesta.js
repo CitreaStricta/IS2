@@ -18,20 +18,12 @@ function DesplegarRespuestas(btn){
     success: function(response) {
       if($.type(response.porcentajes) === "string"){
         element.classList.remove("active");
-<<<<<<< HEAD
-        $("#"+id_encuesta).html(response.porcentajes);
-=======
         $("#"+id_encuesta+"_encuesta").html(response.porcentajes);
->>>>>>> develop
         
       }
       else{
         for (var i = 0; i < response.porcentajes.length; i++) {
-<<<<<<< HEAD
-          for (var j = 0; j < response.porcentajes[0].length; j++) {
-=======
           for (var j = 0; j < response.porcentajes[i].length; j++) {
->>>>>>> develop
             $("#"+id_encuesta+"_"+i+"_"+j).append(" ("+response.porcentajes[i][j]+"%)");
           }
         }
