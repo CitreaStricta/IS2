@@ -12,7 +12,7 @@
 
     <div class="main-content">
 
-        <div id="userMail" value="{{current_user.email}}">
+        <div id="userId" value="{{current_user.id}}">
         </div>
 
         <div class="divTitle">
@@ -149,7 +149,7 @@
         id = JSON.parse(id) //Id de la encuesta
 
         var questionsContainer = document.getElementById("questionsContainer");
-        var userMail = document.getElementById("userMail").getAttribute('value');
+        var userId = document.getElementById("userId").getAttribute('value');
 
         var choices = '{{ choices|tojson }}'
         choices = JSON.parse(choices)
@@ -195,7 +195,7 @@
             data["Respuestas"] = toSend
             dataSend=[]
             dataSend.push(data)
-            dataSend.push(userMail)
+            dataSend.push(userId)
             fetchDataAsync(url_api,dataSend);
         }
     }

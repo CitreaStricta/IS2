@@ -52,8 +52,8 @@ def saveSurveyAnswer(id):
     if request.method == 'POST':
         datosEncuesta = request.get_json(force = True)
         id_encuesta = id
-        #id_encuestado = datosEncuesta[1]
-        id_encuestado = 1 #Esperar a cambio en la tabla
+        id_encuestado = datosEncuesta[1]
+        #id_encuestado = 1 #Esperar a cambio en la tabla
         fecha = date.today()
 
         #return {"hola": "mundo!"} 
