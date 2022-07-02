@@ -3,7 +3,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from app import db 
 
 class User(UserMixin):
-    def __init__(self, name ,email, password, is_admin=False):
+    def __init__(self, name ,email, password, id = None,is_admin=False):
+        self.id = id
         self.name = name
         self.email = email
         self.password = password
@@ -24,7 +25,7 @@ class User(UserMixin):
             if data_administrador is not None:
                 is_admin = True
             #return User(data[1],data[0],None,is_admin) # ESTE True dsps tiene que salir es para que se tome como ADMIN
-            return User(data[1],data[0],None,is_admin)
+            return User(name = data[1],email  = data[0],password = None,id = data[0],is_admin = is_admin)
     
     @classmethod
     def select_user(self,email): # este es para seleccionar un usuario
@@ -37,7 +38,7 @@ class User(UserMixin):
                 data = db.fetch_one('SELECT * FROM encuestado WHERE id_usuario = (%s);',(str(user[0]),))# data encuestado
                 is_admin = False
 
-            return User(user[1],user[2],data[1],is_admin)
+            return User(name = user[1],email = user[2], password = data[1], id = user[0] ,is_admin = is_admin)
         return None
 
     def insert_user(self):
@@ -48,6 +49,7 @@ class User(UserMixin):
         #db.execute('INSERT INTO encuestado_prueba(correo,nombre,hash_contraseña) VALUES(%s,%s,%s)',(self.email,self.name,self.password))
 
         id_user = db.execute_returning('INSERT INTO usuario(id_usuario,nombre,correo) VALUES(DEFAULT,%s,%s) RETURNING id_usuario',(self.name,self.email))
+        self.id = id_user[0]
         db.execute('INSERT INTO encuestado(id_usuario,hash_password) VALUES(%s,%s)',(id_user[0],self.password))
         #db.execute('INSERT INTO administrador(id_usuario,hash_password) VALUES(%s,%s)',(id_user[0],self.password))
 
@@ -58,4 +60,4 @@ class User(UserMixin):
         return check_password_hash(self.password, password)
 
     def __repr__(self):
-        return '<User {}>'.format(self.email)
+        return '<User {}>'.format(self.id)
