@@ -209,7 +209,7 @@ function saveQuestions(){
         return
     }
     datosEncuesta.push(fechaTermino)
-    return
+    
 
     //console.log(datosEncuesta);
 
