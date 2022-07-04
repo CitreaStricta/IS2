@@ -10,7 +10,9 @@ import json
 @login_required
 @surveyed_required
 def showSurvey(id):
+    db.connect()
     survey_structure = db.fetch_one(f"SELECT * FROM encuesta WHERE id_encuesta = {id}") #cambiar a dinamico
+    db.close()
 
     if survey_structure is None:
         return render_template("surveys/alert.html")
@@ -59,8 +61,10 @@ def saveSurveyAnswer(id):
         #return {"hola": "mundo!"} 
 
         try: 
+            db.connect()
             sql = 'INSERT INTO respuesta (id_respuesta, id_encuesta, id_encuestado, fecha, respuestas) VALUES (DEFAULT,%s,%s,%s,%s)'
             db.execute(sql, (id_encuesta,id_encuestado,fecha,json.dumps(datosEncuesta[0])))
+            db.close()
         except Exception as e:
             print(e)
             return {"message": "error!"}

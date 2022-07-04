@@ -33,6 +33,7 @@ def guardar_encuesta():
 
         try:
             sql = 'INSERT INTO encuesta (id_encuesta, titulo_encuesta, descripcion,fecha_comienzo,fecha_termino,preguntas[%s]) VALUES (DEFAULT,%s,%s,%s,%s,%s);'
+            db.connect()
             db.execute(sql, (numPreguntas,titulo,descripcion,fechaComienzo,fechaTermino,json.dumps(preguntas)))
             print("se ejecuto consulta SQL para guardar encuesta")
             sentenciaSQL = 'SELECT correo FROM mails WHERE mails.suscrito = True;'
@@ -40,6 +41,7 @@ def guardar_encuesta():
             todos_correos = [x[0] for x in todos_correos]
             sentsql = 'SElECT MAX(id_encuesta) FROM encuesta;'
             id_encuesta= db.fetch_one(sentsql)
+            db.close()
             for i in todos_correos:
                 send_email(subject='Encuesta para responder',
                        sender=current_app.config['DONT_REPLY_FROM_EMAIL'],
@@ -66,7 +68,9 @@ def guardar_editar_encuesta():
 
         try: 
             sql = 'UPDATE encuesta SET titulo_encuesta = %s , descripcion = %s,fecha_comienzo = %s,fecha_termino = %s WHERE id_encuesta = %s'
+            db.connect()
             db.execute(sql, (titulo,descripcion,fechaComienzo,fechaTermino,id))
+            db.close()
             return {"hola": "mundo!"}
         except Exception as e:
             print(e)
@@ -79,7 +83,9 @@ def guardar_editar_encuesta():
 def rutaEditarEncuesta(id):
     sentenciaSQL = '''\
     SELECT * FROM encuesta WHERE encuesta.id_encuesta = %s;'''
+    db.connect()
     db_data = db.fetch_all(sentenciaSQL,(str(id),))[0]
+    db.close()
 
     if db_data is None:
         abort(404)
@@ -94,7 +100,9 @@ def rutaDesplegarEncuestas():
     try:
         sentenciaSQL = '''\
         SELECT encuesta.id_encuesta,encuesta.titulo_encuesta FROM encuesta ORDER BY encuesta.id_encuesta ASC'''
+        db.connect()
         db_data = db.fetch_all(sentenciaSQL,)
+        db.close()
     except Exception as e:
             print(e)
     if db_data is None:
@@ -107,7 +115,9 @@ def rutaDesplegarEncuestas():
 def mostrar_preguntas_alternativas(id):
     sentenciaSQL = '''\
     SELECT * FROM encuesta WHERE encuesta.id_encuesta = %s;'''
+    db.connect()
     db_data = db.fetch_all(sentenciaSQL,(str(id),))[0]
+    db.close()
 
     if db_data is None:
         abort(404)
@@ -121,11 +131,13 @@ def obtener_respuestas():
     id_encuesta = request.args.get('id_encuesta')
     print(id_encuesta)
 
+    db.connect()
     sentenciaSQL = 'SELECT respuesta.respuestas FROM respuesta WHERE respuesta.id_encuesta = %s;'
     todas_respuestas = db.fetch_all(sentenciaSQL,(str(id_encuesta),))
 
     sentenciaSQL = 'SELECT encuesta.preguntas FROM encuesta WHERE encuesta.id_encuesta = %s;'
     todas_preguntas = db.fetch_one(sentenciaSQL,(str(id_encuesta),))
+    db.close()
 
     if(len(todas_respuestas) == 0):
         return jsonify({'porcentajes':'No hay respuestas'})
@@ -162,13 +174,17 @@ def insertarmail():
             if form.submit.data:
                 email=form.email.data
                 suscrito= True
+                db.connect()
                 db.execute('INSERT INTO mails values(%s,%s)',(email,suscrito))
+                db.close()
                 creado= f'Mail ingresado exitosamente'
                 return render_template('admin/agregarmails.html', form=form,creado=creado)
             else:
                 email=form.email.data
                 suscrito= False
+                db.connect()
                 db.execute('UPDATE mails SET suscrito=%s where correo=%s',(suscrito,email))
+                db.close()
                 creado= f'Mail desuscrito exitosamente'
                 return render_template('admin/agregarmails.html', form=form,creado=creado)
         else:

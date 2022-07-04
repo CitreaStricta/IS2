@@ -15,13 +15,16 @@ class User(UserMixin):
     
     @classmethod # usuario para mantener en la sesion
     def get_by_email(self,email):
+        db.connect()
         data = db.fetch_one('SELECT * FROM usuario WHERE correo = (%s);',(str(email),))
         print(data)
         is_admin = False
         if data is None:
+            db.close()
             return None
         else:
             data_administrador = db.fetch_one('SELECT * FROM administrador WHERE id_usuario = (%s);',(str(data[0]),))
+            db.close()
             if data_administrador is not None:
                 is_admin = True
             #return User(data[1],data[0],None,is_admin) # ESTE True dsps tiene que salir es para que se tome como ADMIN
@@ -29,6 +32,7 @@ class User(UserMixin):
     
     @classmethod
     def select_user(self,email): # este es para seleccionar un usuario
+        db.connect()
         user = db.fetch_one('SELECT * FROM usuario WHERE correo = (%s);', (str(email),)) # verifica si existe el usuario
         if user is not None:
 
@@ -38,10 +42,13 @@ class User(UserMixin):
                 data = db.fetch_one('SELECT * FROM encuestado WHERE id_usuario = (%s);',(str(user[0]),))# data encuestado
                 is_admin = False
 
+            db.close()
             return User(name = user[1],email = user[2], password = data[1], id = user[0] ,is_admin = is_admin)
+        db.close()
         return None
 
     def insert_user(self):
+        db.connect()
         email_from_db = db.fetch_one('SELECT * FROM mails WHERE correo = (%s);',(str(self.email),))
         if email_from_db is None:
             db.execute('INSERT INTO mails(correo,suscrito) VALUES(%s,%s)',(str(self.email),False))
@@ -52,6 +59,7 @@ class User(UserMixin):
         self.id = id_user[0]
         db.execute('INSERT INTO encuestado(id_usuario,hash_password) VALUES(%s,%s)',(id_user[0],self.password))
         #db.execute('INSERT INTO administrador(id_usuario,hash_password) VALUES(%s,%s)',(id_user[0],self.password))
+        db.close()
 
     def set_password(self,password):
         self.password =  generate_password_hash(password)
