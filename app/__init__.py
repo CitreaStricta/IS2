@@ -1,4 +1,3 @@
-
 import logging
 from flask import Flask,render_template
 from flask_login import LoginManager
@@ -6,9 +5,11 @@ from logging.handlers import SMTPHandler
 from flask_mail import Mail
 from .database import Database ,get_db_connection
 from flask_bootstrap import Bootstrap
+from .tasks.scheduler import scheduler
 
 login_manager = LoginManager()
-mail=Mail()
+mail = Mail()
+
 db = Database(
     db = "d28t56b7dpk32k",
     user = "zntctcuflomgsk",
@@ -16,6 +17,8 @@ db = Database(
     port = "5432",
     host = "ec2-52-5-110-35.compute-1.amazonaws.com"
 )
+
+
 def configure_mail(app):
     mail_handler = SMTPHandler((app.config['MAIL_SERVER'], app.config['MAIL_PORT']),
                                 app.config['DONT_REPLY_FROM_EMAIL'],
@@ -27,6 +30,7 @@ def configure_mail(app):
     mail_handler.setLevel(logging.ERROR)
     mail_handler.setFormatter(mail_handler_formatter())
     app.logger.addHandler(mail_handler)
+
 
 def mail_handler_formatter():
     return logging.Formatter(
@@ -41,7 +45,10 @@ def mail_handler_formatter():
         ''',
         datefmt='%d/%m/%Y %H:%M:%S'
     )
+
+
 def register_error_handlers(app):
+    
     @app.errorhandler(500)
     def base_error_handler(e):
         return render_template('500.html'), 500
@@ -73,6 +80,10 @@ def create_app():
     login_manager.login_view = "auth.login"
 
     mail.init_app(app)
+    scheduler.init_app(app)
+    with app.app_context():
+        from .tasks import task
+        scheduler.start()
 
     # Registro de los Blueprints
     from .auth import auth_bp
@@ -83,16 +94,14 @@ def create_app():
 
     from .public import public_bp
     app.register_blueprint(public_bp)
+
+    from .surveys import surveys_bp
+    app.register_blueprint(surveys_bp)
     
     #bootstrap
     Bootstrap(app)
 
-    from .surveys import surveys_bp
-    app.register_blueprint(surveys_bp)
-
     #Errores
     register_error_handlers(app)
     
-
-
     return app

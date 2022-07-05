@@ -2,7 +2,7 @@ from flask import render_template, url_for, request, jsonify,abort,current_app
 from flask_login import current_user, login_required
 from app.auth.routes import admin_required
 import json
-from app.mail import send_email_libre,send_email
+from app.mail import send_email
 from collections import Counter
 from app import admin, db
 from . import admin_bp
@@ -46,11 +46,12 @@ def guardar_encuesta():
                        recipients=[i],
                        text_body='Hola, puedes contestar la encuesta entrando en: http://127.0.0.1:5004/showSurvey/'+str(id_encuesta[0]),
                        html_body=None)
-            return {"hola": "mundo!"}
+            return {"status": "success"}
         except Exception as e:
             print(e)
+            return {"status":"error"}
 
-    return {"hola": "mundo!"}
+    return {"status": "success"}
 
 @admin_bp.route('/guardarEditEncuesta', methods=['POST'] )
 @login_required
