@@ -1,8 +1,9 @@
 from flask import render_template, url_for, request, jsonify,abort,current_app
+from sqlalchemy import true
 from flask_login import current_user, login_required
 from app.auth.routes import admin_required
 import json
-from app.mail import send_email_libre,send_email
+from app.mail import send_email
 from collections import Counter
 from app import admin, db
 from . import admin_bp
@@ -172,22 +173,54 @@ def insertarmail():
     if request.method=='POST':
         if form.validate_on_submit():
             if form.submit.data:
+                db.connect()
+                correos=db.fetch_all('SELECT * FROM mails ORDER BY correo ASC')
+                correo=db.fetch_one('SELECT * FROM mails where correo=%s',(email,))
+                db.close()
+                if correo[0] == form.email.data:
+                    if correo[1] == True:
+                        error= f'Mail ya existente en la base de datos'
+                        return render_template('admin/agregarmails.html',form=form,error=error,db_data=correos)
+                    else:
+                        suscrito= True
+                        db.connect()
+                        db.execute('UPDATE mails SET suscrito=%s where correo=%s',(suscrito,i[0]))
+                        creado= f'Mail resuscrito exitosamente'
+                        correos=db.fetch_all('SELECT * FROM mails')
+                        db.close()
+                        return render_template('admin/agregarmails.html', form=form,creado=creado,db_data=correos)
                 email=form.email.data
                 suscrito= True
                 db.connect()
                 db.execute('INSERT INTO mails values(%s,%s)',(email,suscrito))
-                db.close()
                 creado= f'Mail ingresado exitosamente'
-                return render_template('admin/agregarmails.html', form=form,creado=creado)
+                correos=db.fetch_all('SELECT * FROM mails')
+                db.close()
+                return render_template('admin/agregarmails.html', form=form,creado=creado,db_data=correos)
             else:
                 email=form.email.data
                 suscrito= False
                 db.connect()
-                db.execute('UPDATE mails SET suscrito=%s where correo=%s',(suscrito,email))
+                correo=db.fetch_one('SELECT * FROM mails where correo=%s',(email,))
+                correos=db.fetch_all('SELECT * FROM mails ORDER BY correo ASC')
                 db.close()
-                creado= f'Mail desuscrito exitosamente'
-                return render_template('admin/agregarmails.html', form=form,creado=creado)
+                if correo==None:
+                    error=f'Correo no existente en la base de datos, puedes agregarlo'
+                    return render_template('admin/agregarmails.html', form=form,error=error,db_data=correos)
+                if correo[1]==True:
+                    db.connect()
+                    db.execute('UPDATE mails SET suscrito=%s where correo=%s',(suscrito,email))
+                    creado= f'Mail desuscrito exitosamente'
+                    correos=db.fetch_all('SELECT * FROM mails')
+                    db.close()
+                    return render_template('admin/agregarmails.html', form=form,creado=creado,db_data=correos)
+                else:
+                    error= f'Mail ya desuscrito, verifique los datos'
+                    return render_template('admin/agregarmails.html', form=form,error=error,db_data=correos)
         else:
             error= f'Datos incorrectos,intente de nuevo'
             return render_template('admin/agregarmails.html', form=form,error=error)
-    return render_template('admin/agregarmails.html', form=form,error=error)
+    db.connect()
+    correos=db.fetch_all('SELECT * FROM mails ORDER BY correo ASC')
+    db.close()
+    return render_template('admin/agregarmails.html', form=form,error=error,db_data=correos)

@@ -11,7 +11,15 @@
 
 
     <style>
-        /* aqui puede ir codigo css */
+        table,th,td{
+            border: 1px solid #000;
+            border-collapse: collapse;
+            vertical-align:top;
+            text-align:center;
+        }
+        th,td{
+            text-align: center;
+        }
     </style>
 
 
@@ -53,6 +61,28 @@
             </div>
         </form>
     </div>
+    <table style="margin: 0 auto;">
+        <tr>
+            <th>Correo</th>
+            <th>Estado</th>
+        </tr>
+        <tr>
+            <td> 
+                {% for lista_correos in db_data%}
+                <h3> {{lista_correos[0]}}</h3>
+                {%endfor%}
+            </td>
+            <td>
+                {% for lista_correos in db_data%}
+                    {%if lista_correos[1] %}
+                        <h3>Suscrito</h3>
+                    {%else%}
+                        <h3>No suscrito</h3>
+                    {%endif%}
+                {%endfor%}
+            </td>
+        </tr>
+    </table>
     
     <!-- JS -->
     <script src="{{ url_for('public.static', filename='js/popper.min.js') }}"></script>
