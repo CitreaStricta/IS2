@@ -16,14 +16,23 @@ def get_user_emails():
 def get_ids_of_surveys_start_today():
     """ Obtener los id de las encuestas cuya fecha comienzan actualmente """
     today = '2022-06-06'#date.today() dejar como fecha actual , fecha hardcodeada es solo motivo de prueba
-    get_surveys_query = "SELECT id_encuesta FROM encuesta WHERE fecha_comienzo = '{}';".format(str(today))
+    get_surveys_query = "SELECT id_encuesta,titulo_encuesta FROM encuesta WHERE fecha_comienzo = '{}';".format(str(today))
     list_of_ids_of_surveys = db.fetch_all(get_surveys_query, (today),)
-    return parse_list_of_ids(list_of_ids_of_surveys)
+    return parse_list(list_of_ids_of_surveys)
 
 
-def parse_list_of_ids(list_of_ids):
-    """ Extrae el id de cada tupla dentro de una lista obtenida desde la base de datos """
-    return list(map(lambda index: index[0] , list_of_ids))
+def get_names_of_surveys_start_today():
+    """ Obtener los nombres de las encuestas cuya fecha comienzan actualmente """
+    today = '2022-06-06'
+    get_surveys_query = "SELECT titulo_encuesta FROM encuesta WHERE fecha_comienzo = '{}';".format(str(today))
+    list_of_names_of_surveys = db.fetch_all(get_surveys_query, (today),)
+    return parse_list(list_of_names_of_surveys)
+
+
+
+def parse_list(list_of_data):
+    """ Extrae el primer elemento de cada tupla dentro de una lista obtenida desde la base de datos """
+    return list(map(lambda index: index[0] , list_of_data))
 
 
 def generate_urls_for_surveys():
@@ -39,31 +48,45 @@ def generate_urls_for_surveys():
     return list_of_urls
 
 
+def generate_complete_email_body():
+    """ Funcion que genera el cuerpo del email con todas las encuestas disponibles """
+    list_of_titles = get_names_of_surveys_start_today()
+    list_of_urls = generate_urls_for_surveys()
+
+    number_of_surveys = len(list_of_titles)
+    email_body = 'Enlaces de encuestas disponibles: \n'
+
+    for index in range(number_of_surveys):
+        email_body += f"Encuesta {list_of_titles[index]} : {list_of_urls[index]}\n"
+    
+    return email_body
+
+
 def send_async_emails(server , email ,message):
+    """ Enviar correos de forma asincrona """
     server.sendmail('mails.empresa.is@gmail.com',email,message)
 
 
-@scheduler.task("interval",id="job_sync",seconds=180,max_instances=1,start_date="2022-07-04 12:24:00",)
+@scheduler.task("interval",id="job_sync",seconds=100,max_instances=1,start_date="2022-07-04 12:24:00",)
 def scheduled_send_email_task():
+    """ Funcion ejecutada en background para envio de correos masivos """
+    start_time = time.time()
     print("Enviando correos de forma asincrona...")
-    list_of_urls = generate_urls_for_surveys()
-    list_of_emails = get_user_emails()
-
+    
     server = smtplib.SMTP('smtp.gmail.com',587)
     server.starttls()
     server.login('mails.empresa.is@gmail.com', 'wctlzgvdtukryohr')
 
-    SUBJECT = "Enlace de encuesta"
-    TEXT = "El enlace de la encuesta es el siguiente, gracias por responder: "
+    SUBJECT = "Enlaces de encuestas"
 
-    start_time = time.time()
-    with concurrent.futures.ThreadPoolExecutor(max_workers=15) as executor:
+    list_of_emails = get_user_emails()
+    message = 'Subject: {}\n\n{}'.format(SUBJECT, generate_complete_email_body())
+    
+    with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
         for email in list_of_emails:
-            for url in list_of_urls:
-                message = 'Subject: {}\n\n{}'.format(SUBJECT, TEXT + url)
-                try:
-                    arguments = [server,email,message]
-                    executor.submit(send_async_emails(server, email, message))
-                except Exception as error:
-                    print("Error al enviar correo electronico: " , error)
+            try:
+                executor.map(send_async_emails(server, email, message))
+            except Exception as error:
+                print("Error la enviar mails " , error)
+    
     print(f"Finalizado el proceso de envio de correos asincronos: {time.time() - start_time} segundos")
