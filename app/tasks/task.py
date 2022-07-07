@@ -15,7 +15,7 @@ def get_user_emails():
 
 def get_ids_of_surveys_start_today():
     """ Obtener los id de las encuestas cuya fecha comienzan actualmente """
-    today = '2022-06-06'#date.today() dejar como fecha actual , fecha hardcodeada es solo motivo de prueba
+    today = date.today()
     get_surveys_query = "SELECT id_encuesta,titulo_encuesta FROM encuesta WHERE fecha_comienzo = '{}';".format(str(today))
     list_of_ids_of_surveys = db.fetch_all(get_surveys_query, (today),)
     return parse_list(list_of_ids_of_surveys)
@@ -23,7 +23,7 @@ def get_ids_of_surveys_start_today():
 
 def get_names_of_surveys_start_today():
     """ Obtener los nombres de las encuestas cuya fecha comienzan actualmente """
-    today = '2022-06-06'
+    today = date.today()
     get_surveys_query = "SELECT titulo_encuesta FROM encuesta WHERE fecha_comienzo = '{}';".format(str(today))
     list_of_names_of_surveys = db.fetch_all(get_surveys_query, (today),)
     return parse_list(list_of_names_of_surveys)
@@ -67,7 +67,7 @@ def send_async_emails(server , email ,message):
     server.sendmail('mails.empresa.is@gmail.com',email,message)
 
 
-@scheduler.task("interval",id="job_sync",seconds=100,max_instances=1,start_date="2022-07-04 12:24:00",)
+@scheduler.task("cron",id="async_task",hour=17,minute=57)
 def scheduled_send_email_task():
     """ Funcion ejecutada en background para envio de correos masivos """
     start_time = time.time()
