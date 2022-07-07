@@ -1,8 +1,8 @@
 body{
-  background-image: radial-gradient(#4055c3 2px, transparent 2px), radial-gradient(#4055c3 2px, transparent 2px);
+  /*background-image: radial-gradient(#4055c3 2px, transparent 2px), radial-gradient(#4055c3 2px, transparent 2px);*/
   background-size: 32px 32px;
   background-position: 0 0, 16px 16px;
-  background-color: #4dadf0;
+  background-color: #1768a1;
 }
 
 .nav-letras{

@@ -136,19 +136,24 @@ def obtener_respuestas():
     respuestas = [item[0]['Respuestas'] for item in todas_respuestas]
     n_preguntas = len(respuestas[0])
     porcentajes = []
+    numero_de_respuestas = []
     
     for i in range(n_preguntas):
+        numero_de_respuestas_i = []
         porcentajes_i = []
         respuesta_i = [x[i] for x in respuestas]
         count = Counter(respuesta_i)
         total = sum(count.values())
         for i in range(len(todas_preguntas[0][0][i]['Alternativas'])):
+            numero_de_respuestas_i.append(count[str(i+1)])
             #print("counter",count[str(i+1)])
             porcentajes_i.append(count[str(i+1)] / total * 100)
         
+        numero_de_respuestas.append(numero_de_respuestas_i)
         porcentajes.append(porcentajes_i)
     #print(porcentajes)
-    return jsonify({'porcentajes':porcentajes})
+    
+    return jsonify({'porcentajes':porcentajes, 'n_respuestas':numero_de_respuestas}) #devuelve el porcentaje
 
 @admin_bp.route('/agregarmails',methods=['GET','POST'])
 @login_required
