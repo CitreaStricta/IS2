@@ -1,3 +1,4 @@
+from itsdangerous import NoneAlgorithm
 import psycopg2
 
 def get_db_connection():
@@ -18,6 +19,9 @@ class Database:
         self.port = port 
         self.host = host
 
+        self.connection = None
+        self.cursor = None
+
     def connect(self):
         self.connection = psycopg2.connect(
             database=self.db,
@@ -26,42 +30,28 @@ class Database:
             port=self.port,
             host=self.host
         )
+        self.cursor = self.connection.cursor()
 
     def fetch_all(self, query, values=None):
-        self.connect()
-        cursor = self.connection.cursor()
-        cursor.execute(query, values)
-        result = cursor.fetchall()
-        cursor.close()
-        self.close()
+        self.cursor.execute(query, values)
+        result = self.cursor.fetchall()
         return result
     
     def fetch_one(self, query, values=None):
-        self.connect()
-        cursor = self.connection.cursor()
-        cursor.execute(query, values)
-        result = cursor.fetchone()
-        cursor.close()
-        self.close()
+        self.cursor.execute(query, values)
+        result = self.cursor.fetchone()
         return result
 
     def execute(self, query, values=None):
-        self.connect()
-        cursor = self.connection.cursor()
-        cursor.execute(query, values)
+        self.cursor.execute(query, values)
         self.connection.commit()
-        cursor.close() 
-        self.close()
     
     def execute_returning(self, query, values=None):
-        self.connect()
-        cursor = self.connection.cursor()
-        cursor.execute(query, values)
-        result = cursor.fetchone()
+        self.cursor.execute(query, values)
+        result = self.cursor.fetchone()
         self.connection.commit()
-        cursor.close() 
-        self.close()
         return result
 
     def close(self):
+        self.cursor.close()
         self.connection.close()  

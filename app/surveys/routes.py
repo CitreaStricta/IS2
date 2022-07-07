@@ -1,7 +1,7 @@
 from flask_login import login_required
 from app.auth.routes import surveyed_required
 from . import surveys_bp
-from flask import render_template, url_for, request, jsonify,redirect
+from flask import render_template, url_for, request, jsonify,redirect,abort
 from app import db
 from datetime import date
 import json
@@ -10,7 +10,9 @@ import json
 @login_required
 @surveyed_required
 def showSurvey(id):
+    db.connect()
     survey_structure = db.fetch_one(f"SELECT * FROM encuesta WHERE id_encuesta = {id}") #cambiar a dinamico
+    db.close()
 
     if survey_structure is None:
         return render_template("surveys/alert.html")
@@ -59,8 +61,10 @@ def saveSurveyAnswer(id):
         #return {"hola": "mundo!"} 
 
         try: 
+            db.connect()
             sql = 'INSERT INTO respuesta (id_respuesta, id_encuesta, id_encuestado, fecha, respuestas) VALUES (DEFAULT,%s,%s,%s,%s)'
             db.execute(sql, (id_encuesta,id_encuestado,fecha,json.dumps(datosEncuesta[0])))
+            db.close()
         except Exception as e:
             print(e)
             return {"message": "error!"}
@@ -73,3 +77,31 @@ def saveSurveyAnswer(id):
 @surveyed_required
 def success():
     return render_template("surveys/success.html")
+
+@surveys_bp.route("/MySurveys")
+@login_required
+@surveyed_required
+def MySurveys():
+    db_data = None
+    try:
+        sentenciaSQL = '''\
+        SELECT encuesta.id_encuesta , encuesta.titulo_encuesta, encuesta.fecha_comienzo, encuesta.fecha_termino FROM encuesta ORDER BY encuesta.id_encuesta ASC'''
+        db.connect()
+        db_data = db.fetch_all(sentenciaSQL,)
+        db.close()
+    except Exception as e:
+            print(e)
+    if db_data is None:
+        abort(404)
+    
+    encuestas_habilidadas = []
+    for encuesta in db_data:
+        id = encuesta[0]
+        titulo = encuesta[1]
+        start_date_of_survey = encuesta[2]
+        end_date_of_survey = encuesta[3]
+        if start_date_of_survey > date.today() or  end_date_of_survey < date.today():
+            continue
+        encuestas_habilidadas.append((id,titulo))
+
+    return render_template("surveys/MySurveys.html",db_data = encuestas_habilidadas)
