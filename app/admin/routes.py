@@ -219,7 +219,10 @@ def insertarmail():
                     return render_template('admin/agregarmails.html', form=form,error=error,db_data=correos)
         else:
             error= f'Datos incorrectos,intente de nuevo'
-            return render_template('admin/agregarmails.html', form=form,error=error)
+            db.connect()
+            correos=db.fetch_all('SELECT * FROM mails ORDER BY correo ASC')
+            db.close()
+            return render_template('admin/agregarmails.html', form=form,error=error,db_data=correos)
     db.connect()
     correos=db.fetch_all('SELECT * FROM mails ORDER BY correo ASC')
     db.close()
