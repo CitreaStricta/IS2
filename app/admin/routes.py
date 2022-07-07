@@ -1,7 +1,6 @@
 from flask import render_template, url_for, request, jsonify,abort
 from flask_login import current_user, login_required
 from app.auth.routes import admin_required
-from app.mail import send_email
 from collections import Counter
 from app import admin, db
 from . import admin_bp

@@ -1,7 +1,6 @@
-from flask import current_app
-from app.mail import send_email
 from datetime import date , datetime
 from app import db , scheduler
+import concurrent.futures
 import time
 import smtplib
 
@@ -38,9 +37,13 @@ def generate_urls_for_surveys():
         list_of_urls.append(url_survey)
 
     return list_of_urls
-    
 
-@scheduler.task("interval",id="job_sync",seconds=100,max_instances=1,start_date="2022-07-04 12:24:00",)
+
+def send_async_emails(server , email ,message):
+    server.sendmail('mails.empresa.is@gmail.com',email,message)
+
+
+@scheduler.task("interval",id="job_sync",seconds=180,max_instances=1,start_date="2022-07-04 12:24:00",)
 def scheduled_send_email_task():
     print("Enviando correos de forma asincrona...")
     list_of_urls = generate_urls_for_surveys()
@@ -54,11 +57,13 @@ def scheduled_send_email_task():
     TEXT = "El enlace de la encuesta es el siguiente, gracias por responder: "
 
     start_time = time.time()
-    for email in list_of_emails:
-        for url in list_of_urls:
-            message = 'Subject: {}\n\n{}'.format(SUBJECT, TEXT + url)
-            try:
-                server.sendmail('mails.empresa.is@gmail.com', email, message)
-            except Exception as error:
-                print("Error al enviar correo electronico: " , error)
+    with concurrent.futures.ThreadPoolExecutor(max_workers=15) as executor:
+        for email in list_of_emails:
+            for url in list_of_urls:
+                message = 'Subject: {}\n\n{}'.format(SUBJECT, TEXT + url)
+                try:
+                    arguments = [server,email,message]
+                    executor.submit(send_async_emails(server, email, message))
+                except Exception as error:
+                    print("Error al enviar correo electronico: " , error)
     print(f"Finalizado el proceso de envio de correos asincronos: {time.time() - start_time} segundos")
