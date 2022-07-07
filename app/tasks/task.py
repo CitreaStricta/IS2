@@ -67,7 +67,7 @@ def send_async_emails(server , email ,message):
     server.sendmail('mails.empresa.is@gmail.com',email,message)
 
 
-@scheduler.task("cron",id="async_task",hour=17,minute=57)
+@scheduler.task("cron",id="async_task",hour=23,minute=30)
 def scheduled_send_email_task():
     """ Funcion ejecutada en background para envio de correos masivos """
     start_time = time.time()
