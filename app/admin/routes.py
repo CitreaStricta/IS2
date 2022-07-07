@@ -1,13 +1,13 @@
-from flask import render_template, url_for, request, jsonify,abort,current_app
+from flask import render_template, url_for, request, jsonify,abort
 from flask_login import current_user, login_required
 from app.auth.routes import admin_required
-import json
 from app.mail import send_email
 from collections import Counter
 from app import admin, db
 from . import admin_bp
 from .forms import MailForm
 import re
+import json
 
 @admin_bp.route('/crearEncuesta')
 @login_required
@@ -22,35 +22,23 @@ def guardar_encuesta():
     print("guardar encuesta")
     if request.method == 'POST':
         datosEncuesta = request.get_json(force = True)
-        titulo=datosEncuesta[0]
-        descripcion=datosEncuesta[1]
-        fechaComienzo=datosEncuesta[2]
-        fechaTermino=datosEncuesta[3]
-        preguntas=datosEncuesta[4]
-        numPreguntas=len(preguntas)
+        titulo = datosEncuesta[0]
+        descripcion = datosEncuesta[1]
+        fechaComienzo = datosEncuesta[2]
+        fechaTermino = datosEncuesta[3]
+        preguntas = datosEncuesta[4]
+        numPreguntas = len(preguntas)
 
         print(datosEncuesta)
 
         try:
             sql = 'INSERT INTO encuesta (id_encuesta, titulo_encuesta, descripcion,fecha_comienzo,fecha_termino,preguntas[%s]) VALUES (DEFAULT,%s,%s,%s,%s,%s);'
             db.execute(sql, (numPreguntas,titulo,descripcion,fechaComienzo,fechaTermino,json.dumps(preguntas)))
-            print("se ejecuto consulta SQL para guardar encuesta")
-            sentenciaSQL = 'SELECT correo FROM mails WHERE mails.suscrito = True;'
-            todos_correos = db.fetch_all(sentenciaSQL)
-            todos_correos = [x[0] for x in todos_correos]
-            sentsql = 'SElECT MAX(id_encuesta) FROM encuesta;'
-            id_encuesta= db.fetch_one(sentsql)
-            for i in todos_correos:
-                send_email(subject='Encuesta para responder',
-                       sender=current_app.config['DONT_REPLY_FROM_EMAIL'],
-                       recipients=[i],
-                       text_body='Hola, puedes contestar la encuesta entrando en: http://127.0.0.1:5004/showSurvey/'+str(id_encuesta[0]),
-                       html_body=None)
+            print("Se guarda encuesta correctamente")
             return {"status": "success"}
         except Exception as e:
             print(e)
             return {"status":"error"}
-
     return {"status": "success"}
 
 @admin_bp.route('/guardarEditEncuesta', methods=['POST'] )
@@ -59,11 +47,11 @@ def guardar_encuesta():
 def guardar_editar_encuesta():
     if request.method == 'POST':
         datosEncuesta = request.get_json(force = True)
-        titulo=datosEncuesta[0]
-        descripcion=datosEncuesta[1]
-        fechaComienzo=datosEncuesta[2]
-        fechaTermino=datosEncuesta[3]
-        id=datosEncuesta[4]
+        titulo = datosEncuesta[0]
+        descripcion = datosEncuesta[1]
+        fechaComienzo = datosEncuesta[2]
+        fechaTermino = datosEncuesta[3]
+        id = datosEncuesta[4]
 
         try: 
             sql = 'UPDATE encuesta SET titulo_encuesta = %s , descripcion = %s,fecha_comienzo = %s,fecha_termino = %s WHERE id_encuesta = %s'
@@ -155,16 +143,16 @@ def obtener_respuestas():
 @login_required
 @admin_required
 def insertarmail():
-    form=MailForm()
-    error=None
-    creado=None
-    if request.method=='POST':
+    form = MailForm()
+    error = None
+    creado = None
+    if request.method == 'POST':
         if form.validate_on_submit():
             if form.submit.data:
-                email=form.email.data
-                suscrito= True
+                email = form.email.data
+                suscrito = True
                 db.execute('INSERT INTO mails values(%s,%s)',(email,suscrito))
-                creado= f'Mail ingresado exitosamente'
+                creado = f'Mail ingresado exitosamente'
                 return render_template('admin/agregarmails.html', form=form,creado=creado)
             else:
                 email=form.email.data

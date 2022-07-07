@@ -2,13 +2,11 @@ import logging
 from flask import Flask,render_template
 from flask_login import LoginManager
 from logging.handlers import SMTPHandler
-from flask_mail import Mail
 from .database import Database ,get_db_connection
 from flask_bootstrap import Bootstrap
 from .tasks.scheduler import scheduler
 
 login_manager = LoginManager()
-mail = Mail()
 
 db = Database(
     db = "d28t56b7dpk32k",
@@ -74,12 +72,12 @@ def create_app():
     app.config['DONT_REPLY_FROM_EMAIL'] = 'mails.empresa.is@gmail.com'
     app.config['MAIL_USE_TLS'] = True
     app.config['MAIL_USE_SSL'] = False
+    app.config['SCHEDULER_TIMEZONE'] = 'Chile/Continental'
     configure_mail(app)
-    #Manejador de Login
+
     login_manager.init_app(app)
     login_manager.login_view = "auth.login"
-
-    mail.init_app(app)
+    
     scheduler.init_app(app)
     with app.app_context():
         from .tasks import task

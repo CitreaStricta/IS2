@@ -1,11 +1,9 @@
 from flask import current_app
-from flask_mail import Message
-from threading import Thread
-from smtplib import SMTPException
-from .scheduler import scheduler
 from app.mail import send_email
-from datetime import date, datetime
-from app import db,mail
+from datetime import date , datetime
+from app import db , scheduler
+import time
+import smtplib
 
 
 def get_user_emails():
@@ -40,37 +38,27 @@ def generate_urls_for_surveys():
         list_of_urls.append(url_survey)
 
     return list_of_urls
-
-
-def send_async_email(app,message):
-    with app.app_context():
-        try:
-            mail.send(message)
-        except SMTPException as err:
-            print("Error al enviar email")
-
-
-def send_email(subject,sender,recipients,text_body,cc=None,bcc=None,html_body=None):
-    message = Message(subject,sender=sender,recipients=recipients,cc=cc,bcc=bcc)
-    message.body = text_body
-
-    if html_body:
-        message.html = html_body
-
-    Thread(target=send_async_email,args=[current_app._get_current_object(),message]).start()
     
 
-@scheduler.task("interval",id="job_sync",seconds=20,max_instances=1,start_date="2022-07-04 12:24:00",)
+@scheduler.task("interval",id="job_sync",seconds=100,max_instances=1,start_date="2022-07-04 12:24:00",)
 def scheduled_send_email_task():
     print("Enviando correos de forma asincrona...")
     list_of_urls = generate_urls_for_surveys()
     list_of_emails = get_user_emails()
 
+    server = smtplib.SMTP('smtp.gmail.com',587)
+    server.starttls()
+    server.login('mails.empresa.is@gmail.com', 'wctlzgvdtukryohr')
+
+    SUBJECT = "Enlace de encuesta"
+    TEXT = "El enlace de la encuesta es el siguiente, gracias por responder: "
+
+    start_time = time.time()
     for email in list_of_emails:
         for url in list_of_urls:
-            send_email(subject='Encuesta para responder',
-                    sender='mails.empresa.is@gmail.com',
-                    recipients=[email],
-                    text_body=f'Hola, puedes contestar la encuesta entrando en: {url}',
-                    html_body=None)
-    print("Finalizado el proceso de envio de correos asincronos.")
+            message = 'Subject: {}\n\n{}'.format(SUBJECT, TEXT + url)
+            try:
+                server.sendmail('mails.empresa.is@gmail.com', email, message)
+            except Exception as error:
+                print("Error al enviar correo electronico: " , error)
+    print(f"Finalizado el proceso de envio de correos asincronos: {time.time() - start_time} segundos")
