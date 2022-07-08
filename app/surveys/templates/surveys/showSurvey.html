@@ -36,14 +36,11 @@
             <div id="userId" value="{{current_user.id}}">
             </div>
 
-            <div class="divTitle">
-                <h1 class="center-title">{{surveyTitle}}</h1>
-            </div>
-            
-            <div class="divDescription">
-                <h4>{{surveyDescription}}</h2>
-            </div>
-            
+        <div id="userName" value="{{current_user.name}}"></div>
+
+        <div class="divTitle">
+            <h1 class="center-title">{{surveyTitle}}</h1>
+        </div>
         
             <div id="questionsContainer" class="questionsContainer divSubmit">
                 
@@ -218,8 +215,10 @@ const fetchDataAsync = async(url_api,datosEncuesta) => {
     try {
         const response = await fetchData(url_api,datosEncuesta);
         
-        console.log(response)
+        var userName = document.getElementById("userName").getAttribute('value') + " ha respondido la encuesta correctamente";
+        console.log(userName);
         if(redirect){  
+            alert(userName)
             window.location.replace("http://127.0.0.1:5004/success");
         }
     } catch (error) {
