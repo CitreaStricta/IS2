@@ -55,7 +55,6 @@ def saveSurveyAnswer(id):
         datosEncuesta = request.get_json(force = True)
         id_encuesta = id
         id_encuestado = datosEncuesta[1]
-        #id_encuestado = 1 #Esperar a cambio en la tabla
         fecha = date.today()
 
         #return {"hola": "mundo!"} 
@@ -69,7 +68,7 @@ def saveSurveyAnswer(id):
             print(e)
             return {"message": "error!"}
 
-    return {"hola": "mundo!"}     
+    return {"Message": "Success!"}     
 
 
 @surveys_bp.route("/success")
