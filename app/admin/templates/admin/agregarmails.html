@@ -26,12 +26,11 @@
 </head>
 <body>
     {% include 'public/nav_bar.html' %}
-    <br><br><br><br><br><br><br><br><br><br><br>
-    <div class="container-fluid form-orden-campos">
+    <div class="container form-orden-campos">
         {% if error %}
             <p style="color: red;"><strong>Error:</strong> {{ error }}
         {% endif %}
-        <form action="" method="post" novalidate>
+        <form class="container rounded bg-warning mb-3"action="" method="post" novalidate>
             {{form.hidden_tag()}}
             <div>
                 {{ form.email.label(class="form-label letras_en_login") }}
@@ -40,11 +39,10 @@
                 <span style="color: red;">{{ error }}</span>
                 {% endfor %}
             </div>
-            <div>
-                {{ form.submit(class="btn btn-primary") }}
-            </div>
-            <div>
-                {{ form.delete(class="btn btn-primary") }}
+
+            <div class="col pb-2">
+                {{ form.submit(class="btn btn-secondary") }}
+                {{ form.delete(class="btn btn-secondary") }}
             </div>
         </form>
     </div>
@@ -61,28 +59,35 @@
             </div>
         </form>
     </div>
-    <table style="margin: 0 auto;">
-        <tr>
-            <th>Correo</th>
-            <th>Estado</th>
-        </tr>
-        <tr>
-            <td> 
-                {% for lista_correos in db_data%}
-                <h3> {{lista_correos[0]}}</h3>
-                {%endfor%}
-            </td>
-            <td>
-                {% for lista_correos in db_data%}
-                    {%if lista_correos[1] %}
-                        <h3>Suscrito</h3>
-                    {%else%}
-                        <h3>No suscrito</h3>
-                    {%endif%}
-                {%endfor%}
-            </td>
-        </tr>
-    </table>
+    <center>
+        <div class = "col-md-7">
+                <table class="table">
+                    <tr>
+                        <th>Correo</th>
+                        <th>Estado</th>
+                    </tr>
+                    <tr>
+                        <td> 
+                            {% for lista_correos in db_data%}
+                            <h3> {{lista_correos[0]}}</h3>
+                            {%endfor%}
+                        </td>
+                        <td>
+                            {% for lista_correos in db_data%}
+                                {%if lista_correos[1] %}
+                                    <h3>Suscrito</h3>
+                                {%else%}
+                                    <h3>No suscrito</h3>
+                                {%endif%}
+                            {%endfor%}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+    </center>
+    
+    
+    
     
     <!-- JS -->
     <script src="{{ url_for('public.static', filename='js/popper.min.js') }}"></script>
