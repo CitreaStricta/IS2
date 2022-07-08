@@ -45,12 +45,12 @@ function saveEdit(idEncuesta){
     var fechaTermino = container.getElementsByClassName("fechaTermino")[0].value
 
     if(!titulo){
-        alert("No puede dejar a la encuesta sin un Titulo")
+        alert("Inserte un Titulo a la encuesta")
         return
     }
     datosEncuesta.push(titulo)
     if(!descripcion){
-        alert("No puede dejar a la encuesta sin una Descripción")
+        alert("Inserte una Descripción a la encuesta")
         return
     }
     datosEncuesta.push(descripcion)
@@ -61,6 +61,17 @@ function saveEdit(idEncuesta){
     datosEncuesta.push(fechaComienzo)
     if(!fechaTermino){
         alert("Designe una fecha de termino a la encuesta")
+        return
+    }
+    let today = new Date().toISOString().slice(0, 10)
+    //console.log(today);
+    //console.log(fechaComienzo);
+    if(fechaComienzo < today){
+        alert("Inserte una fecha de Comienzo desde hoy")
+        return
+    }
+    if(fechaComienzo>fechaTermino){
+        alert("La fecha de termino tiene que ser el mismo dia que la fecha de comienzo o posterior")
         return
     }
     datosEncuesta.push(fechaTermino)
