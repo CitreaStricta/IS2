@@ -54,6 +54,10 @@ def generate_complete_email_body():
     list_of_urls = generate_urls_for_surveys()
 
     number_of_surveys = len(list_of_titles)
+
+    if number_of_surveys == 0 or list_of_titles is None:
+        return None
+
     email_body = 'Enlaces de encuestas disponibles: \n'
 
     for index in range(number_of_surveys):
@@ -80,7 +84,13 @@ def scheduled_send_email_task():
     SUBJECT = "Enlaces de encuestas"
 
     list_of_emails = get_user_emails()
-    message = 'Subject: {}\n\n{}'.format(SUBJECT, generate_complete_email_body())
+    email_body = generate_complete_email_body()
+
+    if email_body is None:
+        print(f"No hay encuestas habilitadas para el dia de hoy {str(date.today())}")
+        return
+
+    message = 'Subject: {}\n\n{}'.format(SUBJECT, email_body)
     
     with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
         for email in list_of_emails:
