@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <meta charset="utf-8">
+  <title>HTML</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    <!--saque el css que estaba aqui porque no estaba haciendo nada (lo guarde si en un .txt ~chulz)-->
+  </style>
+    <!-- agrega los .css que bootstrap necesita (se pueden ver en el html en templates de la direccion en cuestion) -->
+    {% include 'public/links_bootstrap_css.html' %}
+    <link rel="stylesheet" href="{{ url_for('public.static', filename='css/main.css')}}">
+    <link rel="stylesheet" href="{{ url_for('public.static', filename='css/para_editar_y_ver_encuestas.css')}}">
+</head>
+
+<body>
+  {% include 'public/nav_bar.html' %}
+  <center >
+    <br>
+    {%for datos_encuesta_i in db_data %}
+
+    <div class="card bg-success text-white w-75 p-3 ">
+      <span style="float:center;">Encuesta : {{ loop.index }}</span>
+      <span style="float:center;">{{datos_encuesta_i[1]}}</span>
+      
+      <a class="links-Ver-Editar-Encuesta" href="{{ url_for('admin.mostrar_preguntas_alternativas',id=datos_encuesta_i[0]) }}"> Ver encuesta</a>
+      <a class="links-Ver-Editar-Encuesta" href="{{ url_for('admin.rutaEditarEncuesta',id=datos_encuesta_i[0]) }}">Editar Encuestas</a>
+    </div>
+    <br>
+    {%endfor%}
+  </center>
+
+  {% include 'public/links_bootstrap_js.html' %}
+  <script src="{{url_for('admin.static', filename='js/desplegar_respuesta_encuesta.js')}}"></script>
+</body>
+
+</html>

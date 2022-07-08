@@ -1,0 +1,41 @@
+<!-- USEN "index.html" COMO EJEMPLO DE COMO USAR ESTE ARCHIVO "base.html" -->
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <title> {% block title %} Page Title {% endblock %} </title>
+  <!-- referencias de los files .css que bootstrap necesita -->
+  <link rel="stylesheet" href="{{ url_for('public.static', filename='css/bootstrap.min.css')}}">
+
+  {% block specific_css_files %}
+  <!-- aqui pueden ir los .css que requieran de forma especifica para una vista/html/template -->
+  {% endblock %}
+
+  <style>
+    {% block style %}
+      /* aqui puede ir codigo css ES PREFERIBLE QUE HAGAN UN .CSS Y LO AGREGUEN EN
+      EL BLOQUE DE "specific_css_files"*/
+    {% endblock %}
+  </style>
+
+</head>
+<body>
+  <!-- la navbar que todas (o casi todas) tienen -->
+  {% include 'public/nav_bar.html' %}
+  {% block content %}
+  <!-- Aqui va el "contenido principal" que su vista/html/template va a tener en forma mas especifica  -->
+  {% endblock %}
+
+  <!-- referencias de los files .js que bootstrap necesita -->
+  <script src="{{ url_for('public.static', filename='js/popper.min.js') }}"></script>
+  <script src="{{ url_for('public.static', filename='js/bootstrap.min.js') }}"></script>
+
+  {% block specific_js_files %}
+  <!-- aqui pueden ir los .js que requieran de forma especifica para una vista/html/template -->
+  {% endblock %}
+
+</body>
+</html>

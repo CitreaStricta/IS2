@@ -1,0 +1,17 @@
+.boton-ver-encuesta {
+    margin-left: auto;
+    margin-right: auto;
+    width:20%;
+}
+
+.chart-box {
+    width: 600px;
+    height: 400px;
+  }
+
+.fondo {
+
+    background-color:#6fc1e7 !important;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+

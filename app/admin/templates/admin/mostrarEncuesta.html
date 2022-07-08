@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	{%include 'public/links_bootstrap_css.html' %}
+	<link rel="stylesheet" href="{{ url_for('public.static', filename='css/main.css')}}">
+	<link rel="stylesheet" href="{{ url_for('public.static', filename='css/desplegador_de_encuesta.css')}}">
+	<title>Encuesta</title>
+</head>
+<body>
+	<center>
+		<br>
+		{%for i in range(0, encuestas.Preguntas|length)%}
+		  <div align="center" class="card bg-success text-white w-75 p-3">
+		  <h1 align="center">Encuesta: {{encuestas.Encuestas[i]}}</h1>
+		  {%for j in range(0, encuestas.Preguntas[i]|length)%}
+			<h3 align="center">{{encuestas.Preguntas[i][j]}}</h3>
+		  {%endfor%}
+		  </div>
+		  <br>
+		{%endfor%}
+	</center>
+</body>
+</html>

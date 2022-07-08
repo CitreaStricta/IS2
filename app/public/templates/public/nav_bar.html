@@ -1,0 +1,28 @@
+<div class="container">
+  <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+      <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
+      <span class="fs-4 texto-titulo-marchelo"> Marchelo Survey's </span>
+    </a>
+
+    <ul class="nav nav-pills nav-principal">
+      <li class="nav-item"><a href="/" class="nav-link active" aria-current="page">Home</a></li>
+      {% if current_user.is_anonymous %}
+        <li class="nav-item"><a href="/login" class="nav-link nav-letras">Log In</a></li>
+        <li class="nav-item"><a href="/signup" class="nav-link nav-letras">Sign Up</a></li>
+      {% else %}
+        {% if current_user.is_admin %}
+
+          <li class="nav-item"><a href="/crearEncuesta" class="nav-link nav-letras">Crear</a></li>
+          <li class="nav-item"><a href="/verEncuestas" class="nav-link nav-letras">Ver Encuestas</a></li>
+          <li class="nav-item"><a href="/agregarmails" class="nav-link nav-letras">Agregar Mail</a></li>
+          <li class="nav-item"><a href="#" class="nav-link nav-letras">Bienvenido admin {{current_user.name}}</a></li>
+        {% else %}
+          <li class="nav-item"><a href="/MySurveys" class="nav-link nav-letras">Responder Encuestas</a></li>
+          <li class="nav-item"><a href="/" class="nav-link nav-letras">Bienvenido {{current_user.name}}</a></li>
+        {% endif %}
+        <li class="nav-item"><a href="/logout" class="nav-link nav-letras">Log Out</a></li>
+      {% endif %}
+    </ul>
+  </header>
+</div>
