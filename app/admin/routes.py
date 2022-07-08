@@ -203,7 +203,7 @@ def insertarmail():
                     db.connect()
                     db.execute('UPDATE mails SET suscrito=%s where correo=%s',(suscrito,email))
                     creado= f'Mail desuscrito exitosamente'
-                    correos=db.fetch_all('SELECT * FROM mails')
+                    correos=db.fetch_all('SELECT * FROM mails ORDER BY correo ASC')
                     db.close()
                     return render_template('admin/agregarmails.html', form=form,creado=creado,db_data=correos)
                 else:
