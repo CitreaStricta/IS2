@@ -8,28 +8,30 @@ function addTitulo(){
     // generacion de un campo input (Para asignar titulo) 
 	container.titulo = document.createElement("input") // se refiere a un h1, un div, un boton, un elemento HTML
     container.titulo.id = "titleId"
-    container.titulo.placeholder = "Add Title here" // place holder
-    //container.titulo.className = "form-control form-control-lg"
+    container.titulo.placeholder = "Agregue el Título aquí" // place holder
+    container.titulo.className = "form-control form-control-lg"
     
     container.descripcion = document.createElement("input") // se refiere a un h1, un div, un boton, un elemento HTML
     container.descripcion.id = "descripcionId"
-    container.descripcion.placeholder = "Add Descripción here" // place holder
-    //container.descripcion.className = "form-control"
+    container.descripcion.placeholder = "Agregue una Descripción aquí" // place holder
+    container.descripcion.className = "form-control"
 
     container.fechaComienzo = document.createElement("input")
     container.fechaComienzo.id= "fechaComienzoId"
     container.fechaComienzo.type= "date"
+    container.fechaComienzo.className = "me-5"
     container.fechaTermino = document.createElement("input")
     container.fechaTermino.id= "fechaTerminoId"
     container.fechaTermino.type= "date"
 
-    container.appendChild(document.createTextNode("Titulo:"))
-    container.appendChild(document.createElement("br")) // br es un salto de linea
+    const titulo = document.createElement("h1");
+    titulo.textContent = "Título";
+    const descripcion = document.createElement("h3");
+    descripcion.textContent = "Descripción";
+    container.appendChild(titulo/*document.createTextNode("Titulo:")*/)
     container.appendChild(container.titulo)
     container.appendChild(document.createElement("br")) // br es un salto de linea
-    container.appendChild(document.createElement("br")) // br es un salto de linea
-    container.appendChild(document.createTextNode("Descripcion:"))
-    container.appendChild(document.createElement("br")) // br es un salto de linea
+    container.appendChild(descripcion)
     container.appendChild(container.descripcion)
     container.appendChild(document.createElement("br")) // br es un salto de linea
     container.appendChild(document.createElement("br")) // br es un salto de linea
@@ -47,11 +49,12 @@ function addAlternativa(pregunta){
 
 	alternativa.contenido = document.createElement("input") // se refiere a un h1, un div, un boton, un elemento HTML
     alternativa.contenido.id = "alternativaId" + pregunta.numAlternativas;
-    alternativa.contenido.placeholder = "Add Alternativa here" // place holder
+    alternativa.contenido.placeholder = "Agregue una Alternativa aquí" // place holder
     alternativa.contenido.name = "input" + pregunta.numAlternativas;
-    //alternativa.contenido.className="text-warning"
+    alternativa.contenido.className="form-control form-control-sm col-6"
 
     alternativa.boton = document.createElement('button');
+    alternativa.boton.className = "btn btn-outline-dark m-2"
     alternativa.boton.innerHTML = "- alternativa"
     alternativa.boton.addEventListener('click', function(){
         // funcion que elimina la alternativa
@@ -77,6 +80,7 @@ function addAlternativa(pregunta){
 function addEncuesta(){
     var encuesta = document.getElementById("containerEncuesta")
     var listPregunta = document.createElement("ul")
+    listPregunta.style = "padding-left: 0!important;"
     encuesta.listPreguntas = listPregunta
     encuesta.numPreguntas=0
 
@@ -92,7 +96,8 @@ function addQuestion(){
     pregunta.contenidoPregunta = document.createElement("input")
     pregunta.contenidoPregunta.name = "input" + numberOfQuestion
     pregunta.contenidoPregunta.id = "inputId" + numberOfQuestion
-    pregunta.contenidoPregunta.placeholder = "Add Pregunta here"
+    pregunta.contenidoPregunta.placeholder = "Agregue una Pregunta aquí"
+    pregunta.contenidoPregunta.className = "form-control"
     //pregunta.revisarContenidoPregunta = document.createElement("div")
     //pregunta.revisarContenidoPregunta.appendChild(document.createTextNode("Vacio"))
     //if(!pregunta.contenidoPregunta){
@@ -100,16 +105,19 @@ function addQuestion(){
     //}
 
     pregunta.alternativas = document.createElement("ul")
+    pregunta.alternativas.style = "padding: 0px 50px!important;"
     pregunta.numAlternativas = 0
 
     pregunta.botonAlternativas = document.createElement('button');
     pregunta.botonAlternativas.innerHTML = "+ alternativa"
+    pregunta.botonAlternativas.className = "btn btn-outline-dark m-2"
     pregunta.botonAlternativas.addEventListener('click', function(){
         addAlternativa(pregunta);
     });
 
     pregunta.botonPregunta = document.createElement('button');
     pregunta.botonPregunta.innerHTML = "- pregunta"
+    pregunta.botonPregunta.className = "btn btn-outline-dark m-2"
     pregunta.botonPregunta.addEventListener('click', function(){
         // funcion que elimina la pregunta
         encuesta.numPreguntas--
