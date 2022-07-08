@@ -27,7 +27,7 @@
 <body>
     {% include 'public/nav_bar.html' %}
     <br><br><br><br><br><br><br><br><br><br><br>
-    <div class="container-fluid form-orden-campos">
+    <div class="container form-orden-campos">
         {% if error %}
             <p style="color: red;"><strong>Error:</strong> {{ error }}
         {% endif %}
@@ -48,6 +48,7 @@
             </div>
         </form>
     </div>
+
     <div class="container-fluid form-orden-campos">
         {% if creado %}
             <p style="color: yellow;"><strong>Correcto:</strong> {{ creado }}
@@ -61,6 +62,7 @@
             </div>
         </form>
     </div>
+
     <table style="margin: 0 auto;">
         <tr>
             <th>Correo</th>
