@@ -26,7 +26,7 @@ const fetchDataAsync = async(url_api,datosEncuesta) => {
         
         console.log(response)
         alert("Encuesta " + datosEncuesta[0] +" editada con exito")
-        window.location.replace("http://127.0.0.1:5004/");
+        window.location.replace("http://152.74.52.191:5004/");
     } catch (error) {
         console.error(error.message);
     }
@@ -73,6 +73,6 @@ function saveEdit(idEncuesta){
 
     console.log(datosEncuesta);
     
-    var url_api = "http://127.0.0.1:5004/guardarEditEncuesta"
+    var url_api = "http://152.74.52.191:5004/guardarEditEncuesta"
     fetchDataAsync(url_api, datosEncuesta);
 }

@@ -109,6 +109,6 @@ function saveEdit(idEncuesta){
     //console.log(jsonEncuesta);
     datosEncuesta.push(jsonEncuesta)
     */
-    var url_api = "http://127.0.0.1:5000/guardarEditEncuesta"
+    var url_api = "http://152.74.52.191:5004/guardarEditEncuesta"
     fetchDataAsync(url_api, datosEncuesta);
 }

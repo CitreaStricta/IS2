@@ -178,7 +178,7 @@
         }
 
         if(redirect){
-            var url_api = "http://127.0.0.1:5004/saveSurveyAnswer/" + id.toString();
+            var url_api = "http://152.74.52.191:5004/saveSurveyAnswer/" + id.toString();
             var data = {}
             data["Respuestas"] = toSend
             dataSend=[]
@@ -219,7 +219,7 @@ const fetchDataAsync = async(url_api,datosEncuesta) => {
         console.log(userName);
         if(redirect){  
             alert(userName)
-            window.location.replace("http://127.0.0.1:5004/MySurveys");
+            window.location.replace("http://152.74.52.191:5004/MySurveys");
         }
     } catch (error) {
         console.error(error.message);

@@ -38,7 +38,7 @@ def parse_list(list_of_data):
 def generate_urls_for_surveys():
     """ Genera las url de todas las encuestas a enviar """
     list_of_ids_of_surveys = get_ids_of_surveys_start_today()
-    url_prefix = 'http://127.0.0.1:5004/showSurvey/'
+    url_prefix = 'http://152.74.52.191:5004/showSurvey/'
 
     list_of_urls = []
     for id_survey in list_of_ids_of_surveys:
